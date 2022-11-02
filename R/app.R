@@ -21,26 +21,26 @@ create_hover_txt <- function(table){
 
 # Global expression sets
 dataset_choices <- list(
-  "CCLE MUT + SCNAs in Cancers (CCLE_MUT_SCNA)" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA"),
-  "Simulated Expression Set (sim.ES)" = system.file("data/sim.ES.RData", package = "CaDrA"),
-  "TCGA BRCA GISTIC + Mutation Signatures (BRCA_GISTIC_MUT_SIG)" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA")
+  "CCLE MUT + SCNAs in Cancers (CCLE_MUT_SCNA)" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA-shiny"),
+  "Simulated Expression Set (sim.ES)" = system.file("data/sim.ES.RData", package = "CaDrA-shiny"),
+  "TCGA BRCA GISTIC + Mutation Signatures (BRCA_GISTIC_MUT_SIG)" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA-shiny")
 )
 
 # Global input scores
 score_choices <- list(
-  "Activation of B-catenin in Cancers (CTNBB1_reporter)" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA"),
-  "Simulated Input Scores from rnorm(n=length(sim.ES), mean=0, sd=1) (sim.Scores)" =  system.file("data/sim.Scores.rda", package = "CaDrA"),
-  "YAP/TAZ Activity in Human Breast Cancers (TAZYAP_BRCA_ACTIVITY)" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA")
+  "Activation of B-catenin in Cancers (CTNBB1_reporter)" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA-shiny"),
+  "Simulated Input Scores from rnorm(n=length(sim.ES), mean=0, sd=1) (sim.Scores)" =  system.file("data/sim.Scores.rda", package = "CaDrA-shiny"),
+  "YAP/TAZ Activity in Human Breast Cancers (TAZYAP_BRCA_ACTIVITY)" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA-shiny")
 )
 
 # Obtain the external data
 get_extdata <- function(dataset_choices, score_choices){
   
   # Check if external data exists in package
-  if(file.exists(system.file("extdata", "datalist.csv", package = "CaDrA"))){
+  if(file.exists(system.file("extdata", "datalist.csv", package = "CaDrA-shiny"))){
     
     # Read in a list of files in datalist.csv 
-    datalist <- read.csv(system.file("extdata/datalist.csv", package = "CaDrA"), header=TRUE)
+    datalist <- read.csv(system.file("extdata/datalist.csv", package = "CaDrA-shiny"), header=TRUE)
     datalist <- datalist[which(datalist$eset_paths != "" & !is.na(datalist$eset_paths) & datalist$eset_names != "" & !is.na(datalist$eset_names)),]
     
     # Obtain external expression sets
@@ -517,14 +517,61 @@ CaDrA_UI <- function(id)
             uiOutput(outputId = ns("permutation_plot_title")),
             plotOutput(outputId = ns("permutation_plot"))
           )
-        ),        
+        ), 
+        tabPanel(
+          title = "Run GSVA",
+          style = "padding: 5px 10px 10px 10px;",
+          icon = icon(name = "running", lib = "font-awesome"),
+          
+          h3("Feature Set:"),
+          selectInput(
+            inputId = ns("gsva_feature_set"),
+            label = NULL,
+            choices = eset_choices,
+            selected = eset_choices[1],
+            width = "600px"
+          )
+        ),
         tabPanel(
           title = "Help", 
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "question", lib = "font-awesome"),
           
-          htmltools::includeMarkdown(file.path(system.file('shinyapp', package="CaDrA"), "README.md"))
+          htmltools::includeMarkdown(file.path(system.file('shinyapp', package = "CaDrA-shiny"), "README.md"))
           
+        ),
+        tabPanel(
+          title = "Dataset",
+          style = "padding: 5px 10px 10px 10px;",
+          icon = icon(name = "database", lib = "font-awesome"),
+          
+          h2("Download Feature Set"),
+          selectInput(
+            inputId = ns("feature_set"),
+            label = NULL,
+            choices = eset_choices,
+            selected = eset_choices[1],
+            width = "600px"
+          ),
+          selectInput(
+            inputId = ns("dataset_type"),
+            label = "Type of Data to Download:",
+            choices = c("Expression Set", "Sample Names", "Feature Names"),
+            width = "600px"
+          ),
+          div(
+            id = ns("input_score_dl"), style="display: none;",
+            checkboxInput(
+              inputId = ns("include_scores"),
+              label = HTML(paste0(
+                'Include Input Scores ', 
+                '<a class="tooltip-txt" data-html="true" ',
+                'data-tooltip-toggle="tooltip" data-placement="top" ',
+                'title=\"Whether to download \'Input Scores\' associated with \'Feature Set\' as well\">?</a>')),
+              value = FALSE
+            )
+          ),
+          downloadButton(outputId = ns("download_data"), label="Download", icon=icon("download"))
         ),
         tabPanel(
           title = "Publication", 
@@ -648,7 +695,7 @@ CaDrA_Server <- function(id){
           )
         )
       })
-      
+      # update eset and score choices
       observeEvent(input$dataset, {
         
         selected_dataset <- isolate({ input$dataset }) 
@@ -680,7 +727,87 @@ CaDrA_Server <- function(id){
         }
         
       })
-      
+      # observe dataset choices
+      observeEvent(input$feature_set, {
+        
+        ns <- session$ns
+        
+        selected_dataset <- isolate({ input$feature_set }) 
+        
+        selection <- input_score_choices[which(eset_choices == selected_dataset)] %>% unlist()
+        
+        if(!is.na(names(selection))){
+          ## Show loading icon ####
+          session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("input_score_dl"), display="yes"))
+          updateCheckboxInput(session, inputId = "include_scores", value=TRUE)
+        }else{
+          ## Hide loading icon ####
+          session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("input_score_dl"), display="no"))
+          updateCheckboxInput(session, inputId = "include_scores", value=FALSE)
+        }
+
+      })
+      # Download dataset handler
+      output$download_data <- downloadHandler(
+        
+        filename = function() {
+          
+          dataset <- isolate({ input$feature_set })
+          type <- isolate({ input$dataset_type })
+          filename <- names(eset_choices[which(eset_choices == dataset)])
+          
+          if(type == "Expression Set"){
+            paste0(filename, "-Expression Set", ".rds")
+          }else if(type == "Sample Names"){
+            paste0(filename, "-Sample Names", ".rds")
+          }else if(type == "Feature Names"){
+            paste0(filename, "-Feature Names", ".rds")
+          }
+          
+        },
+        
+        content = function(file) {
+          
+          dataset <- isolate({ input$feature_set })
+          type <- isolate({ input$dataset_type })
+          include_scores <- isolate({ input$include_scores })
+          
+          if(tools::file_ext(dataset) == "rda" | tools::file_ext(dataset) == "RData"){
+            envir_name <- load(dataset)
+            ES <- get(envir_name)
+          }else{
+            ES <- readRDS(dataset)
+          }
+
+          dl_data <- list()
+          
+          if(type == "Expression Set"){
+            dl_data <- c(dl_data, ES=ES)
+          }else if(type == "Sample Names"){
+            dl_data <- c(dl_data, list(sample_names=colnames(ES)))
+          }else if(type == "Feature Names"){
+            dl_data <- c(dl_data, list(feature_names=rownames(ES)))
+          }
+          
+          if(include_scores){
+            
+            scores <- input_score_choices[which(eset_choices == dataset)] %>% unlist()
+            
+            if(tools::file_ext(scores) == "rda" | tools::file_ext(scores) == "RData"){
+              envir_name <- load(scores)
+              input_score <- get(envir_name)
+            }else{
+              input_score <- readRDS(scores)
+            }
+            
+            dl_data <- c(dl_data, input_score=list(input_score))
+            
+          }
+
+          saveRDS(dl_data, file)
+          
+        }
+      )
       #
       # Start the process
       #    
@@ -1574,12 +1701,6 @@ CaDrA_App <- function() {
     
     ## Reconnecting to new sessions after grey out
     session$allowReconnect("force")
-    
-    ## Close app when browser closing
-    session$onSessionEnded(function() {
-     #print("Closed Shiny Session.")
-     stopApp()
-    })
     
   }
   shinyApp(ui=ui, server=server)
