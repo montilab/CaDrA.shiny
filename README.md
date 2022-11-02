@@ -6,13 +6,24 @@ A web interface for interacting with the R package CaDrA
 
 ## Run your own instance
 
-First install CaDrA R package:
+### (1) Installation
 
-Download CaDrA-shiny R project:
+``` r
+library(devtools)
+devtools::install_github("montilab/CaDrA-shiny")
+```
 
-```{bash}
-git clone https://github.com/montilab/CaDrA-shiny.git
-cd CaDrA-shiny
+### (2) Quickstart
+
+``` r
+library(CaDrA-shiny)
+```
+
+### (3) Launch CaDrA's Shiny app
+
+
+``` r
+`CaDrA-shiny`::CaDrA_App()
 ```
 
 
