@@ -21,16 +21,16 @@ create_hover_txt <- function(table){
 
 # Global expression sets
 dataset_choices <- list(
-  "CCLE MUT + SCNAs in Cancers (CCLE_MUT_SCNA)" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA-shiny"),
-  "Simulated Expression Set (sim.ES)" = system.file("data/sim.ES.RData", package = "CaDrA-shiny"),
-  "TCGA BRCA GISTIC + Mutation Signatures (BRCA_GISTIC_MUT_SIG)" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA-shiny")
+  "CCLE SCNAs + Mutations" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA-shiny"),
+  "TCGA BRCA SCNAs + Mutations" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA-shiny"),
+  "Simulated Expression Set" = system.file("data/sim.ES.RData", package = "CaDrA-shiny")
 )
 
 # Global input scores
 score_choices <- list(
-  "Activation of B-catenin in Cancers (CTNBB1_reporter)" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA-shiny"),
-  "Simulated Input Scores from rnorm(n=length(sim.ES), mean=0, sd=1) (sim.Scores)" =  system.file("data/sim.Scores.rda", package = "CaDrA-shiny"),
-  "YAP/TAZ Activity in Human Breast Cancers (TAZYAP_BRCA_ACTIVITY)" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA-shiny")
+  "B-catenin Activity in CCLE" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA-shiny"),
+  "YAP/TAZ Activity in TCGA BrCa" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA-shiny"),
+  "Simulated Input Score" =  system.file("data/sim.Scores.rda", package = "CaDrA-shiny")
 )
 
 # Obtain the external data
