@@ -33,8 +33,21 @@ score_choices <- list(
   "YAP/TAZ Activity in Human Breast Cancers (TAZYAP_BRCA_ACTIVITY)" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA-shiny")
 )
 
+# Global input scores
+score_choices <- list(
+  "Activation of B-catenin in Cancers (CTNBB1_reporter)" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA-shiny"),
+  "Simulated Input Scores from rnorm(n=length(sim.ES), mean=0, sd=1) (sim.Scores)" =  system.file("data/sim.Scores.rda", package = "CaDrA-shiny"),
+  "YAP/TAZ Activity in Human Breast Cancers (TAZYAP_BRCA_ACTIVITY)" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA-shiny")
+)
+
+gene_expression_choices <- list(
+  "CTNBB1_reporter" = "",
+  "sim.Scores" =  "",
+  "TAZYAP_BRCA_ACTIVITY" = ""
+)
+
 # Obtain the external data
-get_extdata <- function(dataset_choices, score_choices){
+get_extdata <- function(dataset_choices, score_choices, gene_expression_choices){
   
   # Check if external data exists in package
   if(file.exists(system.file("extdata", "datalist.csv", package = "CaDrA-shiny"))){
@@ -65,9 +78,20 @@ get_extdata <- function(dataset_choices, score_choices){
       score_choices <- c(score_choices, score_paths)
     }
     
+    # Obtain gsva scores
+    gene_expression_paths <- datalist$gene_expression_paths
+    gene_expression_names <- datalist$gene_expression_names
+    
+    # Create a labels for each file
+    names(gene_expression_paths) <- gene_expression_names
+    
+    if(length(gene_expression_paths) > 0){
+      gene_expression_choices <- c(gene_expression_choices, gene_expression_paths)
+    }
+    
   }
   
-  return(list(eset_choices=dataset_choices, input_score_choices=score_choices))
+  return(list(eset_choices=dataset_choices, input_score_choices=score_choices, gene_expression_choices=gene_expression_choices))
   
 }
   
@@ -103,7 +127,11 @@ CaDrA_UI <- function(id)
 {
   
   # Combine extdata with global expression set and scores dataset if it was provided
-  eset_choices <- get_extdata(dataset_choices, score_choices)[["eset_choices"]] %>% unlist()
+  eset_choices <- get_extdata(dataset_choices, score_choices, gene_expression_choices)[["eset_choices"]] %>% unlist()
+  input_score_choices <- get_extdata(dataset_choices, score_choices, gene_expression_choices)[["input_score_choices"]] %>% unlist()
+  gene_expression_choices <- get_extdata(dataset_choices, score_choices, gene_expression_choices)[["gene_expression_choices"]] %>% unlist()
+  gsva_eset_choices <- eset_choices[which(gene_expression_choices != "")]
+  gsva_gene_expression_choices <- gene_expression_choices[which(gene_expression_choices != "")]
   
   ns <- NS(id)
   
@@ -167,379 +195,509 @@ CaDrA_UI <- function(id)
       )
     ),
     column(
-      width = 4, 
-      class = "side-bar-options",
-      
-      h2("CaDrA Options", style="text-align: center;"),
-      
-      br(),
-      
-      tagList(
-        selectInput(
-          inputId = ns("dataset"), 
-          label = "Feature Set", 
-          choices = c(eset_choices, "Import Data"),
-          selected = eset_choices[1], 
-          width = "100%"
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'Import Data'", ns("dataset")),
-          fileInput(
-            inputId = ns("ES_file"), 
-            label = strong(span(style = "color: red;", "*"), 
-                           "Feature Set file:"), 
-            width = "100%"
-          ),
-          radioButtons(
-            inputId = ns("ES_file_type"), 
-            label = HTML(paste0(
-              'File type ', 
-              '<a class="tooltip-txt" data-html="true" ',
-              'data-tooltip-toggle="tooltip" data-placement=',
-              '"top" title=\"NOTE: If file is in csv format, ',
-              'the \'Feature Set\' must be a data ',
-              'frame including a \'Features\' column name ',
-              'that contains unique names or labels to ',
-              'search for best features. Otherwise, \'Feature ',
-              'Set\' must be an object of class ExpressionSet ',
-              'from BioBase package.\">?</a>')), 
-            choices = c(".csv", ".rds"), 
-            selected = ".csv", 
-            inline = TRUE
-          )
-        ),
-        selectInput(
-          inputId = ns("scores"), 
-          label = "Input Score", 
-          choices = "Import Data",
-          width = "100%"
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'Import Data'", ns("scores")),
-          fileInput(
-            inputId = ns("input_score_file"), 
-            label = strong(span(style = "color: red;", "*"), 
-                           "Input Score file:"), 
-            width = "100%"
-          ),
-          radioButtons(
-            inputId = ns("input_score_file_type"), 
-            label = HTML(paste0(
-              'File type ', 
-              '<a class="tooltip-txt" data-html="true" ',
-              'data-tooltip-toggle="tooltip" data-placement=',
-              '"top" title=\"NOTE: If file is in csv format, ', 
-              'then the \'Input Score\' file ',
-              'must be a data frame with two columns ',
-              '(Samples and Scores) and the \'Samples\' column ',
-              'must match the colnames of \'Feature Set\'. ',
-              'Otherwise, \'Input Score\' must be a list of  ',
-              'vectors and have names or labels that match the ',
-              'colnames of the \'Feature Set\'.\">?</a>')), 
-            choices = c(".csv", ".rds"), 
-            selected = ".csv", 
-            inline = TRUE
-          )
-        ),
-        numericInput(
-          inputId = ns("min_cutoff"), 
-          label = HTML(paste0(
-            '<strong>Min Event Frequency (n)</strong> ', 
-            '<a class="tooltip-txt" data-html="true" ',
-            'data-tooltip-toggle="tooltip" data-placement="top" ',
-            'title=\"Minimum number of \'occurrences\' a feature ',
-            '(e.g., a mutation) must have to be included in the ',
-            '\'Feature Set\`. Features with fewer events than the ',
-            'specified number will be removed.\n\nNOTE: \'Min event ',
-            'frequency\' must be >= 5.\">?</a>')),
-          value = 30,
-          min = 5, 
-          max = Inf, 
-          step = 1,
-          width = "100%"
-        ),
-        numericInput(
-          inputId = ns("max_cutoff"), 
-          label = HTML(paste0(
-            '<strong>Max Event Frequency (%)</strong> ',
-            '<a class="tooltip-txt" data-html="true" ',
-            'data-tooltip-toggle="tooltip" data-placement="top" ',
-            'title=\"Maximum number (expressed as % of total) of ',
-            '\'occurrences\' a feature (e.g., a mutation) can have ',
-            'to be included in the \'Feature Set\`. Features with a ',
-            'higher percentage of events than the specified number ',
-            'will be removed.\n\nNOTE: \'Max event frequency\' must ',
-            'be <= 90.\">?</a>')),
-          value = 60, 
-          min = 0, 
-          max = 100, 
-          step = 1, 
-          width = "100%"
-        ),
-        radioButtons(
-          inputId = ns("method"), 
-          label = strong(span(style="color:red;", "*"), 
-                         "Scoring method:"), 
-          choices = c("ks", "wilcox", "revealer"), 
-          selected = "ks", inline = TRUE
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'ks'", ns("method")),
-          checkboxInput(
-            inputId = ns("weighted_ks"), 
-            label = "Compute weighted KS?", 
-            value = FALSE
-          ), 
-          conditionalPanel(
-            condition = sprintf("input['%s'] == true", ns("weighted_ks")),
-            fileInput(
-              inputId = ns("weights_file"), 
-              label = strong(span(style = "color: red;", "*"), 
-                             "Choose a weight file:"), 
-              width = "100%"
-            ),
-            radioButtons(
-              inputId = ns("weights_file_type"), 
-              label = HTML(paste0(
-                'File type ', 
-                '<a class="tooltip-txt" data-html="true" ',
-                'data-tooltip-toggle="tooltip" ',
-                'data-placement="top" title=\"NOTE: ',
-                'If file is in csv format, then ',
-                'the \'Weights\' file must be a data frame ',
-                'with two columns (Samples and Weights) and ',
-                'the \'Samples\' column must match the colnames of ',
-                '\'Feature Set\'. Otherwise, \'Weights\' file',
-                'must contain a list of vectors and have names or ',
-                'labels that match the colnames of \'Feature Set\'.\">?</a>')), 
-              choices=c(".csv", ".rds"), 
-              selected = ".csv", 
-              inline = TRUE
-            )     
-          )
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'ks' | 
-                              input['%s'] == 'wilcox'", 
-                              ns("method"), 
-                              ns("method")),
-          selectInput(
-            inputId = ns("alternative"), 
-            label = strong(span(style="color:red;", "*"), 
-                           "Alternative:"), 
-            choices = c("less", "two.sided", "greater"), 
-            selected = "less", width = "100%"
-          ),
-        ),
-        fluidRow(
-          column(
-            width = 6,
-            radioButtons(
-              inputId = ns("metric"), 
-              label = strong(span(style="color:red;", "*"), 
-                             "Type of metric:"), 
-              choices=c("pval", "stat"), 
-              selected = "pval", inline = FALSE
-            )
-          ),
-          column(
-            width = 6,
-            radioButtons(
-              inputId = ns("search_method"), 
-              label = strong(span(style="color:red;", "*"), 
-                             "Search method:"), 
-              choices=c("forward and backward"="both", 
-                        "forward"="forward"), 
-              selected = "both", inline = FALSE
-            )
-          )
-        ),
-        numericInput(
-          inputId = ns("max_size"), 
-          label = HTML(paste0(
-            '<span style=\"color:red;\">*</span> Max meta-feature size ', 
-            '<a class="tooltip-txt" data-html="true" ',
-            'data-tooltip-toggle="tooltip" data-placement="top" ',
-            'title=\"Max possible number of features to be ',
-            'included in the meta-feature (search will stop ',
-            'after max is reached)\">?</a>')), 
-          min = 1, 
-          max = 100, 
-          step = 1, 
-          value = 7, 
-          width = "100%"
-        ),
-        radioButtons(
-          inputId = ns("initial_seed"), 
-          label = HTML(paste0(
-            '<span style=\"color:red;\">*</span> Search modality ', 
-            '<a class="tooltip-txt" data-html="true" ',
-            'data-tooltip-toggle="tooltip" data-placement="top" ',
-            'title=\"\'Top N\' repeats the search starting from ',
-            'each of the top N scoring features. \'Custom seeds\' ',
-            'repeats the search starting from each of the custom ',
-            'seeds. WARNING: If number of seeds specified is greater ',
-            'than 10, this may result in a longer search time.\">?</a>')), 
-          choices = c("Top N seeds"="top_N_seeds", "Custom seeds"="search_start_seeds"), 
-          selected = "top_N_seeds", 
-          inline = TRUE
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'top_N_seeds'", 
-                              ns("initial_seed")),
-          numericInput(
-            inputId = ns("top_N"), 
-            label = strong(span(style = "color:red;", "*"), 
-                           paste0("Top N value")), 
-            min = 1, 
-            max = 100, 
-            step = 1, 
-            value = 10, 
-            width = "100%"
-          ),
-        ),
-        conditionalPanel(
-          condition = sprintf("input['%s'] == 'search_start_seeds'", 
-                              ns("initial_seed")),
-          textAreaInput(
-            inputId = ns("search_start"), 
-            label = strong(span(style = "color:red;", "*"), 
-                           paste0('Enter a list of character strings ',
-                                  '(separated by commas) corresponding ', 
-                                  'to feature names within the ',
-                                  '\'Feature Set\' object')), 
-            value="", 
-            width="100%"
-          )
-        ),
-        checkboxInput(
-          inputId = ns("permutation_test"), 
-          label = strong("Perform permutation testing?"), 
-          value = FALSE
-        ), 
-        conditionalPanel(
-          condition = sprintf("input['%s'] == true", ns("permutation_test")),
-          numericInput(
-            inputId = ns("n_perm"), 
-            label = strong(span(style="color:red;", "*"), 
-                           paste0("Number of permutations to perform")), 
-            min = 1, 
-            max = Inf,
-            step = 1, 
-            value = 100,
-            width = "100%"
-          ),
-          numericInput(
-            inputId = ns("ncores"), 
-            label = strong(span(style="color:red;", "*"), 
-                           paste0("Number of cores to perform parallelization for permutation testing")), 
-            min = 1, 
-            max = Inf, 
-            step = 1, 
-            value = 1,
-            width = "100%"
-          )
-        ),
-        br(),
-        uiOutput(outputId = ns("error_message")),
-        actionButton(
-          inputId = ns("run_cadra"), 
-          label = strong("RUN"), 
-          style="background: blue; color: white;"
-        ),
-        actionButton(
-          inputId = ns("stop_cadra"), 
-          label = strong("STOP"), 
-          style="background: blue; color: white;"
-        ),
-        br(), br(), br(), br(),
-        HTML(
-          paste0(
-            "<p style='text-align: center;'>",
-            "<span class='footer-info'>&copy; Monti Lab &diams; ",
-            "<script>document.write(new Date().getFullYear());",
-            "</script> &diams; All Rights Reserved.</span></p>"
-          )
-        )
-      )
-    ),
-    column(
-      width = 8,
-      style = "border: 1px solid gray; padding: 5px 10px 10px 10px; min-height: 850px;",
+      width = 12,
+      style = "padding: 5px 10px 10px 10px;",
       
       tabsetPanel(
         id = "tabs",
         
+        ##### RUN CADRA #######
         tabPanel(
           title = "Run CaDrA", 
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "running", lib = "font-awesome"),
           
-          div(
-            uiOutput(outputId = ns("instructions"))
-          ),
-          div(
-            id = ns("loading_icon"), class = "loading_div", style="display: none;",
-            span(
-              div(class = "loader"),
+          column(
+            width = 4, 
+            class = "side-bar-options",
+            
+            h2("CaDrA Options", style="text-align: center;"),
+            
+            br(),
+            
+            tagList(
+              selectInput(
+                inputId = ns("dataset"), 
+                label = "Feature Set", 
+                choices = c(eset_choices, "Import Data"),
+                selected = eset_choices[1], 
+                width = "100%"
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'Import Data'", ns("dataset")),
+                fileInput(
+                  inputId = ns("ES_file"), 
+                  label = strong(span(style = "color: red;", "*"), 
+                                 "Feature Set file:"), 
+                  width = "100%"
+                ),
+                radioButtons(
+                  inputId = ns("ES_file_type"), 
+                  label = HTML(paste0(
+                    'File type ', 
+                    '<a class="tooltip-txt" data-html="true" ',
+                    'data-tooltip-toggle="tooltip" data-placement=',
+                    '"top" title=\"NOTE: If file is in csv format, ',
+                    'the \'Feature Set\' must be a data ',
+                    'frame including a \'Features\' column name ',
+                    'that contains unique names or labels to ',
+                    'search for best features. Otherwise, \'Feature ',
+                    'Set\' must be an object of class ExpressionSet ',
+                    'from BioBase package.\">?</a>')), 
+                  choices = c(".csv", ".rds"), 
+                  selected = ".csv", 
+                  inline = TRUE
+                )
+              ),
+              selectInput(
+                inputId = ns("scores"), 
+                label = "Input Score", 
+                choices = input_score_choices[1],
+                width = "100%"
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'Import Data'", ns("scores")),
+                fileInput(
+                  inputId = ns("input_score_file"), 
+                  label = strong(span(style = "color: red;", "*"), 
+                                 "Input Score file:"), 
+                  width = "100%"
+                ),
+                radioButtons(
+                  inputId = ns("input_score_file_type"), 
+                  label = HTML(paste0(
+                    'File type ', 
+                    '<a class="tooltip-txt" data-html="true" ',
+                    'data-tooltip-toggle="tooltip" data-placement=',
+                    '"top" title=\"NOTE: If file is in csv format, ', 
+                    'then the \'Input Score\' file ',
+                    'must be a data frame with two columns ',
+                    '(Samples and Scores) and the \'Samples\' column ',
+                    'must match the colnames of \'Feature Set\'. ',
+                    'Otherwise, \'Input Score\' must be a list of  ',
+                    'vectors and have names or labels that match the ',
+                    'colnames of the \'Feature Set\'.\">?</a>')), 
+                  choices = c(".csv", ".rds"), 
+                  selected = ".csv", 
+                  inline = TRUE
+                )
+              ),
+              numericInput(
+                inputId = ns("min_cutoff"), 
+                label = HTML(paste0(
+                  '<strong>Min Event Frequency (n)</strong> ', 
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement="top" ',
+                  'title=\"Minimum number of \'occurrences\' a feature ',
+                  '(e.g., a mutation) must have to be included in the ',
+                  '\'Feature Set\`. Features with fewer events than the ',
+                  'specified number will be removed.\n\nNOTE: \'Min event ',
+                  'frequency\' must be >= 5.\">?</a>')),
+                value = 30,
+                min = 5, 
+                max = Inf, 
+                step = 1,
+                width = "100%"
+              ),
+              numericInput(
+                inputId = ns("max_cutoff"), 
+                label = HTML(paste0(
+                  '<strong>Max Event Frequency (%)</strong> ',
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement="top" ',
+                  'title=\"Maximum number (expressed as % of total) of ',
+                  '\'occurrences\' a feature (e.g., a mutation) can have ',
+                  'to be included in the \'Feature Set\`. Features with a ',
+                  'higher percentage of events than the specified number ',
+                  'will be removed.\n\nNOTE: \'Max event frequency\' must ',
+                  'be <= 90.\">?</a>')),
+                value = 60, 
+                min = 0, 
+                max = 100, 
+                step = 1, 
+                width = "100%"
+              ),
+              radioButtons(
+                inputId = ns("method"), 
+                label = strong(span(style="color:red;", "*"), 
+                               "Scoring method:"), 
+                choices = c("ks", "wilcox", "revealer"), 
+                selected = "ks", inline = TRUE
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'ks'", ns("method")),
+                checkboxInput(
+                  inputId = ns("weighted_ks"), 
+                  label = "Compute weighted KS?", 
+                  value = FALSE
+                ), 
+                conditionalPanel(
+                  condition = sprintf("input['%s'] == true", ns("weighted_ks")),
+                  fileInput(
+                    inputId = ns("weights_file"), 
+                    label = strong(span(style = "color: red;", "*"), 
+                                   "Choose a weight file:"), 
+                    width = "100%"
+                  ),
+                  radioButtons(
+                    inputId = ns("weights_file_type"), 
+                    label = HTML(paste0(
+                      'File type ', 
+                      '<a class="tooltip-txt" data-html="true" ',
+                      'data-tooltip-toggle="tooltip" ',
+                      'data-placement="top" title=\"NOTE: ',
+                      'If file is in csv format, then ',
+                      'the \'Weights\' file must be a data frame ',
+                      'with two columns (Samples and Weights) and ',
+                      'the \'Samples\' column must match the colnames of ',
+                      '\'Feature Set\'. Otherwise, \'Weights\' file',
+                      'must contain a list of vectors and have names or ',
+                      'labels that match the colnames of \'Feature Set\'.\">?</a>')), 
+                    choices=c(".csv", ".rds"), 
+                    selected = ".csv", 
+                    inline = TRUE
+                  )     
+                )
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'ks' | 
+                              input['%s'] == 'wilcox'", 
+                                    ns("method"), 
+                                    ns("method")),
+                selectInput(
+                  inputId = ns("alternative"), 
+                  label = strong(span(style="color:red;", "*"), 
+                                 "Alternative:"), 
+                  choices = c("less", "two.sided", "greater"), 
+                  selected = "less", width = "100%"
+                ),
+              ),
+              fluidRow(
+                column(
+                  width = 6,
+                  radioButtons(
+                    inputId = ns("metric"), 
+                    label = strong(span(style="color:red;", "*"), 
+                                   "Type of metric:"), 
+                    choices=c("pval", "stat"), 
+                    selected = "pval", inline = FALSE
+                  )
+                ),
+                column(
+                  width = 6,
+                  radioButtons(
+                    inputId = ns("search_method"), 
+                    label = strong(span(style="color:red;", "*"), 
+                                   "Search method:"), 
+                    choices=c("forward and backward"="both", 
+                              "forward"="forward"), 
+                    selected = "both", inline = FALSE
+                  )
+                )
+              ),
+              numericInput(
+                inputId = ns("max_size"), 
+                label = HTML(paste0(
+                  '<span style=\"color:red;\">*</span> Max meta-feature size ', 
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement="top" ',
+                  'title=\"Max possible number of features to be ',
+                  'included in the meta-feature (search will stop ',
+                  'after max is reached)\">?</a>')), 
+                min = 1, 
+                max = 100, 
+                step = 1, 
+                value = 7, 
+                width = "100%"
+              ),
+              radioButtons(
+                inputId = ns("initial_seed"), 
+                label = HTML(paste0(
+                  '<span style=\"color:red;\">*</span> Search modality ', 
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement="top" ',
+                  'title=\"\'Top N\' repeats the search starting from ',
+                  'each of the top N scoring features. \'Custom seeds\' ',
+                  'repeats the search starting from each of the custom ',
+                  'seeds. WARNING: If number of seeds specified is greater ',
+                  'than 10, this may result in a longer search time.\">?</a>')), 
+                choices = c("Top N seeds"="top_N_seeds", "Custom seeds"="search_start_seeds"), 
+                selected = "top_N_seeds", 
+                inline = TRUE
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'top_N_seeds'", 
+                                    ns("initial_seed")),
+                numericInput(
+                  inputId = ns("top_N"), 
+                  label = strong(span(style = "color:red;", "*"), 
+                                 paste0("Top N value")), 
+                  min = 1, 
+                  max = 100, 
+                  step = 1, 
+                  value = 10, 
+                  width = "100%"
+                ),
+              ),
+              conditionalPanel(
+                condition = sprintf("input['%s'] == 'search_start_seeds'", 
+                                    ns("initial_seed")),
+                textAreaInput(
+                  inputId = ns("search_start"), 
+                  label = strong(span(style = "color:red;", "*"), 
+                                 paste0('Enter a list of character strings ',
+                                        '(separated by commas) corresponding ', 
+                                        'to feature names within the ',
+                                        '\'Feature Set\' object')), 
+                  value="", 
+                  width="100%"
+                )
+              ),
+              checkboxInput(
+                inputId = ns("permutation_test"), 
+                label = strong("Perform permutation testing?"), 
+                value = FALSE
+              ), 
+              conditionalPanel(
+                condition = sprintf("input['%s'] == true", ns("permutation_test")),
+                numericInput(
+                  inputId = ns("n_perm"), 
+                  label = strong(span(style="color:red;", "*"), 
+                                 paste0("Number of permutations to perform")), 
+                  min = 1, 
+                  max = Inf,
+                  step = 1, 
+                  value = 100,
+                  width = "100%"
+                ),
+                numericInput(
+                  inputId = ns("ncores"), 
+                  label = strong(span(style="color:red;", "*"), 
+                                 paste0("Number of cores to perform parallelization for permutation testing")), 
+                  min = 1, 
+                  max = Inf, 
+                  step = 1, 
+                  value = 1,
+                  width = "100%"
+                )
+              ),
               br(),
-              p(class = "loading_text", "Running Candidate Search...")
+              uiOutput(outputId = ns("error_message")),
+              actionButton(
+                inputId = ns("run_cadra"), 
+                label = strong("RUN"), 
+                style="background: blue; color: white;"
+              ),
+              actionButton(
+                inputId = ns("stop_cadra"), 
+                label = strong("STOP"), 
+                style="background: blue; color: white;"
+              ),
+              br(), br(), br(), br(),
+              HTML(
+                paste0(
+                  "<p style='text-align: center;'>",
+                  "<span class='footer-info'>&copy; Monti Lab &diams; ",
+                  "<script>document.write(new Date().getFullYear());",
+                  "</script> &diams; All Rights Reserved.</span></p>"
+                )
+              )
             )
           ),
-          div(
-            uiOutput(outputId = ns("featureData_title"))
-          ),
-          div(
-            uiOutput(outputId = ns("inputScoreData_title")),
-            DT::dataTableOutput(outputId = ns("inputScoreData"))
-          ),
-          div(
-            uiOutput(outputId = ns("bestFeatureData_title")),
-            DT::dataTableOutput(outputId = ns("bestFeatureData"))
-          ),
-          div(
-            uiOutput(outputId = ns("meta_plot_title")),
-            plotOutput(outputId = ns("meta_plot"))
-          ),
-          div(
-            uiOutput(outputId = ns("topn_plot_title")),
-            plotOutput(outputId = ns("topn_plot"))
-          ),
-          div(
-            id = ns("permutation_loading_icon"), class = "loading_div", style="display: none;",
-            span(
-              div(class = "loader"),
-              br(),
-              p(class = "loading_text", "Running Permutation Testing...")
+          column(
+            width = 8,
+            
+            div(
+              uiOutput(outputId = ns("instructions"))
+            ),
+            div(
+              id = ns("loading_icon"), class = "loading_div", style="display: none;",
+              span(
+                div(class = "loader"),
+                br(),
+                p(class = "loading_text", "Running Candidate Search...")
+              )
+            ),
+            div(
+              uiOutput(outputId = ns("featureData_title"))
+            ),
+            div(
+              uiOutput(outputId = ns("inputScoreData_title")),
+              DT::dataTableOutput(outputId = ns("inputScoreData"))
+            ),
+            div(
+              uiOutput(outputId = ns("bestFeatureData_title")),
+              DT::dataTableOutput(outputId = ns("bestFeatureData"))
+            ),
+            div(
+              uiOutput(outputId = ns("meta_plot_title")),
+              plotOutput(outputId = ns("meta_plot"))
+            ),
+            div(
+              uiOutput(outputId = ns("topn_plot_title")),
+              plotOutput(outputId = ns("topn_plot"))
+            ),
+            div(
+              id = ns("permutation_loading_icon"), class = "loading_div", style="display: none;",
+              span(
+                div(class = "loader"),
+                br(),
+                p(class = "loading_text", "Running Permutation Testing...")
+              )
+            ),
+            div(
+              uiOutput(outputId = ns("permutation_plot_title")),
+              plotOutput(outputId = ns("permutation_plot"))
             )
-          ),
-          div(
-            uiOutput(outputId = ns("permutation_plot_title")),
-            plotOutput(outputId = ns("permutation_plot"))
           )
         ), 
+        
+        ##### RUN GSVA #######
         tabPanel(
           title = "Run GSVA",
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "running", lib = "font-awesome"),
           
-          h3("Feature Set:"),
-          selectInput(
-            inputId = ns("gsva_feature_set"),
-            label = NULL,
-            choices = eset_choices,
-            selected = eset_choices[1],
-            width = "600px"
+          column(
+            width = 4, 
+            class = "side-bar-options",
+            
+            h3("Feature Set:"),
+            selectInput(
+              inputId = ns("gsva_feature_set"),
+              label = NULL,
+              choices = c(gsva_eset_choices, "Import Data"),
+              selected = gsva_eset_choices[1],
+              width = "600px"
+            ),
+            
+            conditionalPanel(
+              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_feature_set")),
+              fileInput(
+                inputId = ns("gsva_feature_set_file"), 
+                label = strong(span(style = "color: red;", "*"), 
+                               "Feature Set file:"), 
+                width = "600px"
+              ),
+              radioButtons(
+                inputId = ns("gsva_feature_set_file_type"), 
+                label = HTML(paste0(
+                  'File type ', 
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement=',
+                  '"top" title=\"NOTE: If file is in csv format, ',
+                  'the \'Feature Set\' must be a data ',
+                  'frame including a \'Features\' column name ',
+                  'that contains unique names or labels to ',
+                  'search for best features. Otherwise, \'Feature ',
+                  'Set\' must be an object of class ExpressionSet ',
+                  'from BioBase package.\">?</a>')), 
+                choices = c(".csv", ".rds"), 
+                selected = ".csv", 
+                inline = TRUE,
+                width = "600px"
+              )
+            ),
+            
+            h3("Gene Expression Set:"),
+            selectInput(
+              inputId = ns("gsva_gene_expression"),
+              label = NULL,
+              choices = gsva_gene_expression_choices[1],
+              width = "600px"
+            ),
+            conditionalPanel(
+              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_gene_expression")),
+              fileInput(
+                inputId = ns("gsva_gene_expression_file"), 
+                label = strong(span(style = "color: red;", "*"), 
+                               "Input Score file:"), 
+                width = "600px"
+              ),
+              radioButtons(
+                inputId = ns("gsva_gene_expression_file_type"), 
+                label = HTML(paste0(
+                  'File type ', 
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement=',
+                  '"top" title=\"NOTE: If file is in csv format, ', 
+                  'then the \'Input Score\' file ',
+                  'must be a data frame with two columns ',
+                  '(Samples and Scores) and the \'Samples\' column ',
+                  'must match the colnames of \'Feature Set\'. ',
+                  'Otherwise, \'Input Score\' must be a list of  ',
+                  'vectors and have names or labels that match the ',
+                  'colnames of the \'Feature Set\'.\">?</a>')), 
+                choices = c(".csv", ".rds"), 
+                selected = ".csv", 
+                inline = TRUE,
+                width = "600px"
+              )
+            ),
+            
+            h3("Geneset:"),
+            fileInput(
+              inputId = ns("gsva_geneset_file"), 
+              label = strong(span(style = "color: red;", "*"), 
+                             "Choose a geneset file to import:"), 
+              width = "600px"
+            ),
+            radioButtons(
+              inputId = ns("gsva_geneset_file_type"), 
+              label = HTML(paste0(
+                'File type ', 
+                '<a class="tooltip-txt" data-html="true" ',
+                'data-tooltip-toggle="tooltip" data-placement=',
+                '"top" title=\"NOTE: If file is in csv format, ',
+                'the \'Feature Set\' must be a data ',
+                'frame including a \'Features\' column name ',
+                'that contains unique names or labels to ',
+                'search for best features. Otherwise, \'Feature ',
+                'Set\' must be an object of class ExpressionSet ',
+                'from BioBase package.\">?</a>')), 
+              choices = c(".csv", ".gmt"), 
+              selected = ".csv", 
+              inline = TRUE,
+              width = "600px"
+            ),
+            
+            actionButton(
+              inputId = ns("run_gsva"), 
+              label = strong("RUN"), 
+              style="background: blue; color: white;"
+            ),
+            actionButton(
+              inputId = ns("stop_gsva"), 
+              label = strong("STOP"), 
+              style="background: blue; color: white;"
+            ),
+            br(), br(), br(), br(),
+            HTML(
+              paste0(
+                "<p style='text-align: center;'>",
+                "<span class='footer-info'>&copy; Monti Lab &diams; ",
+                "<script>document.write(new Date().getFullYear());",
+                "</script> &diams; All Rights Reserved.</span></p>"
+              )
+            )
+          ),
+          
+          column(
+            width =8,
+            div(
+              uiOutput(outputId = ns("gsva_instructions"))
+            ),
+            div(
+              id = ns("gsva_loading_icon"), class = "loading_div", style="display: none;",
+              span(
+                div(class = "loader"),
+                br(),
+                p(class = "loading_text", "Running GSVA...")
+              )
+            )
           )
         ),
-        tabPanel(
-          title = "Help", 
-          style = "padding: 5px 10px 10px 10px;",
-          icon = icon(name = "question", lib = "font-awesome"),
-          
-          htmltools::includeMarkdown(file.path(system.file('shinyapp', package = "CaDrA-shiny"), "README.md"))
-          
-        ),
+        ##### DOWNLOAD DATASET #######
         tabPanel(
           title = "Dataset",
           style = "padding: 5px 10px 10px 10px;",
@@ -547,16 +705,16 @@ CaDrA_UI <- function(id)
           
           h2("Download Feature Set"),
           selectInput(
-            inputId = ns("feature_set"),
+            inputId = ns("download_feature_set"),
             label = NULL,
             choices = eset_choices,
             selected = eset_choices[1],
             width = "600px"
           ),
           selectInput(
-            inputId = ns("dataset_type"),
+            inputId = ns("download_dataset_type"),
             label = "Type of Data to Download:",
-            choices = c("Expression Set", "Sample Names", "Feature Names"),
+            choices = c("Feature Set", "Sample Names", "Feature Names"),
             width = "600px"
           ),
           div(
@@ -567,12 +725,34 @@ CaDrA_UI <- function(id)
                 'Include Input Scores ', 
                 '<a class="tooltip-txt" data-html="true" ',
                 'data-tooltip-toggle="tooltip" data-placement="top" ',
-                'title=\"Whether to download \'Input Scores\' associated with \'Feature Set\' as well\">?</a>')),
+                'title=\"Whether to download \'Input Scores\' that is associated with \'Feature Set\'\">?</a>')),
               value = FALSE
             )
           ),
-          downloadButton(outputId = ns("download_data"), label="Download", icon=icon("download"))
+          div(
+            id = ns("gene_expression_dl"), style="display: none;",
+            checkboxInput(
+              inputId = ns("include_gene_expression"),
+              label = HTML(paste0(
+                'Include Gene Expression Set ', 
+                '<a class="tooltip-txt" data-html="true" ',
+                'data-tooltip-toggle="tooltip" data-placement="top" ',
+                'title=\"Whether to download \'Gene Expression Set\' that is associated with \'Feature Set\'\">?</a>')),
+              value = FALSE
+            )
+          ),
+          downloadButton(outputId = ns("download_data"), label="Download", icon=icon("download"), style="background: blue; color: white;")
         ),
+        ##### HELP TAB #######
+        tabPanel(
+          title = "Help", 
+          style = "padding: 5px 10px 10px 10px;",
+          icon = icon(name = "question", lib = "font-awesome"),
+          
+          htmltools::includeMarkdown(file.path(system.file('shinyapp', package = "CaDrA-shiny"), "README.md"))
+          
+        ),
+        ##### PUBLICATION TAB #######
         tabPanel(
           title = "Publication", 
           style = "padding: 5px 10px 10px 10px;",
@@ -598,6 +778,7 @@ CaDrA_UI <- function(id)
             )
           )
         ),
+        ##### CONTRACT TAB #######
         tabPanel(
           title = "Contact Us", 
           style = "padding: 5px 10px 10px 10px;",
@@ -643,7 +824,7 @@ CaDrA_UI <- function(id)
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #'  
-#' @import shiny htmltools Biobase parallel
+#' @import shiny htmltools Biobase parallel GSEABase
 #' @importFrom tibble column_to_rownames rownames_to_column
 #' @importFrom dplyr mutate_all
 #' @importFrom stats rnorm 
@@ -658,15 +839,16 @@ CaDrA_Server <- function(id){
     id,
     function(input, output, session) {
 
-      # Combine extdata with global expression set and scores dataset if it was provided
-      extdata <- get_extdata(dataset_choices, score_choices)
+      ## Exact extdata ####
+      extdata <- get_extdata(dataset_choices, score_choices, gene_expression_choices)
       eset_choices <- extdata[["eset_choices"]] %>% unlist()
       input_score_choices <- extdata[["input_score_choices"]] %>% unlist()
+      gene_expression_choices <- extdata[["gene_expression_choices"]] %>% unlist()
       
-      # Detect number of cores on machine
+      ## Detect number of cores on machine ####
       num_of_cores <- detectCores()
 
-      # Create reactive values
+      ## Create reactive values for CaDrA search ####
       rVal <- reactiveValues()
       rVal$candidate_search_process <- NULL
       rVal$candidate_search_obs <- NULL
@@ -678,7 +860,16 @@ CaDrA_Server <- function(id){
       instructions_message <- reactiveVal(TRUE)
       error_message <- reactiveVal()
       
-      # Output instructions message
+      ## Create reactive values for CaDrA search ####
+      gVal <- reactiveValues()
+      gVal$gsva_search_process <- NULL
+      gVal$gsva_search_obs <- NULL
+      gsva_error_message <- reactiveVal()
+      gsva_instructions_message <- reactiveVal(TRUE)
+      gsva_genesetcollection <- reactiveVal()
+      gsva_genesetname <- reactiveVal()
+      
+      ## Output instructions message ####
       output$instructions <- renderUI({
         
         req(instructions_message())
@@ -695,17 +886,34 @@ CaDrA_Server <- function(id){
           )
         )
       })
-      # update eset and score choices
+      
+      ## Output instructions message for running GSVA####
+      output$gsva_instructions <- renderUI({
+        
+        req(gsva_instructions_message())
+        
+        div(
+          h2("Instructions"),
+          
+          tags$pre(
+            tags$code(
+              "Select the `GSVA options` on the left and Click 'RUN' at the bottom"
+            )
+          )
+        )
+      })
+      
+      ## Updates feature set and input score choices for running CaDrA search ####
       observeEvent(input$dataset, {
         
         selected_dataset <- isolate({ input$dataset }) 
         
         if(selected_dataset != "Import Data"){
           
-          selection <- input_score_choices[which(eset_choices == selected_dataset)] %>% unlist()
+          input_score_selection <- input_score_choices[which(eset_choices == selected_dataset)] %>% unlist()
           
-          if(!is.na(names(selection))){
-            updateSelectInput(session, inputId = "scores", choices = c(selection, "Import Data"), selected = selection[1])
+          if(!is.na(input_score_selection) & input_score_selection != ""){
+            updateSelectInput(session, inputId = "scores", choices = c(input_score_selection, "Import Data"), selected = input_score_selection[1])
           }else{
             updateSelectInput(session, inputId = "scores", choices = "Import Data")
           }
@@ -727,37 +935,73 @@ CaDrA_Server <- function(id){
         }
         
       })
-      # observe dataset choices
-      observeEvent(input$feature_set, {
+      ## Updates feature set and gene expression set choices for running GSVA ####
+      observeEvent(input$gsva_feature_set, {
+        
+        selected_dataset <- isolate({ input$gsva_feature_set }) 
+        
+        if(selected_dataset != "Import Data"){
+          
+          gene_expression_selection <- gene_expression_choices[which(eset_choices == selected_dataset)] %>% unlist()
+          
+          if(!is.na(gene_expression_selection) & gene_expression_selection != ""){
+            updateSelectInput(session, inputId = "gsva_gene_expression", choices = c(gene_expression_selection, "Import Data"), selected = gene_expression_selection[1])
+          }else{
+            updateSelectInput(session, inputId = "gsva_gene_expression", choices = "Import Data")
+          }
+          
+        }else{
+          
+          updateSelectInput(session, inputId = "gsva_gene_expression", choices = "Import Data")
+          
+        }
+        
+      })
+      ## Updates feature set, input score, and gene expression set choices for downloading dataset ####
+      observeEvent(input$download_feature_set, {
         
         ns <- session$ns
         
-        selected_dataset <- isolate({ input$feature_set }) 
+        selected_dataset <- isolate({ input$download_feature_set }) 
         
-        selection <- input_score_choices[which(eset_choices == selected_dataset)] %>% unlist()
+        input_score_selection <- input_score_choices[which(eset_choices == selected_dataset)] %>% unlist()
         
-        if(!is.na(names(selection))){
-          ## Show loading icon ####
+        gene_expression_selection <- gene_expression_choices[which(eset_choices == selected_dataset)] %>% unlist()
+        
+        print(selected_dataset); print(input_score_selection); print(gene_expression_selection);
+        
+        if(!is.na(input_score_selection) & input_score_selection != ""){
+          ## Show input score checkbox
           session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("input_score_dl"), display="yes"))
           updateCheckboxInput(session, inputId = "include_scores", value=TRUE)
         }else{
-          ## Hide loading icon ####
+          ## Hide input score checkbox
           session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("input_score_dl"), display="no"))
           updateCheckboxInput(session, inputId = "include_scores", value=FALSE)
         }
+        
+        if(!is.na(gene_expression_selection) & gene_expression_selection != ""){
+          ## Show gene expression checkbox
+          session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("gene_expression_dl"), display="yes"))
+          updateCheckboxInput(session, inputId = "include_gene_expression", value=TRUE)
+        }else{
+          ## Hide gene expression checkbox
+          session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("gene_expression_dl"), display="no"))
+          updateCheckboxInput(session, inputId = "include_gene_expression", value=FALSE)
+        }
 
       })
-      # Download dataset handler
+      ## Download dataset handler ####
       output$download_data <- downloadHandler(
         
         filename = function() {
           
-          dataset <- isolate({ input$feature_set })
-          type <- isolate({ input$dataset_type })
+          dataset <- isolate({ input$download_feature_set })
+          type <- isolate({ input$download_dataset_type })
           filename <- names(eset_choices[which(eset_choices == dataset)])
           
-          if(type == "Expression Set"){
-            paste0(filename, "-Expression Set", ".rds")
+          if(type == "Feature Set"){
+            paste0(filename, "-Feature Set", ".rds")
           }else if(type == "Sample Names"){
             paste0(filename, "-Sample Names", ".rds")
           }else if(type == "Feature Names"){
@@ -768,21 +1012,24 @@ CaDrA_Server <- function(id){
         
         content = function(file) {
           
-          dataset <- isolate({ input$feature_set })
-          type <- isolate({ input$dataset_type })
+          dataset <- isolate({ input$download_feature_set })
+          type <- isolate({ input$download_dataset_type })
           include_scores <- isolate({ input$include_scores })
+          include_gene_expression <- isolate({ input$include_gene_expression })
+          
+          print(dataset); print(type); print(include_scores); print(include_gene_expression); 
           
           if(tools::file_ext(dataset) == "rda" | tools::file_ext(dataset) == "RData"){
             envir_name <- load(dataset)
             ES <- get(envir_name)
           }else{
-            ES <- readRDS(dataset)
+            ES <- readRDS(system.file("extdata", "eset", dataset, package = "CaDrA-shiny"))
           }
 
           dl_data <- list()
           
-          if(type == "Expression Set"){
-            dl_data <- c(dl_data, ES=ES)
+          if(type == "Feature Set"){
+            dl_data <- c(dl_data, list(feature_set=ES))
           }else if(type == "Sample Names"){
             dl_data <- c(dl_data, list(sample_names=colnames(ES)))
           }else if(type == "Feature Names"){
@@ -797,10 +1044,27 @@ CaDrA_Server <- function(id){
               envir_name <- load(scores)
               input_score <- get(envir_name)
             }else{
-              input_score <- readRDS(scores)
+              input_score <- readRDS(system.file("extdata", "input_score", scores, package = "CaDrA-shiny"))
             }
             
-            dl_data <- c(dl_data, input_score=list(input_score))
+            dl_data <- c(dl_data, list(input_score=input_score))
+            
+          }
+          
+          if(include_gene_expression){
+            
+            geset <- gene_expression_choices[which(eset_choices == dataset)] %>% unlist()
+            
+            print(geset)
+            
+            if(tools::file_ext(geset) == "rda" | tools::file_ext(geset) == "RData"){
+              envir_name <- load(geset)
+              gene_expression <- get(envir_name)
+            }else{
+              gene_expression <- readRDS(system.file("extdata", "gene_expression", geset, package = "CaDrA-shiny"))
+            }
+            
+            dl_data <- c(dl_data, list(gene_expression=gene_expression))
             
           }
 
@@ -809,7 +1073,7 @@ CaDrA_Server <- function(id){
         }
       )
       #
-      # Start the process
+      # Start CaDrA Search ####
       #    
       observeEvent(input$run_cadra, {
         
@@ -826,7 +1090,7 @@ CaDrA_Server <- function(id){
         instructions_message(FALSE)
         error_message(NULL)
         
-        ## Show loading icon ####
+        ## Show cadra loading icon 
         session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("loading_icon"), display="yes"))
         
         dataset <- isolate({ input$dataset })
@@ -901,7 +1165,7 @@ CaDrA_Server <- function(id){
               envir_name <- load(dataset)
               ES <- get(envir_name)
             }else{
-              ES <- readRDS(dataset)
+              ES <- readRDS(system.file("extdata", "eset", dataset, package = "CaDrA-shiny"))
             }
           
         }
@@ -948,7 +1212,7 @@ CaDrA_Server <- function(id){
             envir_name <- load(scores)
             input_score <- get(envir_name)
           }else{
-            input_score <- readRDS(scores)
+            input_score <- readRDS(system.file("extdata", "input_score", scores, package = "CaDrA-shiny"))
           }
           
         }
@@ -1172,7 +1436,7 @@ CaDrA_Server <- function(id){
         
         if(permutation == TRUE){
           
-          ## show permutation loading icon ####
+          ## show permutation loading icon 
           session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("permutation_loading_icon"), display="yes"))
 
           n_perm <- as.integer(input$n_perm)
@@ -1270,7 +1534,7 @@ CaDrA_Server <- function(id){
         
       })
       #
-      # Stop the process
+      # Stop CaDrA Search ####
       #
       observeEvent(input$stop_cadra, {
         
@@ -1300,10 +1564,10 @@ CaDrA_Server <- function(id){
         
         error_message("Your process has been interrupted")
         
-        ## Hide loading icon ####
+        ## Hide cadra loading icon 
         session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("loading_icon"), display="no"))
 
-        ## Hide permutation loading icon ####
+        ## Hide permutation loading icon 
         session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("permutation_loading_icon"), display="no"))
         
         # Show instruction message
@@ -1311,7 +1575,7 @@ CaDrA_Server <- function(id){
         
       }, ignoreInit = TRUE) 
       #
-      # Handle candidate search process event
+      # Handle CaDrA search process event ####
       #
       observeEvent(rVal$candidate_search_process, {
         rVal$candidate_search_obs <- observe({
@@ -1323,14 +1587,14 @@ CaDrA_Server <- function(id){
               rVal$candidate_search_result <- result[[1]]
               rVal$candidate_search_obs$destroy()
               rVal$candidate_search_process <- NULL
-              ## Hide loading icon ####
+              ## Hide cadra loading icon 
               session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("loading_icon"), display="no"))
             }
           })
         })
       }, ignoreInit = TRUE)
       #
-      # Handle cadra permutation process event
+      # Handle CaDrA permutation process event ####
       #      
       observeEvent(rVal$cadra_permutation_process, {
         rVal$cadra_permutation_obs <- observe({
@@ -1342,14 +1606,256 @@ CaDrA_Server <- function(id){
               rVal$cadra_permutation_result <- result[[1]]
               rVal$cadra_permutation_obs$destroy()
               rVal$cadra_permutation_process <- NULL
-              ## Hide permutation loading icon ####
+              ## Hide permutation loading icon 
               session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("permutation_loading_icon"), display="no"))
             }
           })
         })
       })
       #
-      # Render messages
+      # Start GSVA Analysis ####
+      #    
+      observeEvent(input$run_gsva, {
+        
+        ns <- session$ns
+        
+        if(!is.null(gVal$gsva_process))
+          return()
+        
+        gVal$gsva_result <- NULL
+        gsva_instructions_message(FALSE)
+        gsva_error_message(NULL)
+        
+        fset <- isolate({ input$gsva_feature_set })
+        geset <- isolate({ input$gsva_gene_expression })
+
+        print(fset)
+        print(geset)
+        
+        genesetcollection <- list() 
+        genesetname <- c()
+        
+        ## Show gsva loading icon ####
+        session$sendCustomMessage(type = "ToggleOperation", message = list(id=ns("gsva_loading_icon"), display="yes"))
+        
+        # Check feature set ####
+        if(fset == "Import Data"){
+          
+          inputfile <- input$gsva_feature_set_file;
+          inputtype <- input$gsva_feature_set_file_type;
+          
+          if(is.null(inputfile)){
+            gsva_error_message("Please choose a 'Feature Set' file to import.")
+            return(NULL)
+          }
+          
+          csv_ext <-  grep(toupper(".csv"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+          rds_ext <-  grep(toupper(".rds"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+          
+          if(inputtype %in% ".csv" & length(csv_ext) > 0){
+            
+            # read in the Eset file
+            Eset <- read.csv(inputfile$datapath, header=TRUE, check.names=FALSE) 
+            
+            if("Features" %in% colnames(Eset)){
+              
+              Eset <- Eset %>% tibble::column_to_rownames(var="Features") %>% 
+                dplyr::mutate_all(as.numeric)
+              
+              # convert Eset to matrix
+              Eset <- as.matrix(Eset, nrow=nrow(Eset), ncol=ncol(Eset), 
+                                byrow=TRUE, 
+                                dimnames=list(rownames(Eset), colnames(Eset)))
+              
+              #create phenotypic data
+              pData <- data.frame(Samples = colnames(Eset), stringsAsFactors=TRUE)
+              rownames(pData) <- pData$Samples
+              phenoData <- methods::new("AnnotatedDataFrame", data=pData)
+              
+              #create feature data
+              fData <- data.frame(Features = rownames(Eset), stringsAsFactors=TRUE)
+              rownames(fData) <- fData$Features
+              featureData <-  methods::new("AnnotatedDataFrame", data=fData)
+              
+              # Create feature set
+              feature_set <- Biobase::ExpressionSet(
+                assayData=Eset, 
+                phenoData=phenoData, 
+                featureData=featureData
+              )
+              
+            }else{
+              
+              gsva_error_message("The 'Feature Set' file must contain a 'Features' column name that contains unique names or labels to search for best features.")
+              return(NULL)
+              
+            }
+            
+          }else if (inputtype %in% ".rds" & length(rds_ext) > 0){
+            
+            feature_set <- readRDS(inputfile$datapath)
+            
+          }else{
+            
+            gsva_error_message("Incorrect file format. Please check your 'Feature Set' file again.")
+            return(NULL)
+            
+          }
+          
+        }else{
+          
+          if(tools::file_ext(fset) == "rda" | tools::file_ext(fset) == "RData"){
+            envir_name <- load(fset)
+            feature_set <- get(envir_name)
+          }else{
+            feature_set <- readRDS(system.file("extdata", "eset", fset, package = "CaDrA-shiny"))
+          }
+          
+        }
+        
+        # Check gene expression set ####
+        if(geset == "Import Data"){
+          
+          inputfile <- input$gsva_gene_expression_file;
+          inputtype <- input$gsva_gene_expression_file_type;
+          
+          if(is.null(inputfile)){
+            gsva_error_message("Please choose a 'gene expression' file to import.")
+            return(NULL)
+          }
+          
+          csv_ext <-  grep(toupper(".csv"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+          rds_ext <-  grep(toupper(".rds"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+          
+          if(inputtype %in% ".csv" & length(csv_ext) > 0) {
+            
+            Eset <- read.csv(inputfile$datapath, header = TRUE, check.names = FALSE)
+            
+            if("Features" %in% colnames(Eset)){
+              
+              Eset <- Eset %>% tibble::column_to_rownames(var="Features") %>% 
+                dplyr::mutate_all(as.numeric)
+              
+              # convert Eset to matrix
+              Eset <- as.matrix(Eset, nrow=nrow(Eset), ncol=ncol(Eset), 
+                                byrow=TRUE, 
+                                dimnames=list(rownames(Eset), colnames(Eset)))
+              
+              #create phenotypic data
+              pData <- data.frame(Samples = colnames(Eset), stringsAsFactors=TRUE)
+              rownames(pData) <- pData$Samples
+              phenoData <- methods::new("AnnotatedDataFrame", data=pData)
+              
+              #create feature data
+              fData <- data.frame(Features = rownames(Eset), stringsAsFactors=TRUE)
+              rownames(fData) <- fData$Features
+              featureData <-  methods::new("AnnotatedDataFrame", data=fData)
+              
+              # Create feature set
+              gene_expression <- Biobase::ExpressionSet(
+                assayData=Eset, 
+                phenoData=phenoData, 
+                featureData=featureData
+              )
+              
+            }else{
+              
+              gsva_error_message("The 'Feature Set' file must contain a 'Features' column name that contains unique names or labels to search for best features.")
+              return(NULL)
+              
+            }
+            
+          } else if (inputtype %in% ".rds" & length(rds_ext) > 0){
+            
+            gene_expression <- readRDS(inputfile$datapath) 
+            
+          } else {
+            
+            gsva_error_message("Incorrect file format. Please check your 'Gene Expression' file again.")
+            return(NULL)
+            
+          }
+          
+        }else{
+          
+          if(tools::file_ext(geset) == "rda" | tools::file_ext(geset) == "RData"){
+            envir_name <- load(geset)
+            gene_expression <- get(envir_name)
+          }else{
+            gene_expression <- readRDS(system.file("extdata", "gene_expression", geset, package = "CaDrA-shiny"))
+          }
+          
+        }
+        
+        ## Check geneset list ####
+        inputfile <- input$gsva_geneset_file;
+        inputtype <- input$gsva_geneset_file_type;
+        
+        if(is.null(inputfile)){
+          gsva_error_message("Please choose a 'geneset' file to import.")
+          return(NULL)
+        }
+        
+        csv_ext <-  grep(toupper(".csv"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+        gmt_ext <-  grep(toupper(".gmt"), toupper(substr(inputfile$datapath, nchar(inputfile$datapath)-4, nchar(inputfile$datapath))), fixed = TRUE)
+        
+        if(inputtype %in% ".csv" & length(csv_ext) > 0) {
+
+          genelist <- read.csv(inputfile$datapath, header = TRUE, check.names = FALSE)
+
+          # Getting differential expression
+          for(u in 1:ncol(genelist)){
+            #u=1;
+            genesetname <- c(names, colnames(genelist)[u])
+            genesetcollection <- c(genesetcollection, list(genelist=genelist[,u]))
+            names(genesetcollection) <- genesetname
+          }
+
+        } else if (inputtype %in% ".gmt" & length(gmt_ext) > 0){
+
+          genesetcollection <- GSEABase::getGmt(inputfile$datapath)
+          genesetname <- names(genesetcollection)
+
+        } else {
+
+          gsva_error_message("Incorrect file format. Please check your 'Geneset' file again.")
+          return(NULL)
+
+        }
+        
+        # make sure the samples match between expression and feature set
+        matching_samples <- colnames(feature_set)[which(colnames(feature_set) %in% colnames(gene_expression))]
+        gene_expression <- gene_expression[, matching_samples]
+        
+        # run the gsva analysis
+        gVal$gsva_search_process <- parallel::mcparallel({
+          
+          gsva(expr=gene_expression, gset.idx.list=genesetcollection, method="gsva", mx.diff=TRUE)
+          
+          # Create phenotypic data
+          pData <- data.frame(Samples=colnames(gsva_es), stringsAsFactors=TRUE)
+          rownames(pData) <- pData$Samples
+          phenoData <- new("AnnotatedDataFrame", data=pData)
+          
+          #create feature data
+          fData <- data.frame(Geneset=rownames(gsva_es), stringsAsFactors = TRUE)
+          rownames(fData) <- fData$Geneset
+          featureData <- new("AnnotatedDataFrame", data=fData)
+          
+          # Create expression set
+          gsva_eset <- ExpressionSet(assayData=exprs(gsva_es), phenoData=phenoData, featureData=featureData)
+          
+          return(gsva_eset)
+
+        })
+
+        gsva_error_message("NONE")
+        
+      })
+      
+      
+      #
+      # Render error messages
       #
       output$error_message <- renderUI({
 
@@ -1374,6 +1880,7 @@ CaDrA_Server <- function(id){
         }
         
       })
+      ## Feature Set Tittle for CaDrA Search
       output$featureData_title <- renderUI({
 
         req(rVal$candidate_search_result, feature_set_description())
@@ -1396,6 +1903,7 @@ CaDrA_Server <- function(id){
           downloadButton(outputId = ns("download_featureset"), label="Download Filtered Feature Set")
         )
       })
+      ## Download Feature Set
       output$download_featureset <- downloadHandler(
         filename = function() {
           paste0("CaDrA-Filtered-Features-Eset.csv")
@@ -1405,10 +1913,12 @@ CaDrA_Server <- function(id){
           write.csv(Eset_table, file, row.names=FALSE)
         }
       )
+      ## Title for Best Meta-Feature
       output$bestFeatureData_title <- renderUI({
         req(rVal$candidate_search_result)
         h2("Best Meta-Feature Eset")
       })
+      ## Output Best Meta-Feature Eset
       output$bestFeatureData <- DT::renderDataTable({
 
         req(rVal$candidate_search_result)
@@ -1456,6 +1966,7 @@ CaDrA_Server <- function(id){
           )
         return(table)
       })
+      ## Shows Best Meta-Feature Dialog
       observeEvent(input$Download_Eset, {
 
         ns <- session$ns
@@ -1471,7 +1982,7 @@ CaDrA_Server <- function(id){
           )
         )
       })
-      ## Download CSV File ####
+      ## Download Feature Set in CSV format ####
       output$downloadEsetCSV <- downloadHandler(
 
         filename = function() {
@@ -1485,7 +1996,7 @@ CaDrA_Server <- function(id){
 
         }
       )
-      ## Download RDS File ####
+      ## Download Best Meta-Feature in RDS format ####
       output$downloadEsetRDS <- downloadHandler(
 
         filename = function() {
@@ -1500,6 +2011,7 @@ CaDrA_Server <- function(id){
           saveRDS(Eset_table, file)
         }
       )
+      ## Title for Input Scores
       output$inputScoreData_title <- renderUI({
 
         req(rVal$candidate_search_result, input_score_data())
@@ -1515,6 +2027,7 @@ CaDrA_Server <- function(id){
         h2("Observed Input Scores:", title)
         
       })
+      ## Output Input Scores 
       output$inputScoreData <- DT::renderDataTable({
 
         req(rVal$candidate_search_result, input_score_data())
@@ -1561,6 +2074,7 @@ CaDrA_Server <- function(id){
           )
         return(table)
       })
+      ## Show input score dialog
       observeEvent(input$Download_InputScore, {
 
         ns <- session$ns
@@ -1576,7 +2090,7 @@ CaDrA_Server <- function(id){
           )
         )
       })
-      ## Download CSV File ####
+      ## Download input scores in CSV format ####
       output$downloadScoreCSV <- downloadHandler(
 
         filename = function() {
@@ -1595,7 +2109,7 @@ CaDrA_Server <- function(id){
           write.csv(score_table, file, row.names=FALSE)
         }
       )
-      ## Download RDS File ####
+      ## Download input score in RDS format ####
       output$downloadScoreRDS <- downloadHandler(
 
         filename = function() {
@@ -1613,12 +2127,14 @@ CaDrA_Server <- function(id){
           saveRDS(score_table, file)
         }
       )
+      ## Title for meta plot
       output$meta_plot_title <- renderUI({
 
         req(rVal$candidate_search_result)
 
         h2("Best Meta-Feature Plot")
       })
+      # Output meta-feature plot
       output$meta_plot <- renderPlot({
 
         req(rVal$candidate_search_result)
@@ -1628,6 +2144,7 @@ CaDrA_Server <- function(id){
 
         CaDrA::meta_plot(topn_best_list = topn_best_meta)
       })
+      # Title for topn plot
       output$topn_plot_title <- renderUI({
 
         req(rVal$candidate_search_result)
@@ -1644,6 +2161,7 @@ CaDrA_Server <- function(id){
           h2("Top N Overlapping Heatmap")
         }
       })
+      ## Output Topn plot
       output$topn_plot <- renderPlot({
 
         req(rVal$candidate_search_result)
@@ -1652,12 +2170,14 @@ CaDrA_Server <- function(id){
 
         CaDrA::topn_plot(topn_res)
       })
+      ## title for permutation plot
       output$permutation_plot_title <- renderUI({
 
         req(rVal$cadra_permutation_result)
 
         h2("Permutation-Based Testing")
       })
+      ## Output permutation plot
       output$permutation_plot <- renderPlot({
 
         req(rVal$cadra_permutation_result)
