@@ -4,7 +4,21 @@
 \alias{CaDrA_App}
 \title{Run both Shiny UI and Server Modules}
 \usage{
-CaDrA_App()
+CaDrA_App(id, datalist_file)
+}
+\arguments{
+\item{id}{A unique namespace identifier}
+
+\item{datalist_file}{A path to data file (in cvs or rds format) listing 
+the absolute paths of necessary files to start the app. 
+
+The datalist must contains the following variables:
+'feature_set_names' (required), 'feature_set_paths' (repuired), 
+'input_score_names' (required), input_score_paths' (required), 
+'gene_expression_names' (optional), 'gene_expression_paths' (optional)
+
+Default is NULL. If NULL, the app will start with DEFAULT dataset included 
+in CaDrA package.}
 }
 \value{
 Shiny application
@@ -17,10 +31,12 @@ Run both Shiny UI and Server Modules
 # Load R library
 library(shiny)
 
+id = "myapp"
+
 # Create a Shiny app
-app <- CaDrA_App()
+app <- CaDrA-shiny::CaDrA_App(id = id)
 
 # Launch and deploy Shiny app (NOT RUN)
 # shiny::runApp(app, host='0.0.0.0', port=3838)
- 
+
 }
