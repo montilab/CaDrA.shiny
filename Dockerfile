@@ -25,10 +25,9 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     tcl8.6-dev \
     tk8.6-dev 
     
-# Install the required bioconductor packages to run CaDrA
+# Install required bioconductor packages to run CaDrA
 RUN R -e "BiocManager::install('Biobase')"
 RUN R -e "BiocManager::install('GSVA')"
-RUN R -e "BiocManager::install('GSVABase')"
 RUN R -e "BiocManager::install('SummarizedExperiment')"
 
 # Install required R packages to run CaDrA
@@ -40,10 +39,10 @@ RUN R -e "install.packages('ppcor', dependencies=TRUE, repos='http://cran.rstudi
 RUN R -e "install.packages('R.cache', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('reshape2', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-# Install all functions in CaDrA package no dependencies (already done so previously)
-RUN R -e "devtools::install_github('montilab/CaDrA', dependencies=FALSE)"
+# Install CaDrA package with all dependencies already installed previously
+RUN R -e "devtools::install_github('montilab/CaDrA', dependencies=TRUE)"
 
-# Install additional packages for shiny applications
+# Install additional packages to run CaDrA-shiny applications
 RUN R -e "install.packages('shinyBS', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinyjs', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinycssloaders', dependencies=TRUE, repos='http://cran.rstudio.com/')"
@@ -52,9 +51,10 @@ RUN R -e "install.packages('plotly', dependencies=TRUE, repos='http://cran.rstud
 RUN R -e "install.packages('heatmaply', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('future', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
-# Install packages for plumber-api tp docker images
+# Install additional packages to run CaDrA-Plumber-API
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('plumber', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('jsonlite', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Make ShinyApp available at port 3838
 EXPOSE 3838

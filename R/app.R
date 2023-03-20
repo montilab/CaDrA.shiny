@@ -897,7 +897,7 @@ CaDrA_UI <- function(id, datalist_file=NULL){
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "question", lib = "font-awesome"),
 
-          htmltools::includeMarkdown(file.path(system.file('shinyapp', package = "CaDrA-shiny"), "README.md"))
+          htmltools::includeMarkdown(file.path(system.file("README.md", package = "CaDrA-shiny")))
 
         ),
 
@@ -987,7 +987,7 @@ CaDrA_UI <- function(id, datalist_file=NULL){
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #'  
-#' @import CaDrA DT GSVA GSVABase htmltools methods parallel SummarizedExperiment tibble tools utils
+#' @import CaDrA DT GSVA GSEABase htmltools methods parallel SummarizedExperiment tibble tools utils
 #' @rawNamespace import(dplyr, except = c(union, intersect, setdiff))
 #' 
 #' @export 

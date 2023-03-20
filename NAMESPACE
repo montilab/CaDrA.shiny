@@ -3,12 +3,14 @@
 export("%>%")
 export(CaDrA_App)
 export(CaDrA_Server)
+export(CaDrA_UI)
 import(CaDrA)
 import(DT)
-import(GSVA, except = c(union, intersect, setdiff))
-
+import(GSEABase)
+import(GSVA)
 import(SummarizedExperiment)
-import(dplyr)
+import(dplyr, except = c(union, intersect, setdiff))
+
 import(htmltools)
 import(methods)
 import(parallel)

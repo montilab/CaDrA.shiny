@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  cadra:
+    image: montilab/cadra:2.0.0
+    container_name: cadra
+    restart: always
+    ports:
+      - 4567:3838
+    volumes:
+      - /Users/reinachau/github/CaDrA-shiny:/srv/shiny-server
+      - /Users/reinachau/github/CaDrA-shiny/inst/shinyapp/shiny-server.sh:/usr/bin/shiny-server.sh
+
+  cadra_api:
+    image: montilab/cadra:2.0.0
+    container_name: cadra_api
+    restart: always
+    ports:
+      - 5678:3838
+    volumes:
+      - /Users/reinachau/github/CaDrA-shiny:/srv/shiny-server
+      - /Users/reinachau/github/CaDrA-shiny/inst/plumber/shiny-server.sh:/usr/bin/shiny-server.sh
