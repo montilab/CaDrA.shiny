@@ -1,22 +1,54 @@
 version: '3.9'
+  
+x-cadra-shiny:
+  &cadra-shiny
+  montilab/cadra-shiny:1.0.0
+  
+x-cadra-shiny-code:
+  &cadra-shiny-code
+  type: bind
+  source: /Users/reinachau/github/CaDrA-shiny
+  target: /srv/shiny-server
 
+x-cadra-shiny-server:
+  &cadra-shiny-server
+  type: bind
+  source: /Users/reinachau/github/CaDrA-shiny/inst/shinyapp/shiny-server.sh
+  target: /usr/bin/shiny-server.sh 
+  
+x-cadra-api-server:
+  &cadra-api-server
+  type: bind
+  source: /Users/reinachau/github/CaDrA-shiny/inst/plumber/shiny-server.sh
+  target: /usr/bin/shiny-server.sh 
+  
 services:
   cadra:
-    image: montilab/cadra:2.0.0
+    image: *cadra-shiny
     container_name: cadra
     restart: always
+    networks:
+      - frontend
     ports:
       - 4567:3838
     volumes:
-      - /Users/reinachau/github/CaDrA-shiny:/srv/shiny-server
-      - /Users/reinachau/github/CaDrA-shiny/inst/shinyapp/shiny-server.sh:/usr/bin/shiny-server.sh
+      - *cadra-shiny-code
+      - *cadra-shiny-server
 
   cadra_api:
-    image: montilab/cadra:2.0.0
+    image: *cadra-shiny
     container_name: cadra_api
     restart: always
+    networks:
+      - frontend    
     ports:
       - 5678:3838
     volumes:
-      - /Users/reinachau/github/CaDrA-shiny:/srv/shiny-server
-      - /Users/reinachau/github/CaDrA-shiny/inst/plumber/shiny-server.sh:/usr/bin/shiny-server.sh
+      - *cadra-shiny-code
+      - *cadra-api-server
+
+networks:
+  frontend: 
+    name: frontend
+  
+      

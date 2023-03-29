@@ -585,18 +585,21 @@ CaDrA_UI <- function(id, datalist_file=NULL){
             ),
 
             br(), br(), br(), br(),
-
+            
             HTML(
               paste0(
                 "<div style='position: absolute; width: 98%; bottom: 0px;'>",
                 "<p style='text-align: center;'>",
                 "<span class='footer-info'>&copy; Monti Lab &diams; ",
-                "<script>document.write(new Date().getFullYear());",
-                "</script> &diams; All Rights Reserved.</span></p></div>"
+                "<script>document.write(new Date().getFullYear());</script> ",
+                "&diams; All Rights Reserved.",
+                "</span>", 
+                "</p>",
+                "</div>"
               )
             )
           ),
-
+          
           ##### RUN CADRA #######
           column(
             width = 8,
@@ -911,14 +914,14 @@ CaDrA_UI <- function(id, datalist_file=NULL){
           p("Kartha VK, Kern JG, Sebastiani P, Zhang L, Varelas X, Monti S (2019) CaDrA: A computational framework for performing candidate driver analyses using genomic features.", a(href="https://www.frontiersin.org/articles/10.3389/fgene.2019.00121/full", "{Frontiers in Genetics}")),
 
           h2("Github"),
-          p("Kartha V, Monti S, Chau R, Bulekova K (2022). CaDrA: Candidate Driver Analysis. R package version 2.0.0, ", a(target="_blank", href="https://github.com/montilab/CaDrA/", "https://github.com/montilab/CaDrA/"), "."),
+          p("Chau R, Bulekova K, Kartha V, Monti S (2022). CaDrA: Candidate Driver Analysis. R package version 2.0.0, ", a(target="_blank", href="https://github.com/montilab/CaDrA/", "https://github.com/montilab/CaDrA/"), "."),
 
           tags$pre(
             tags$code(
               "
               @Manual{,
                 title = {CaDrA: Candidate Driver Analysis},
-                author = {Vinay Kartha and Stefano Monti and Reina Chau and Katia Bulekova},
+                author = {Reina Chau and Katia Bulekova and Vinay Kartha and Stefano Monti},
                 year = {2022},
                 note = {R package version 2.0.0},
                 url = {https://github.com/montilab/CaDrA/},
@@ -942,7 +945,26 @@ CaDrA_UI <- function(id, datalist_file=NULL){
 
           p(a(href="mailto:vkartha@bu.edu", strong("Vinay Kartha")), em(". Author.")),
 
-          p(a(href="mailto:smonti@bu.edu", strong("Stefano Monti")), em(". Author."))
+          p(a(href="mailto:smonti@bu.edu", strong("Stefano Monti")), em(". Author.")),
+          
+          h2("Acknowledgements"),
+          
+          HTML(
+            paste0(
+              "<p>",
+              "This project is funded in part by the ",
+              "<a href='https://www.nidcr.nih.gov/'>NIH/NIDCR</a> ",
+              "(3R01DE030350-01A1S1, R01DE031831), ", 
+              "<a href='https://findthecausebcf.org'>", 
+              "Find the Cause Breast Cancer Foundation</a>, and ", 
+              "<a href='https://findthecausebcf.org'>NIH/NIA</a> ",
+              "(UH3 AG064704).",
+              "</p>"
+            )
+          ),
+          
+          br()
+          
         )
       )
     )

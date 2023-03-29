@@ -1,6 +1,9 @@
 
+ARG CADRA_VERSION
+ARG CADRA_VERSION=${CADRA_VERSION:-2.0.0}
+
 # Get shiny+tidyverse+devtools packages from rocker image
-FROM rocker/shiny-verse:4.2.2
+FROM montilab/cadra:${CADRA_VERSION}
 
 # Set up the maintainer information
 MAINTAINER Reina Chau (lilychau999@gmail.com)
@@ -24,23 +27,6 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     liblzma-dev \
     tcl8.6-dev \
     tk8.6-dev 
-    
-# Install required bioconductor packages to run CaDrA
-RUN R -e "BiocManager::install('Biobase')"
-RUN R -e "BiocManager::install('GSVA')"
-RUN R -e "BiocManager::install('SummarizedExperiment')"
-
-# Install required R packages to run CaDrA
-RUN R -e "install.packages('doParallel', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('gplots', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('misc3d', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('plyr', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('ppcor', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('R.cache', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('reshape2', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-
-# Install CaDrA package with all dependencies already installed previously
-RUN R -e "devtools::install_github('montilab/CaDrA', dependencies=TRUE)"
 
 # Install additional packages to run CaDrA-shiny applications
 RUN R -e "install.packages('shinyBS', dependencies=TRUE, repos='http://cran.rstudio.com/')"
