@@ -2,10 +2,10 @@
 # R packages
 library(shiny)
 library(devtools)
-load_all(".")
+load_all("/CaDrA-shiny")
 
 id <- "myapp"
-datalist_file <- system.file("extdata/datalist.csv", package = "CaDrA-shiny")
+datalist_file <- "/CaDrA-shiny/inst/extdata/datalist.csv"
 
 app <-  `CaDrA-shiny`::CaDrA_App(id=id, datalist_file=datalist_file)
 

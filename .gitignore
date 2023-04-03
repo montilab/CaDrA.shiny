@@ -1,4 +1,4 @@
-.DS_Store
+*.DS_Store
 .git
 .project
 
@@ -38,4 +38,9 @@
 *.utf8.md
 *.knit.md
 
+## Ignores extradata 
+inst/extdata/datalist.csv
+inst/extdata/feature_set/**
+inst/extdata/gene_expression/**
+inst/extdata/input_score/**
 

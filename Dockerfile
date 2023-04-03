@@ -9,10 +9,10 @@ FROM montilab/cadra:${CADRA_VERSION}
 MAINTAINER Reina Chau (lilychau999@gmail.com)
     
 # Set up a volume directory
-VOLUME /srv/shiny-server/   
+VOLUME /CaDrA-shiny   
 
 # Set up working directory to the app
-WORKDIR /srv/shiny-server/
+WORKDIR /CaDrA-shiny
 
 # Define a system argument
 ARG DEBIAN_FRONTEND=noninteractive
@@ -49,7 +49,7 @@ EXPOSE 3838
 COPY inst/shinyapp/shiny-server.sh /usr/bin/shiny-server.sh
 
 # Allow permissions
-RUN ["chmod", "+rwx", "/srv/shiny-server/"]
+RUN ["chmod", "+rwx", "/CaDrA-shiny"]
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
 
 # Execute the app

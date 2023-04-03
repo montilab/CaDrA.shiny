@@ -10,5 +10,5 @@ then
     exec xtail /var/log/shiny-server/ &
 fi
 
-# start shiny server
-exec Rscript /srv/shiny-server/inst/shinyapp/run_cadra_server.R 2>&1
+# Start shiny server
+exec Rscript /CaDrA-shiny/inst/shinyapp/run_cadra_server.R 2>&1

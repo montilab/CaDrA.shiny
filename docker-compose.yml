@@ -8,7 +8,7 @@ x-cadra-shiny-code:
   &cadra-shiny-code
   type: bind
   source: /Users/reinachau/github/CaDrA-shiny
-  target: /srv/shiny-server
+  target: /CaDrA-shiny
 
 x-cadra-shiny-server:
   &cadra-shiny-server
@@ -34,13 +34,15 @@ services:
     volumes:
       - *cadra-shiny-code
       - *cadra-shiny-server
-
+      
   cadra_api:
     image: *cadra-shiny
     container_name: cadra_api
     restart: always
     networks:
-      - frontend    
+      - backend 
+    depends_on:
+      - cadra
     ports:
       - 5678:3838
     volumes:
@@ -50,5 +52,7 @@ services:
 networks:
   frontend: 
     name: frontend
+  backend:
+    name: backend
   
       
