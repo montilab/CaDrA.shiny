@@ -34,9 +34,3 @@
 # Temporary files created by R markdown
 *.utf8.md
 *.knit.md
-
-## Ignores extradata directory
-inst/extdata/**
-!inst/extdata/feature_set
-!inst/extdata/gene_expression
-!inst/extdata/input_score

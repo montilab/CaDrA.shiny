@@ -1,0 +1,5 @@
+
+## Ignores extradata directory
+feature_set/**
+gene_expression/**
+input_score/**
