@@ -36,9 +36,7 @@
 *.knit.md
 
 ## Ignores extradata directory
-inst/extdata/feature_set/**
-inst/extdata/gene_expression/**
-inst/extdata/input_score/**
+inst/*
 !inst/extdata/feature_set
 !inst/extdata/gene_expression
 !inst/extdata/input_score
