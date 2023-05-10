@@ -1,0 +1,14 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  FAQs: FAQs.html
+  api: api.html
+  docker-compose: docker-compose.html
+  docker: docker.html
+  getting-started: getting-started.html
+last_built: 2023-05-10T18:46Z
+urls:
+  reference: https://github.com/montilab/CaDrA.shiny/reference
+  article: https://github.com/montilab/CaDrA.shiny/articles
+

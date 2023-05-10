@@ -1,0 +1,88 @@
+---
+title: "Launch CaDrA Shiny with Compose"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Launch CaDrA Shiny with Compose}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE, messages=FALSE, warnings=FALSE}
+knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+```
+
+## Software requirements
+
+- Docker version >= 20.10,
+- Git version >= 2.21
+- Docker-compose version >= 1.29
+
+Don't have Docker installed, see [Docker Engine](https://docs.docker.com/engine/install/)
+
+Don't have Git installed, see [Git Guides](https://github.com/git-guides/install-git)
+
+### (1) Clone this respitory
+
+```bash
+git clone https://github.com/montilab/CaDrA.shiny.git
+``` 
+
+### (2) CD to `CaDrA.shiny` folder where `docker-compose.yml` is stored and edit the yaml file to link the data inputs and code base to appropriate containers
+
+- Mount code base of **CaDrA-shiny** to **/CaDrA-shiny** directory inside the container (e.g. change __/path/to/CaDrA.shiny__ to your **CaDrA-shiny** directory)
+- Mount shiny bash file to **/usr/bin/shiny-server.sh** directory inside the container to launch your shiny app (e.g. change **/path/to/shiny-server.sh** to your **CaDrA-shiny/inst/shinyapp/shiny-server.sh** directory)
+- Mount plumber bash file to **/usr/bin/shiny-server.sh** directory inside the container to launch plumber api (e.g. change **/path/to/shiny-server.sh** to your **CaDrA-shiny/inst/plumber/shiny-server.sh** directory)
+
+```bash
+version: '3.9'
+
+x-cadra-git-repo:
+  &cadra-git-repo
+  https://raw.githubusercontent.com/montilab/CaDrA/devel/inst/docker/Dockerfile
+
+x-cadra-shiny-git-repo:
+  &cadra-shiny-git-repo
+  https://github.com/montilab/CaDrA.shiny.git#main
+  
+x-cadra-shiny-code:
+  &cadra-shiny-code
+  type: bind
+  source: /path/to/CaDrA.shiny
+  target: /CaDrA-shiny
+
+x-cadra-shiny-server:
+  &cadra-shiny-server
+  type: bind
+  source: /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh
+  target: /usr/bin/shiny-server.sh 
+  
+x-cadra-api-server:
+  &cadra-api-server
+  type: bind
+  source: /path/to/CaDrA.shiny/inst/plumber/shiny-server.sh
+  target: /usr/bin/shiny-server.sh 
+```
+
+### (3) Start all services listed in the docker-compose.yml file
+
+```bash
+docker-compose up -d 
+```
+
+**-d**: run the containers in detached mode <br>
+
+For more information about the docker-compose syntax, see [docker-compose up reference](https://docs.docker.com/engine/reference/commandline/compose_up/)
+
+### (4) To check if the services are started sucessfully
+
+```bash
+docker-compose ps
+```
+
+### (5) Access `CaDrA` shiny dashboard on the host network
+
+You can visit the local host using your preferred web browser, type in http://localhost:4567, and check if the dashboard is indeed hosted there.
+
+
+
+

@@ -1,8 +1,8 @@
 ---
-title: "Docker and Docker-Compose"
+title: "Containerizing CaDrA.shiny with Docker"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{Docker and Docker-Compose}
+  %\VignetteIndexEntry{Containerizing CaDrA.shiny with Docker}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -10,8 +10,6 @@ vignette: >
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 ```
-
-# Containerizing CaDrA.shiny with Docker
 
 ## Software requirements
 
@@ -80,18 +78,12 @@ docker container ps
 
 
 CONTAINER ID   IMAGE               COMMAND                    CREATED        STATUS        PORTS                    NAMES
-b37b6b19c4e8   cadra-shiny:1.0.0   "bash dashboard-kickoff"   5 hours ago    Up 5 hours    0.0.0.0:8080->3838/tcp   cadra-shiny
+b37b6b19c4e8   cadra-shiny:1.0.0   "bash dashboard-kickoff"   5 hours ago    Up 5 hours    0.0.0.0:4567->3838/tcp   cadra-shiny
 
 ```
 
-**NOTE:** The `cadra-shiny` container is published on port **8080** on the host machine, and **3838** is the port of where the `cadra-shiny` is published inside the container. All requests that are made to the host will be redirected to the Docker container.
+**NOTE:** The `cadra-shiny` container is published on port **4567** on the host machine, and **3838** is the port of where the `cadra-shiny` is published inside the container. All requests that are made to the host will be redirected to the Docker container.
 
 ### (6) Access `CaDrA` Shiny dashboard on the host network
 
-You can visit the local host using your preferred web browser, type in http://localhost:8080, and check if the dashboard is indeed hosted there.
-
-# Run CaDrA.shiny container with Compose
-
-
-
-
+You can visit the local host using your preferred web browser, type in http://localhost:4567, and check if the dashboard is indeed hosted there.

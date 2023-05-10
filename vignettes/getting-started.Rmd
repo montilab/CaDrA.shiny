@@ -1,8 +1,8 @@
 ---
-title: "CaDrA API"
+title: "Getting Started"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{CaDrA API}
+  %\VignetteIndexEntry{Getting Started}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

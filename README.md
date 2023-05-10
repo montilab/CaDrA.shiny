@@ -1,11 +1,13 @@
 
 <!-- README.md is generated from README.Rmd. Please edit this file -->
 
-# CaDrA.shiny: R Shiny Dashboard for Interacting with CaDrA package
+# CaDrA.shiny
+
+An R Shiny Dashboard for Interacting with CaDrA package
 
 ## **Documentation: <https://montilab.github.io/CaDrA/>**
 
-## Web Portal: <https://cadra.bu.edu/>
+## **Web Portal: <https://cadra.bu.edu/>**
 
 ## Overview
 
@@ -51,7 +53,7 @@ devtools::install_github("montilab/CaDrA.shiny")
 library(CaDrA.shiny)
 ```
 
-### (3) Launch CaDrA’s Shiny app
+### (3) Launch Shiny app
 
 ``` r
 id <- "myapp"
