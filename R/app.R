@@ -1,12 +1,15 @@
 
 # function to hover columns in data table
 create_hover_txt <- function(table){
+  
   column_names <- colnames(table)
+  
   th_tr <- lapply(seq_along(column_names), function(l){ 
     title <- column_names[l]
     name <- ifelse(nchar(title) > 4, paste0(substr(title, 1, 4), "..."), title)
     th <- sprintf('<th title = "%s">%s</th>\n', title, name) 
   }) %>% purrr::flatten_chr() %>% paste0(., collapse = "")
+  
   th_tr <- paste0('<th title=""></th>\n', th_tr) %>% HTML()
   sketch <- htmltools::withTags(
     tags$table(
@@ -16,7 +19,9 @@ create_hover_txt <- function(table){
       )
     )
   )
+  
   return(sketch)
+  
 }
 
 # Global expression sets ####

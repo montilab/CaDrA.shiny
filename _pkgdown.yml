@@ -1,0 +1,57 @@
+url: https://github.com/montilab/CaDrA.shiny/
+
+development:
+  mode: auto
+
+template:
+  params:
+    bootswatch: cosmo
+
+authors:
+  Reina Chau:
+    href: https://github.com/RC-88
+  Stefano Monti:
+    href: https://github.com/tetomonti
+  Katia Bulekova:
+    href: https://github.com/katgit
+  Vinay Kartha:
+    href: https://github.com/vkartha
+
+news:
+  one_page: false
+
+reference:
+- title: Shiny Methods
+  desc: ~
+  contents:
+  - '`CaDrA_Server`'
+  - '`CaDrA_UI`'
+  - '`CaDrA_App`'
+  
+- title: Plumber API Methods
+  desc: ~
+  contents:
+  - '`CaDrA_Server`'
+  - '`CaDrA_UI`'
+  - '`CaDrA_App`'
+    
+navbar:
+  title: "CaDrA.shiny"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Docs"
+      menu:
+      - text: "Docker and Docker-Compose"
+        href: articles/docker.html
+      - text: "CaDrA API"
+        href: articles/api.html
+      - text: "FAQs"
+        href: articles/FAQs.html
+    - text: "Reference"
+      href: reference/index.html
+  right:
+    - text: "Change Log"
+      href: news/index.html
+    - icon: fa-github
+      href: https://github.com/montilab/CaDrA.shiny

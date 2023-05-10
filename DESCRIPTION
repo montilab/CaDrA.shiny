@@ -1,20 +1,23 @@
-Package: CaDrA-shiny
+Package: CaDrA.shiny
 Type: Package
-Title: Shiny Interface for Candidate Driver Analysis
+Title: Shiny Interface for Candidate Driver Analysis 
 Version: 1.0.0
-Date: 2022-11-01
+Date: 2022-11-20
 Authors@R: 
-    c(person(given="Reina", family="Chau", role=c("aut","cre"), email="rchau88@bu.edu"), 
-      person(given="Katia", family="Bulekova", role=c("aut"), email="ktrn@bu.edu", comment=c(ORCID="0000-0003-1560-2146")),
-      person(given="Vinay", family="Kartha", role=c("aut"), email="vkartha@bu.edu"), 
-      person(given="Stefano", family="Monti", role=c("aut"), email="smonti@bu.edu")
+    c(person(given="Reina", family="Chau", role=c("aut","cre"), 
+              email="rchau88@bu.edu", comment=c(ORCID="0000-0003-3012-1404")), 
+      person(given="Katia", family="Bulekova", role=c("aut"), 
+              email="ktrn@bu.edu", comment=c(ORCID="0000-0003-1560-2146")),
+      person(given="Vinay", family="Kartha", role=c("aut"), 
+              email="vkartha@bu.edu"), 
+      person(given="Stefano", family="Monti", role=c("aut"), 
+              email="smonti@bu.edu", comment=c(ORCID="0000-0002-9376-0660"))
      )
-Description: This tool 
+Description: This is a web interface tool for interacting with the R package CaDrA.
 Depends: R (>= 4.1.0)
-LazyData: no
-StagedInstall: no
+LazyData: false
 License: GPL-3 + file LICENSE
-URL: https://github.com/montilab/CaDrA-shiny/
+URL: https://github.com/montilab/CaDrA.shiny/
 Packaged: 2017-07-10 18:44:45 UTC; 
 Encoding: UTF-8
 RoxygenNote: 7.2.3
@@ -28,6 +31,7 @@ Imports:
     magrittr,
     methods,
     parallel,
+    purrr,
     shiny,
     SummarizedExperiment,
     tibble,
@@ -42,4 +46,4 @@ Suggests:
 Config/testthat/edition: 3
 biocViews: Software
 VignetteBuilder: knitr
-BugReports: https://github.com/montilab/CaDrA-shiny/issues
+BugReports: https://github.com/montilab/CaDrA.shiny/issues

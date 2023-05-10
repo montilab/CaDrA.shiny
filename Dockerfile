@@ -1,4 +1,6 @@
 
+# Create a cadra_version argument
+# to allow the package to build according to its R version
 ARG CADRA_VERSION
 ARG CADRA_VERSION=${CADRA_VERSION:-2.0.0}
 
@@ -9,16 +11,16 @@ FROM montilab/cadra:${CADRA_VERSION}
 MAINTAINER Reina Chau (lilychau999@gmail.com)
     
 # Set up a volume directory
-VOLUME /CaDrA-shiny   
+VOLUME /CaDrA.shiny   
 
 # Set up working directory to the app
-WORKDIR /CaDrA-shiny
+WORKDIR /CaDrA.shiny
 
 # Define a system argument
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install system libraries of general use
-RUN apt-get update -qq && apt-get -y --no-install-recommends install \
+RUN apt-get update && apt-get -y --no-install-recommends install \
     librsvg2-dev \
     libudunits2-dev \
     libv8-dev \
@@ -28,7 +30,7 @@ RUN apt-get update -qq && apt-get -y --no-install-recommends install \
     tcl8.6-dev \
     tk8.6-dev 
 
-# Install additional packages to run CaDrA-shiny applications
+# Install additional packages to run CaDrA.shiny applications
 RUN R -e "install.packages('shinyBS', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinyjs', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('shinycssloaders', dependencies=TRUE, repos='http://cran.rstudio.com/')"
@@ -49,7 +51,7 @@ EXPOSE 3838
 COPY inst/shinyapp/shiny-server.sh /usr/bin/shiny-server.sh
 
 # Allow permissions
-RUN ["chmod", "+rwx", "/CaDrA-shiny"]
+RUN ["chmod", "+rwx", "/CaDrA.shiny"]
 RUN ["chmod", "+x", "/usr/bin/shiny-server.sh"]
 
 # Execute the app

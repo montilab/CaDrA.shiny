@@ -1,5 +1,9 @@
 
-##R packages####
+# Load the package ####
+library(devtools)
+load_all(".")
+
+# R packages ####
 library(jsonlite)
 library(Biobase)
 library(CaDrA)
