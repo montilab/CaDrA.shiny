@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shiny Interface for Candidate Driver Analysis  • CaDrA.shiny</title>
+<title>Shiny Interface for CaDrA • CaDrA.shiny</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Shiny Interface for Candidate Driver Analysis ">
+<script src="pkgdown.js"></script><meta property="og:title" content="Shiny Interface for CaDrA">
 <meta property="og:description" content="This is a web interface tool for interacting with the R package CaDrA.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -92,9 +92,11 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
+
 <div class="section level1">
 <div class="page-header"><h1 id="cadrashiny">CaDrA.shiny<a class="anchor" aria-label="anchor" href="#cadrashiny"></a>
 </h1></div>
+<p><img src="https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg" alt="build"><img src="https://img.shields.io/gitter/room/montilab/cadra.shiny" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/cadra.shiny" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/cadra.shiny" alt="GitHub last commit"></p>
 <p>An R Shiny Dashboard for Interacting with CaDrA package</p>
 <div class="section level2">
 <h2 id="documentation-httpsmontilabgithubiocadra">
@@ -124,6 +126,12 @@
 </ul>
 <p>The <strong>CaDrA.shiny</strong> package is containerized using <strong>Docker</strong> and can be deployed on any Cloud-based services.</p>
 <p><strong>Docker Image: <a href="https://hub.docker.com/r/montilab/cadra-shiny" class="external-link">montilab/cadra-shiny</a></strong></p>
+</div>
+</div>
+<div class="section level1">
+<h1 id="run-cadra-shiny-app-on-rstudio-desktop">Run CaDrA Shiny App on RStudio Desktop<a class="anchor" aria-label="anchor" href="#run-cadra-shiny-app-on-rstudio-desktop"></a>
+</h1>
+<p>Don’t have RStudio Desktop installed, download <a href="https://posit.co/download/rstudio-desktop/" class="external-link">here</a>.</p>
 <div class="section level3">
 <h3 id="id_1-installation">(1) Installation<a class="anchor" aria-label="anchor" href="#id_1-installation"></a>
 </h3>
@@ -132,20 +140,53 @@
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/CaDrA.shiny"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_2-quickstart">(2) Quickstart<a class="anchor" aria-label="anchor" href="#id_2-quickstart"></a>
+<h3 id="id_2-load-packages">(2) Load packages<a class="anchor" aria-label="anchor" href="#id_2-load-packages"></a>
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA.shiny/">CaDrA.shiny</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_3-launch-shiny-app">(3) Launch Shiny app<a class="anchor" aria-label="anchor" href="#id_3-launch-shiny-app"></a>
+<h3 id="id_3-launch-cadra-shiny-app-with-dataset-included-in-the-package">(3) Launch CaDrA Shiny App with dataset included in the package<a class="anchor" aria-label="anchor" href="#id_3-launch-cadra-shiny-app-with-dataset-included-in-the-package"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">id</span> <span class="op">&lt;-</span> <span class="st">"myapp"</span></span>
-<span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="va">id</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_4-launch-cadra-shiny-app-with-your-provided-dataset">(4) Launch CaDrA Shiny App with your provided dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadra-shiny-app-with-your-provided-dataset"></a>
+</h3>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># Read in your data file. Assume your datafile is stored as csv format</span></span>
+<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'/path/to/mydatafile.csv'</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Lauch CaDrA Shiny app with your provided data file</span></span>
+<span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist_file<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="id_5-a-glimpse-of-cadras-dashboard">(5) A Glimpse of CaDrA’s Dashboard<a class="anchor" aria-label="anchor" href="#id_5-a-glimpse-of-cadras-dashboard"></a>
+</h3>
+<div class="section level4">
+<h4 id="i-user-inputs">(i) User Inputs<a class="anchor" aria-label="anchor" href="#i-user-inputs"></a>
+</h4>
+<p><img src="reference/figures/CaDrA.png"></p>
+</div>
+<div class="section level4">
+<h4 id="ii-cadra-results">(ii) CaDrA Results<a class="anchor" aria-label="anchor" href="#ii-cadra-results"></a>
+</h4>
+<p><img src="reference/figures/filtered-FS.png"></p>
+<p><img src="reference/figures/input-scores.png"></p>
+<p><img src="reference/figures/best-meta-feature-set.png"></p>
+<p><img src="reference/figures/meta-feature-plot.png"><img src="reference/figures/overlapping-heatmap.png"></p>
 </div>
 </div>
+<div class="section level2">
+<h2 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h2>
+<p>See User Guide for more complete documention of all of CaDrA.shiny’s features.</p>
+<p>To get help with CaDrA or CaDrA.shiny, please use the <a href="https://github.com/montilab/CaDrA/discussions" class="external-link">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA/issues" class="external-link">Github issues</a>.</p>
 </div>
+</div>
+
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

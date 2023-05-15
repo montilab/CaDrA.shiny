@@ -1,6 +1,6 @@
 Package: CaDrA.shiny
 Type: Package
-Title: Shiny Interface for Candidate Driver Analysis 
+Title: Shiny Interface for CaDrA
 Version: 1.0.0
 Date: 2022-11-20
 Authors@R: 
