@@ -123,11 +123,11 @@ get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_sco
 #' id <- "myapp"
 #' 
 #' ui <- shiny::fluidPage(
-#'    CaDrA-shiny::CaDrA_UI(id = id)
+#'    CaDrA.shiny::CaDrA_UI(id = id)
 #' )
 #' 
 #' server <- function(input, output, session) {
-#'    CaDrA-shiny::CaDrA_Server(id = id)
+#'    CaDrA.shiny::CaDrA_Server(id = id)
 #' }
 #' 
 #' app <- shiny::shinyApp(ui=ui, server=server)
@@ -905,7 +905,7 @@ CaDrA_UI <- function(id, datalist_file=NULL){
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "question", lib = "font-awesome"),
 
-          htmltools::includeMarkdown(file.path(system.file("README.md", package = "CaDrA-shiny")))
+          htmltools::includeMarkdown(file.path(system.file("README.md", package = "CaDrA.shiny")))
 
         ),
 
@@ -1002,11 +1002,11 @@ CaDrA_UI <- function(id, datalist_file=NULL){
 #' id <- "myapp"
 #' 
 #' ui <- shiny::fluidPage(
-#'    CaDrA-shiny::CaDrA_UI(id = id)
+#'    CaDrA.shiny::CaDrA_UI(id = id)
 #' )
 #' 
 #' server <- function(input, output, session) {
-#'    CaDrA-shiny::CaDrA_Server(id = id)
+#'    CaDrA.shiny::CaDrA_Server(id = id)
 #' }
 #' 
 #' app <-  shiny::shinyApp(ui=ui, server=server)
@@ -2329,7 +2329,7 @@ CaDrA_Server <- function(id, datalist_file=NULL){
         
         if(length(row) > 0){
           
-          score_dir <- file.path(system.file(package = "CaDrA-shiny"), "extdata", "input_score")
+          score_dir <- file.path(system.file(package = "CaDrA.shiny"), "extdata", "input_score")
           
           if(!dir.exists(score_dir)){
             dir.create(score_dir)
@@ -2826,7 +2826,7 @@ CaDrA_Server <- function(id, datalist_file=NULL){
 #' id = "myapp"
 #' 
 #' # Create a Shiny app
-#' app <- CaDrA-shiny::CaDrA_App(id = id)
+#' app <- CaDrA.shiny::CaDrA_App(id = id)
 #' 
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)

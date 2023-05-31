@@ -5,7 +5,7 @@ development:
 
 template:
   params:
-    bootswatch: cosmo
+    bootswatch: flatly
 
 authors:
   Reina Chau:
@@ -36,19 +36,16 @@ reference:
   - '`CaDrA_App`'
     
 navbar:
-  title: "CaDrA.shiny"
   left:
     - text: "Home"
       href: index.html
     - text: "Getting Started"
       menu:
-      - text: "How to Run CaDrA Shiny"
-        href: articles/getting-started.html      
       - text: "Containerizing CaDrA.shiny with Docker"
         href: articles/docker.html
       - text: "Launch CaDrA Shiny with Compose"
         href: articles/docker-compose.html        
-      - text: "Retrieve data with CaDrA Rest API"
+      - text: "Retrieve Dataset from our Rest API"
         href: articles/api.html
       - text: "FAQs"
         href: articles/FAQs.html

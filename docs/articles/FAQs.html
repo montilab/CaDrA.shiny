@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FAQs - Frequently Asked Questions • CaDrA.shiny</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -50,16 +50,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="../articles/getting-started.html">How to Run CaDrA Shiny</a>
-    </li>
-    <li>
       <a href="../articles/docker.html">Containerizing CaDrA.shiny with Docker</a>
     </li>
     <li>
       <a href="../articles/docker-compose.html">Launch CaDrA Shiny with Compose</a>
     </li>
     <li>
-      <a href="../articles/api.html">Retrieve data with CaDrA Rest API</a>
+      <a href="../articles/api.html">Retrieve Dataset from our Rest API</a>
     </li>
     <li>
       <a href="../articles/FAQs.html">FAQs</a>
@@ -103,12 +100,290 @@
 
     
     
-
+<style type="text/css">
+thead {
+  font-weight: bold;
+}
+thead, td {
+  border: 1px solid black
+}
+</style>
+<div class="section level2">
+<h2 id="frequently-asked-questions">Frequently asked questions<a class="anchor" aria-label="anchor" href="#frequently-asked-questions"></a>
+</h2>
+<div class="section level3">
+<h3 id="how-do-i-get-help">How do I get help?<a class="anchor" aria-label="anchor" href="#how-do-i-get-help"></a>
+</h3>
+<p><strong>CaDrA</strong> and <strong>CaDrA.shiny</strong> are still
+under active development. If you need help, would like to contribute, or
+simply want to talk about the project with like-minded individuals, we
+have a number of open channels for communication.</p>
+<ul>
+<li><p>To report bugs or file feature requests, use our <a href="https://github.com/montilab/CaDrA/issues" class="external-link">issue tracker on
+Github</a>.</p></li>
+<li><p>To contribute code submit a <a href="https://github.com/montilab/CaDrA/pulls" class="external-link">pull request on
+Github</a>.</p></li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="where-can-i-find-examples-of-cadra">Where can I find examples of CaDrA?<a class="anchor" aria-label="anchor" href="#where-can-i-find-examples-of-cadra"></a>
+</h3>
+<ul>
+<li>See our <a href="getting-started.html">User Guides on how to use
+CaDrA package</a>
+</li>
+</ul>
+</div>
+<div class="section level3">
+<h3 id="how-to-start-restart-stop-or-remove-services-listed-in-docker-compose-yml">How to start, restart, stop or remove services listed in
+docker-compose.yml?<a class="anchor" aria-label="anchor" href="#how-to-start-restart-stop-or-remove-services-listed-in-docker-compose-yml"></a>
+</h3>
+<table class="table">
+<thead><tr>
+<td>
+Command
+</td>
+<td>
+Description
+</td>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_build/" class="external-link">docker
+compose build</a>
+</td>
+<td>
+Build or rebuild services
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_config/" class="external-link">docker
+compose config</a>
+</td>
+<td>
+Parse, resolve and render compose file in canonical format
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_cp/" class="external-link">docker
+compose cp</a>
+</td>
+<td>
+Copy files/folders between a service container and the local filesystem
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_create/" class="external-link">docker
+compose create</a>
+</td>
+<td>
+Creates containers for a service.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_down/" class="external-link">docker
+compose down</a>
+</td>
+<td>
+Stop and remove containers, networks
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_events/" class="external-link">docker
+compose events</a>
+</td>
+<td>
+Receive real time events from containers.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_exec/" class="external-link">docker
+compose exec</a>
+</td>
+<td>
+Execute a command in a running container.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_images/" class="external-link">docker
+compose images</a>
+</td>
+<td>
+List images used by the created containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_kill/" class="external-link">docker
+compose kill</a>
+</td>
+<td>
+Force stop service containers.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_logs/" class="external-link">docker
+compose logs</a>
+</td>
+<td>
+View output from containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_ls/" class="external-link">docker
+compose ls</a>
+</td>
+<td>
+List running compose projects
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_pause/" class="external-link">docker
+compose pause</a>
+</td>
+<td>
+Pause services
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_port/" class="external-link">docker
+compose port</a>
+</td>
+<td>
+Print the public port for a port binding.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_ps/" class="external-link">docker
+compose ps</a>
+</td>
+<td>
+List containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_pull/" class="external-link">docker
+compose pull</a>
+</td>
+<td>
+Pull service images
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_push/" class="external-link">docker
+compose push</a>
+</td>
+<td>
+Push service images
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_restart/" class="external-link">docker
+compose restart</a>
+</td>
+<td>
+Restart service containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_rm/" class="external-link">docker
+compose rm</a>
+</td>
+<td>
+Removes stopped service containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_run/" class="external-link">docker
+compose run</a>
+</td>
+<td>
+Run a one-off command on a service.
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_start/" class="external-link">docker
+compose start</a>
+</td>
+<td>
+Start services
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_stop/" class="external-link">docker
+compose stop</a>
+</td>
+<td>
+Stop services
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_top/" class="external-link">docker
+compose top</a>
+</td>
+<td>
+Display the running processes
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_unpause/" class="external-link">docker
+compose unpause</a>
+</td>
+<td>
+Unpause services
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_up/" class="external-link">docker
+compose up</a>
+</td>
+<td>
+Create and start containers
+</td>
+</tr>
+<tr>
+<td>
+<a target="_blank" href="https://docs.docker.com/engine/reference/commandline/compose_version/" class="external-link">docker
+compose version</a>
+</td>
+<td>
+Show the Docker Compose version information
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 
@@ -116,7 +391,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by <a href="https://github.com/RC-88" class="external-link">Reina Chau</a>, <a href="https://github.com/katgit" class="external-link">Katia Bulekova</a>, <a href="https://github.com/vkartha" class="external-link">Vinay Kartha</a>, <a href="https://github.com/tetomonti" class="external-link">Stefano Monti</a>.</p>
+<p>Developed by <a href="https://github.com/RC-88" class="external-link">Reina Chau</a>, <a href="https://github.com/katgit" class="external-link">Katia Bulekova</a>, <a href="https://github.com/tetomonti" class="external-link">Stefano Monti</a>.</p>
 </div>
 
 <div class="pkgdown">

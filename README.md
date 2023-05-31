@@ -1,7 +1,10 @@
 
 <!-- README.md is generated from README.Rmd. Please edit this file -->
-
-# CaDrA.shiny
+<script src='https://cdn.jsdelivr.net/gh/eddymens/markdown-external-link-script@v1.0.0/main.min.js'></script>
+<p style="font-size: 40pt; front-weight: bold; padding-bottom: 0px; margin-bottom: 0;">
+CaDrA.shiny
+</p>
+<hr style="padding-top: 0; margin-top: 0;">
 
 ![build](https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg)
 ![Gitter](https://img.shields.io/gitter/room/montilab/cadra.shiny)
@@ -10,42 +13,42 @@ issues](https://img.shields.io/github/issues/montilab/cadra.shiny)
 ![GitHub last
 commit](https://img.shields.io/github/last-commit/montilab/cadra.shiny)
 
-An R Shiny Dashboard for Interacting with CaDrA package
+An R Shiny Dashboard for Interacting with
+**[CaDrA](https://montilab.github.io/CaDrA/)** Package
 
-## **Documentation: <https://montilab.github.io/CaDrA/>**
+### **Documentation: <https://montilab.github.io/CaDrA/>**
 
-## **Web Portal: <https://cadra.bu.edu/>**
+### **Web Portal: <https://cadra.bu.edu/>**
 
 ## Overview
 
-**CaDrA-shiny** is an interactive Shiny dashboard that was developed to
-allow users to directly interacting with **CaDrA** package. **CaDrA** is
-an R package that supports a heuristic search framework aimed at
+**CaDrA-shiny** is an interactive R Shiny dashboard that was developed
+to allow users to directly interacting with **CaDrA** package. **CaDrA**
+is an R package that supports a heuristic search framework aimed at
 identifying candidate drivers of a molecular phenotype of interest
 (visit [our Github repo](https://github.com/montilab/CaDrA) for more
 details).
 
-The CaDrA shiny dashboard has two distinctive features:
+The CaDrA’s shiny dashboard has two distinctive features:
 
-1.  Run **CaDrA** to search for candidate drivers of a molecular
+1.  Run **CaDrA** search to identify candidate drivers of a molecular
     phenotype of interest
-2.  Run **GSVA** to obtain the relative enrichment scores for a given
-    gene sets, then subsequently, these scores are used to run **CaDrA**
-    to identify complementary features that likely driving the input of
-    molecular phenotype.
+2.  Run **GSVA** to obtain relative enrichment scores for a given gene
+    sets, then subsequently, these scores are used to run **CaDrA**
+    search to look for complementary features that likely driving the
+    input of molecular phenotype.
 
 Data visualization includes:
 
 - Meta-feature plot
-- KS enrichment plot
+- Kolmogorov Smirnov (KS) enrichment plot
 - Top N candidates overlapping heatmap
 - Permutation-based testing plot
 
-The **CaDrA.shiny** package is containerized using **Docker** and can be
-deployed on any Cloud-based services.
+The **CaDrA.shiny** package is already containerized using **Docker**
+and can be deployed on any Cloud-based services.
 
-**Docker Image:
-[montilab/cadra-shiny](https://hub.docker.com/r/montilab/cadra-shiny)**
+#### **Docker image: [montilab/cadra-shiny](https://hub.docker.com/r/montilab/cadra-shiny)**
 
 # Run CaDrA Shiny App on RStudio Desktop
 
@@ -65,45 +68,91 @@ devtools::install_github("montilab/CaDrA.shiny")
 library(CaDrA.shiny)
 ```
 
-### (3) Launch CaDrA Shiny App with dataset included in the package
+### (3) Launch CaDrA’s Shiny App with dataset included in the package
 
 ``` r
 CaDrA.shiny::CaDrA_App(id="myapp")
 ```
 
-### (4) Launch CaDrA Shiny App with your provided dataset
+### (4) Launch CaDrA’s Shiny App with your pre-proccessed dataset
+
+**Required:** a data file (in **csv** or **rds** format) that includes
+paths to your pre-proccessed dataset with the following column fields
+populated:
+
+- feature_set_names
+- feature_set_paths
+- input_score_names
+- input_score_paths
+- gene_expression_names
+- gene_expression_paths
+
+Here is an example of **mydatafile.csv**: ![](man/figures/datalist.png)
+
+To launch the app:
 
 ``` r
-
-# Read in your data file. Assume your datafile is stored as csv format
+# Read in the data file that includes paths to your pre-proccessed dataset
 mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 
-# Lauch CaDrA Shiny app with your provided data file
+# Launch CaDrA's Shiny app with your loaded data file
 CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
 ```
 
-### (5) A Glimpse of CaDrA’s Dashboard
+### (6) Launch CaDrA’s Shiny App with dataset download from our API portal
 
-#### (i) User Inputs
+#### (i) Retrieve pre-processed dataset from API
 
-![](man/figures/CaDrA.png)
+``` r
+# Read in the data file that includes paths to your pre-proccessed dataset
+mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 
-#### (ii) CaDrA Results
+# Launch CaDrA's Shiny app with your loaded data file
+CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+```
 
-![](man/figures/filtered-FS.png)
+#### (ii) Launch CaDrA’s app with downloaded dataset
 
-![](man/figures/input-scores.png)
+``` r
+# Read in the data file that includes paths to your pre-proccessed dataset
+mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 
-![](man/figures/best-meta-feature-set.png)
+# Launch CaDrA's Shiny app with your loaded data file
+CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+```
 
-![](man/figures/meta-feature-plot.png)
-![](man/figures/overlapping-heatmap.png)
+# A Glimpse of CaDrA’s Dashboard
 
-## Getting Help
+There are five tabs on CaDrA’s Dashboard. Explore each tab and see what
+they do:
 
-See User Guide for more complete documention of all of CaDrA.shiny’s
-features.
+![](man/figures/tabs.png)
 
-To get help with CaDrA or CaDrA.shiny, please use the [Github
+- <a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a>
+- <a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a>
+- <a href="articles/dataset-tab.html" target="_blank">Dataset</a>
+- Help
+- Publication
+- Contract Us
+
+# User Guide:
+
+- [Containerizing CaDrA.shiny with
+  Docker](https://montilab.github.io/CaDrA/articles/docker.html)
+- [Launch CaDrA Shiny with
+  Compose](https://montilab.github.io/CaDrA/articles/docker-compose.html)
+- [Getting started with CaDrA’s Shiny
+  Dashboard](https://montilab.github.io/CaDrA/articles/getting-started.html)
+
+# Getting Help
+
+See our **User Guide** for more complete documentation of
+**CaDrA.shiny**
+
+To get help with **CaDrA**, visit our [Github
 dicussion](https://github.com/montilab/CaDrA/discussions) or [Github
 issues](https://github.com/montilab/CaDrA/issues).
+
+To get help with **CaDrA.shiny**, visit our the [Github
+dicussion](https://github.com/montilab/CaDrA.shiny/discussions) or
+[Github issues](https://github.com/montilab/CaDrA.shiny/issues).

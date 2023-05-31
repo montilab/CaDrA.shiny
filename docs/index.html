@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Shiny Interface for CaDrA • CaDrA.shiny</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/cosmo/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="bootstrap-toc.css">
 <script src="bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
@@ -50,16 +50,13 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/getting-started.html">How to Run CaDrA Shiny</a>
-    </li>
-    <li>
       <a href="articles/docker.html">Containerizing CaDrA.shiny with Docker</a>
     </li>
     <li>
       <a href="articles/docker-compose.html">Launch CaDrA Shiny with Compose</a>
     </li>
     <li>
-      <a href="articles/api.html">Retrieve data with CaDrA Rest API</a>
+      <a href="articles/api.html">Retrieve Dataset from our Rest API</a>
     </li>
     <li>
       <a href="articles/FAQs.html">FAQs</a>
@@ -93,44 +90,48 @@
       </header><div class="row">
   <div class="contents col-md-9">
 
-<div class="section level1">
-<div class="page-header"><h1 id="cadrashiny">CaDrA.shiny<a class="anchor" aria-label="anchor" href="#cadrashiny"></a>
-</h1></div>
+<p style="font-size: 40pt; front-weight: bold; padding-bottom: 0px; margin-bottom: 0;">
+CaDrA.shiny
+</p>
+<hr style="padding-top: 0; margin-top: 0;">
 <p><img src="https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg" alt="build"><img src="https://img.shields.io/gitter/room/montilab/cadra.shiny" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/cadra.shiny" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/cadra.shiny" alt="GitHub last commit"></p>
-<p>An R Shiny Dashboard for Interacting with CaDrA package</p>
-<div class="section level2">
-<h2 id="documentation-httpsmontilabgithubiocadra">
+<p>An R Shiny Dashboard for Interacting with <strong><a href="https://montilab.github.io/CaDrA/" class="external-link">CaDrA</a></strong> package</p>
+<div class="section level3">
+<h3 id="documentation-httpsmontilabgithubiocadra">
 <strong>Documentation: <a href="https://montilab.github.io/CaDrA/" class="external-link uri">https://montilab.github.io/CaDrA/</a></strong><a class="anchor" aria-label="anchor" href="#documentation-httpsmontilabgithubiocadra"></a>
-</h2>
+</h3>
 </div>
-<div class="section level2">
-<h2 id="web-portal-httpscadrabuedu">
+<div class="section level3">
+<h3 id="web-portal-httpscadrabuedu">
 <strong>Web Portal: <a href="https://cadra.bu.edu/" class="external-link uri">https://cadra.bu.edu/</a></strong><a class="anchor" aria-label="anchor" href="#web-portal-httpscadrabuedu"></a>
-</h2>
+</h3>
 </div>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><strong>CaDrA-shiny</strong> is an interactive Shiny dashboard that was developed to allow users to directly interacting with <strong>CaDrA</strong> package. <strong>CaDrA</strong> is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit <a href="https://github.com/montilab/CaDrA" class="external-link">our Github repo</a> for more details).</p>
-<p>The CaDrA shiny dashboard has two distinctive features:</p>
+<p><strong>CaDrA-shiny</strong> is an interactive R Shiny dashboard that was developed to allow users to directly interacting with <strong>CaDrA</strong> package. <strong>CaDrA</strong> is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit <a href="https://github.com/montilab/CaDrA" class="external-link">our Github repo</a> for more details).</p>
+<p>The CaDrA’s shiny dashboard has two distinctive features:</p>
 <ol style="list-style-type: decimal">
-<li>Run <strong>CaDrA</strong> to search for candidate drivers of a molecular phenotype of interest</li>
-<li>Run <strong>GSVA</strong> to obtain the relative enrichment scores for a given gene sets, then subsequently, these scores are used to run <strong>CaDrA</strong> to identify complementary features that likely driving the input of molecular phenotype.</li>
+<li>Run <strong>CaDrA</strong> search to identify candidate drivers of a molecular phenotype of interest</li>
+<li>Run <strong>GSVA</strong> to obtain relative enrichment scores for a given gene sets, then subsequently, these scores are used to run <strong>CaDrA</strong> search to look for complementary features that likely driving the input of molecular phenotype.</li>
 </ol>
 <p>Data visualization includes:</p>
 <ul>
 <li>Meta-feature plot</li>
-<li>KS enrichment plot</li>
+<li>Kolmogorov Smirnov (KS) enrichment plot</li>
 <li>Top N candidates overlapping heatmap</li>
 <li>Permutation-based testing plot</li>
 </ul>
-<p>The <strong>CaDrA.shiny</strong> package is containerized using <strong>Docker</strong> and can be deployed on any Cloud-based services.</p>
-<p><strong>Docker Image: <a href="https://hub.docker.com/r/montilab/cadra-shiny" class="external-link">montilab/cadra-shiny</a></strong></p>
+<p>The <strong>CaDrA.shiny</strong> package is already containerized using <strong>Docker</strong> and can be deployed on any Cloud-based services.</p>
+<div class="section level4">
+<h4 id="docker-image-montilabcadra-shiny">
+<strong>Docker image: <a href="https://hub.docker.com/r/montilab/cadra-shiny" class="external-link">montilab/cadra-shiny</a></strong><a class="anchor" aria-label="anchor" href="#docker-image-montilabcadra-shiny"></a>
+</h4>
 </div>
 </div>
 <div class="section level1">
-<h1 id="run-cadra-shiny-app-on-rstudio-desktop">Run CaDrA Shiny App on RStudio Desktop<a class="anchor" aria-label="anchor" href="#run-cadra-shiny-app-on-rstudio-desktop"></a>
-</h1>
+<div class="page-header"><h1 id="run-cadra-shiny-app-on-rstudio-desktop">Run CaDrA Shiny App on RStudio Desktop<a class="anchor" aria-label="anchor" href="#run-cadra-shiny-app-on-rstudio-desktop"></a>
+</h1></div>
 <p>Don’t have RStudio Desktop installed, download <a href="https://posit.co/download/rstudio-desktop/" class="external-link">here</a>.</p>
 <div class="section level3">
 <h3 id="id_1-installation">(1) Installation<a class="anchor" aria-label="anchor" href="#id_1-installation"></a>
@@ -146,45 +147,77 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA.shiny/">CaDrA.shiny</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_3-launch-cadra-shiny-app-with-dataset-included-in-the-package">(3) Launch CaDrA Shiny App with dataset included in the package<a class="anchor" aria-label="anchor" href="#id_3-launch-cadra-shiny-app-with-dataset-included-in-the-package"></a>
+<h3 id="id_3-launch-cadras-shiny-app-with-dataset-included-in-the-package">(3) Launch CaDrA’s Shiny App with dataset included in the package<a class="anchor" aria-label="anchor" href="#id_3-launch-cadras-shiny-app-with-dataset-included-in-the-package"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_4-launch-cadra-shiny-app-with-your-provided-dataset">(4) Launch CaDrA Shiny App with your provided dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadra-shiny-app-with-your-provided-dataset"></a>
+<h3 id="id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset">(4) Launch CaDrA’s Shiny App with your pre-proccessed dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset"></a>
 </h3>
+<p><strong>Required:</strong> a data file (in <strong>csv</strong> or <strong>rds</strong> format) that includes paths to your pre-proccessed dataset with the following column fields populated:</p>
+<ul>
+<li>feature_set_names</li>
+<li>feature_set_paths</li>
+<li>input_score_names</li>
+<li>input_score_paths</li>
+<li>gene_expression_names</li>
+<li>gene_expression_paths</li>
+</ul>
+<p>Here is an example of <strong>mydatafile.csv</strong>: <img src="reference/figures/datalist.png"></p>
+<p>To launch the app:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span></span>
-<span><span class="co"># Read in your data file. Assume your datafile is stored as csv format</span></span>
+<code class="sourceCode R"><span><span class="co"># Read in the data file that includes paths to your pre-proccessed dataset</span></span>
 <span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'/path/to/mydatafile.csv'</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Lauch CaDrA Shiny app with your provided data file</span></span>
+<span><span class="co"># Launch CaDrA's Shiny app with your loaded data file</span></span>
 <span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist_file<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_5-a-glimpse-of-cadras-dashboard">(5) A Glimpse of CaDrA’s Dashboard<a class="anchor" aria-label="anchor" href="#id_5-a-glimpse-of-cadras-dashboard"></a>
+<h3 id="id_6-launch-cadras-shiny-app-with-dataset-download-from-our-api-portal">(6) Launch CaDrA’s Shiny App with dataset download from our API portal<a class="anchor" aria-label="anchor" href="#id_6-launch-cadras-shiny-app-with-dataset-download-from-our-api-portal"></a>
 </h3>
 <div class="section level4">
-<h4 id="i-user-inputs">(i) User Inputs<a class="anchor" aria-label="anchor" href="#i-user-inputs"></a>
+<h4 id="i-retrieve-pre-processed-dataset-from-api">(i) Retrieve pre-processed dataset from API<a class="anchor" aria-label="anchor" href="#i-retrieve-pre-processed-dataset-from-api"></a>
 </h4>
-<p><img src="reference/figures/CaDrA.png"></p>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Read in the data file that includes paths to your pre-proccessed dataset</span></span>
+<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'/path/to/mydatafile.csv'</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Launch CaDrA's Shiny app with your loaded data file</span></span>
+<span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist_file<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
-<h4 id="ii-cadra-results">(ii) CaDrA Results<a class="anchor" aria-label="anchor" href="#ii-cadra-results"></a>
+<h4 id="ii-launch-cadras-app-with-downloaded-dataset">(ii) Launch CaDrA’s app with downloaded dataset<a class="anchor" aria-label="anchor" href="#ii-launch-cadras-app-with-downloaded-dataset"></a>
 </h4>
-<p><img src="reference/figures/filtered-FS.png"></p>
-<p><img src="reference/figures/input-scores.png"></p>
-<p><img src="reference/figures/best-meta-feature-set.png"></p>
-<p><img src="reference/figures/meta-feature-plot.png"><img src="reference/figures/overlapping-heatmap.png"></p>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Read in the data file that includes paths to your pre-proccessed dataset</span></span>
+<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'/path/to/mydatafile.csv'</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Launch CaDrA's Shiny app with your loaded data file</span></span>
+<span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist_file<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-<div class="section level2">
-<h2 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
-</h2>
-<p>See User Guide for more complete documention of all of CaDrA.shiny’s features.</p>
-<p>To get help with CaDrA or CaDrA.shiny, please use the <a href="https://github.com/montilab/CaDrA/discussions" class="external-link">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA/issues" class="external-link">Github issues</a>.</p>
 </div>
+<div class="section level1">
+<h1 id="a-glimpse-of-cadras-dashboard">A Glimpse of CaDrA’s Dashboard<a class="anchor" aria-label="anchor" href="#a-glimpse-of-cadras-dashboard"></a>
+</h1>
+<p>There are five tabs on CaDrA’s Dashboard. Explore each tab and see what they do:</p>
+<p><img src="reference/figures/tabs.png"></p>
+<ul>
+<li><a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a></li>
+<li><a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a></li>
+<li><a href="articles/dataset-tab.html" target="_blank">Dataset</a></li>
+<li>Help</li>
+<li>Publication</li>
+<li>Contract Us</li>
+</ul>
+</div>
+<div class="section level1">
+<h1 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
+</h1>
+<p>See our <strong>User Guide</strong> for more complete documentation of <strong>CaDrA.shiny</strong></p>
+<p>To get help with <strong>CaDrA</strong>, visit our <a href="https://github.com/montilab/CaDrA/discussions" class="external-link">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA/issues" class="external-link">Github issues</a>.</p>
+<p>To get help with <strong>CaDrA.shiny</strong>, visit our the <a href="https://github.com/montilab/CaDrA.shiny/discussions">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA.shiny/issues">Github issues</a>.</p>
 </div>
 
   </div>
@@ -223,8 +256,6 @@
 <li>
 <a href="https://github.com/katgit" class="external-link">Katia Bulekova</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0003-1560-2146" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 <li>
-<a href="https://github.com/vkartha" class="external-link">Vinay Kartha</a> <br><small class="roles"> Author </small>  </li>
-<li>
 <a href="https://github.com/tetomonti" class="external-link">Stefano Monti</a> <br><small class="roles"> Author </small> <a href="https://orcid.org/0000-0002-9376-0660" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
 </ul>
 </div>
@@ -237,7 +268,7 @@
 
       <footer><div class="copyright">
   <p></p>
-<p>Developed by <a href="https://github.com/RC-88" class="external-link">Reina Chau</a>, <a href="https://github.com/katgit" class="external-link">Katia Bulekova</a>, <a href="https://github.com/vkartha" class="external-link">Vinay Kartha</a>, <a href="https://github.com/tetomonti" class="external-link">Stefano Monti</a>.</p>
+<p>Developed by <a href="https://github.com/RC-88" class="external-link">Reina Chau</a>, <a href="https://github.com/katgit" class="external-link">Katia Bulekova</a>, <a href="https://github.com/tetomonti" class="external-link">Stefano Monti</a>.</p>
 </div>
 
 <div class="pkgdown">

@@ -1,0 +1,28 @@
+---
+title: "Run GSVA Tab"
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Run GSVA Tab}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include=FALSE, messages=FALSE, warnings=FALSE}
+knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+```
+
+![](figures/run-gsva-tab.png)
+
+There are two panels on this page:
+
+- Right-side: [User Inputs](#user-inputs)
+- Left-side: [GSVA Results](#gsva-results)
+
+## 1. User Inputs
+
+![](figures/gsva.png)
+
+## 2. GSVA Results
+
+![](figures/gsva-results.png)
+
