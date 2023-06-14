@@ -36,3 +36,4 @@
 *.knit.md
 
 .Rproj.user
+docker-compose-local.yml

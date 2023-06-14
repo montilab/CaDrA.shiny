@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESOURCE_ROOT=/$PWD/inst
+RESOURCE_ROOT=/CaDrA.shiny/inst
 
 # Make sure the directory for individual app logs exists
 mkdir -p /var/log/shiny-server
