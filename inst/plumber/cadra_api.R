@@ -1,154 +1,334 @@
 
-# Load the package ####
-library(devtools)
-load_all(".")
-
 # R packages ####
-library(jsonlite)
-library(Biobase)
-library(CaDrA)
 library(dplyr)
+library(plumber)
+library(jsonlite)
 
 # Increase the memory limit for reading and downloading data from API
 library(unix)
 unix::rlimit_as(1e12, 1e12)
 
-# Global expression sets
-dataset_choices <- list(
-  "CCLE_MUT_SCNA" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA"),
-  "sim.ES" = system.file("data/sim.ES.RData", package = "CaDrA"),
-  "BRCA_GISTIC_MUT_SIG" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA")
-)
+# API title and description ####
 
-# Global input scores
-score_choices <- list(
-  "CTNBB1_reporter" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA"),
-  "sim.Scores" =  system.file("data/sim.Scores.rda", package = "CaDrA"),
-  "TAZYAP_BRCA_ACTIVITY" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA")
-)
+#* @apiTitle Plumber Example API
+#* @apiDescription This is a server for generating NGS special report.
 
-# Obtain the external data
-get_extdata <- function(dataset_choices, score_choices){
-  
-  # Check if external data exists in package
-  if(file.exists(system.file("extdata", "datalist.csv", package = "CaDrA"))){
-    
-    # Read in a list of files in datalist.csv 
-    datalist <- read.csv(system.file("extdata/datalist.csv", package = "CaDrA"), header=TRUE)
-    datalist <- datalist[which(datalist$eset_paths != "" & !is.na(datalist$eset_paths) & datalist$eset_names != "" & !is.na(datalist$eset_names)),]
-    
-    # Obtain external expression sets
-    eset_paths <- datalist$eset_paths
-    eset_names <- datalist$eset_names
-    
-    # Create a labels for each file
-    names(eset_paths) <- eset_names
-    
-    if(length(eset_paths) > 0){
-      dataset_choices <- c(dataset_choices, eset_paths)
-    }
-    
-    # Obtain external input scores
-    score_paths <- datalist$score_paths
-    score_names <- datalist$score_names
-    
-    # Create a labels for each file
-    names(score_paths) <- score_names
-    
-    if(length(score_paths) > 0){
-      score_choices <- c(score_choices, score_paths)
-    }
-    
-  }
-  
-  return(list(eset_choices=dataset_choices, input_score_choices=score_choices))
-  
+# Set-up header access ####
+
+#* @filter cors
+cors <- function(res){
+  res$setHeader("Access-Control-Allow-Origin", "*")
+  plumber::forward()
 }
 
-## Get a list of feature set available on database
-#* @param orderby
-#' @get /feature_set
-#' @post /feature_set
-feature_set <- function(orderby="asc"){
-  
-  # Combine extdata with global expression set and scores dataset if it was provided
-  eset_choices <- get_extdata(dataset_choices, score_choices)[["eset_choices"]] %>% unlist() %>% names() 
-  
-  # Sort projects by ascending or descending order
-  if(orderby == "asc"){
-    eset_choices <- sort(eset_choices, decreasing = FALSE)
-  }else if(orderby == "desc"){
-    eset_choices <- sort(eset_choices, decreasing = TRUE)
-  }
-  
-  return(toJSON(eset_choices, pretty=TRUE))
-  
-}
+# Create a list of serializers to return object ####
+serializers <- list(
+  "html" = plumber::serializer_html(),
+  "json" = plumber::serializer_json(),
+  "csv" = plumber::serializer_csv(),
+  "rds" = plumber::serializer_rds(),
+  "pdf" = plumber::serializer_pdf(),
+  "text" = plumber::serializer_text(),
+  "htmlwidget" = plumber::serializer_htmlwidget()
+)
 
-## Get expression set of the selected feature set
-#* @param feature_set
-#' @serializer rds
-#' @get /expression_set
-#' @post /expression_set
-expression_set <- function(res, req, feature_set, include_scores=FALSE){
+# Create a page not found
+page_not_found <- function(status, message){
   
-  # Remove multiple spaces
-  feature_set <- gsub("\\s+", " ", feature_set)
-  
-  # Combine extdata with global expression set and scores dataset if it was provided
-  extdata <- get_extdata(dataset_choices, score_choices)
-  eset_choices <- extdata[["eset_choices"]] %>% unlist()
-  input_score_choices <- extdata[["input_score_choices"]] %>% unlist()
-  eset_names <- names(eset_choices)
-  
-  # Check if the project is available on GeneHive, if not, return warning message
-  if(toupper(feature_set) %in% toupper(eset_names)){
-    
-    dl_data <- list()
-    
-    dataset <- eset_choices[which(toupper(eset_names) == toupper(feature_set))]
-    
-    if(tools::file_ext(dataset) == "rda" | tools::file_ext(dataset) == "RData"){
-      envir_name <- load(dataset)
-      ES <- get(envir_name)
-    }else{
-      ES <- readRDS(system.file("extdata", "eset", dataset, package = "CaDrA"))
-    }
-    
-    dl_data <- c(dl_data, ES=ES)
-    
-    if(include_scores){
-      
-      scores <- input_score_choices[which(eset_choices == dataset)] %>% unlist()
-      
-      if(!is.na(names(scores))){
-        
-        if(tools::file_ext(scores) == "rda" | tools::file_ext(scores) == "RData"){
-          envir_name <- load(scores)
-          input_score <- get(envir_name)
-        }else{
-          input_score <- readRDS(system.file("extdata", "input_score", scores, package = "CaDrA"))
+  sprintf(
+    '
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+     <title>%s Error</title>
+     <style>
+       #error-404 {
+        text-align: center;
+          margin: 0;
+          padding: 0.6em 2em 0.4em;
+          border-bottom: 2px solid #000;
+          color: #fff;
+          background-color: #900;
+          font-size: 0.9em;
+          font-weight: normal;
+          font-family: sans-serif, helvetica;
         }
-        
-        dl_data <- c(dl_data, input_score=list(input_score))
+     
+        #error-message {
+          padding: 1em 5em;
+          text-align: center;
+          border-bottom: 2px solid #000;
+        }
+     </style>
+    </head>
+    <body>
+      <div id="error-404"><h1><strong>%s Error</strong></h1></div>
+      <div id="error-message"><h3>%s</h3></div>
+    </body>
+    </html>
+    ', status, status, message
+  )
+  
+}
 
-      }else{
+## Get a list of feature sets available on the database
+#' @get /get_feature_sets
+get_feature_sets <- function(res, req){
+  
+  # Get the path of datalist file which it contains all of the feature sets, input scores,
+  # and gene expression sets that are available on the server
+  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
+  
+  # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
+  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
+    dplyr::select(description, feature_set_names)
+  
+  # Validate results
+  if(nrow(fs_df) == 0){
+    fs_df <- data.frame(
+      warning = sprintf("There are currently no feature sets avaliable on our portal.")
+    )
+  }
+  
+  return(jsonlite::toJSON(fs_df, pretty=TRUE))
+  
+}
+
+## Get a list of input scores that are associated with a given feature set
+#* @param feature_set
+#' @get /get_input_scores
+get_input_scores <- function(res, req, feature_set){
+  
+  # parameters
+  params <- c("feature_set")
+  
+  # check parameters
+  if(base::missing(feature_set)){
+    missing_params <- c(base::missing(feature_set))
+    error_message <- sprintf("Missing required parameter: %s", paste(params[which(missing_params==TRUE)], collapse=", "))
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 500
+    rest$body <- page_not_found(status="500", message=error_message)
+  }
+  
+  # Validate parameters
+  feature_set <- trimws(feature_set)
+  
+  # Get the path of datalist file which it contains all of the feature sets, input scores,
+  # and gene expression sets that are available on the server
+  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
+  
+  # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
+  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
+    dplyr::filter(feature_set_names %in% feature_set)
+  
+  # Validate results
+  if(nrow(fs_df) == 0){
+    fs_df <- data.frame(
+      warning = sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
+    )
+  }else{
+    fs_df <- fs_df %>% 
+      dplyr::distinct(feature_set_names, input_score_names, .keep_all = TRUE)
+  }
+  
+  return(jsonlite::toJSON(fs_df, pretty=TRUE))
+  
+}
+
+## Get a list of gene expression set that are associated with a given feature set
+#* @param feature_set
+#' @get /get_gene_expressions
+get_gene_expressions <- function(res, req, feature_set){
+  
+  # parameters
+  params <- c("feature_set")
+  
+  # check parameters
+  if(base::missing(feature_set)){
+    missing_params <- c(base::missing(feature_set))
+    error_message <- sprintf("Missing required parameter: %s", paste(params[which(missing_params==TRUE)], collapse=", "))
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 500
+    rest$body <- page_not_found(status="500", message=error_message)
+  }
+  
+  # Validate parameters
+  feature_set <- trimws(feature_set)
+  
+  # Get the path of datalist file which it contains all of the feature sets, input scores,
+  # and gene expression sets that are available on the server
+  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
+  
+  # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
+  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
+    dplyr::filter(feature_set_names %in% feature_set)
+  
+  # Validate results
+  if(nrow(fs_df) == 0){
+    fs_df <- data.frame(
+      warning = sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
+    )
+  }else{
+    fs_df <- fs_df %>% 
+      dplyr::distinct(feature_set_names, gene_expression_names, .keep_all = TRUE)
+  }
+  
+  return(jsonlite::toJSON(fs_df, pretty=TRUE))
+  
+}
+
+## Returns a Zip file that consists a list of given feature sets along with their associated input scores and gene expression sets
+#* @param feature_sets
+#* @param include_input_score
+#* @param include_gene_expression
+#* @serializer contentType list(type="application/zip")
+#' @get /download_feature_sets
+download_feature_sets <- function(res, req, feature_sets, include_input_score=TRUE, include_gene_expression=TRUE){
+  
+  # parameters
+  params <- c("feature_set", "include_input_score", "include_gene_expression")
+  
+  # check parameters
+  if(base::missing(feature_set) | base::missing(include_input_score) | base::missing(include_gene_expression)){
+    
+    missing_params <- c(base::missing(feature_set), base::missing(include_input_score), base::missing(include_gene_expression))
+    error_message <- sprintf("Missing required parameter(s): %s", paste(params[which(missing_params==TRUE)], collapse=", "))
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 500
+    rest$body <- page_not_found(status="500", message=error_message)
+    
+  }
+  
+  # Validate parameters
+  feature_sets <- strsplit(as.character(feature_sets), ",", perl=TRUE) %>% unlist() %>% gsub("[[:space:]]", "", .)
+  include_input_score <- ifelse(include_input_score==TRUE, 1, 0)
+  include_gene_expression <- ifelse(include_gene_expression==TRUE, 1, 0)
+  
+  # Get the path of datalist file which it contains all of the feature sets, input scores,
+  # and gene expression sets that are available on the server
+  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
+  
+  # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
+  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
+    dplyr::filter(feature_set_names %in% feature_sets)
+  
+  # Validate results
+  if(nrow(fs_df) == 0){
+    
+    fs_df <- data.frame(
+      warning = sprintf(
+        "There %s no feature set%s with the name%s: %s avaliable on our portal.", 
+        ifelse(length(feature_sets)==1, "is", "are"),
+        ifelse(length(feature_sets)==1, "", "s"),
+        ifelse(length(feature_sets)==1, "", "s"),
+        paste0(feature_sets, collapse=", "))
+    )
+    
+    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    
+  }else{
+    
+    # Create a temporary directory to store RDS files
+    fs <- c()
+    tmpdir <- file.path(tempdir(), paste0("download-fs-", Sys.Date()))
+    dir.create(tmpdir, showWarnings=FALSE, recursive=TRUE)
+    
+    # Delete the directory after exiting the function
+    on.exit({
+      if (dir.exists(tmpdir)) {
+        unlink(tmpdir, recursive = TRUE)
+      }
+    }, add = TRUE)
+    
+    # Create an empty object to store file names
+    file_paths <- NULL
+      
+    # Read in feature sets 
+    for(f in 1:nrow(fs_df)){
+      #f=1;
+      feature_set_name = fs_df$feature_set_names[f]
+      feature_set_path = fs_df$feature_set_paths[f]
+
+      # Create a directory
+      file_dir <- file.path(tmpdir, feature_set_name, "feature_set")
+      dir.create(file_dir, showWarnings=FALSE, recursive=TRUE)
+      
+      # Create a file path
+      file_path <- file.path(file_dir, paste0(feature_set_name, ".RDS"))
+      
+      # Copy FS to zip directory
+      file.copy(from=feature_set_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+      
+      # Store file path
+      file_paths <- c(file_paths, file_path)    
+      
+      # Whether to include input scores
+      if(include_input_score == TRUE){
+        input_score_name = fs_df$input_score_names[f]
+        input_score_path = fs_df$input_score_paths[f]
         
-        dl_data <- c(dl_data, input_score=list("Currently, there are no input scores associated with this feature set on CaDrA portal."))
+        if(input_score_name != "" && !is.na(input_score_name) && !is.null(input_score_name)){
+
+          # Create a directory
+          file_dir <- file.path(tmpdir, feature_set_name, "input_score")
+          dir.create(file_dir, showWarnings=FALSE, recursive=TRUE)
+          
+          # Create a file path
+          file_path <- file.path(file_dir, paste0(input_score_name, ".RDS"))
+          
+          # Copy FS to zip directory
+          file.copy(from=input_score_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+          
+          # Store file path
+          file_paths <- c(file_paths, file_path)  
+          
+        }
+      }
+      
+      # Whether to include gene expression
+      if(include_gene_expression == TRUE){
+        gene_expression_name = fs_df$gene_expression_names[f]
+        gene_expression_path = fs_df$gene_expression_paths[f]
         
+        if(gene_expression_name != "" && !is.na(gene_expression_name) && !is.null(gene_expression_name)){
+          
+          # Create a directory
+          file_dir <- file.path(tmpdir, feature_set_name, "gene_expression")
+          dir.create(file_dir, showWarnings=FALSE, recursive=TRUE)
+          
+          # Create a file path
+          file_path <- file.path(file_dir, paste0(gene_expression_name, ".RDS"))
+          
+          # Copy FS to zip directory
+          file.copy(from=input_score_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+          
+          # Store file path
+          file_paths <- c(file_paths, file_path)  
+          
+        }
       }
       
     }
     
-    return(as_attachment(dl_data, paste0(feature_set, ".rds")))
+    # zip the files with predefined names
+    for(path in file_paths){
+      fs <- c(fs, path)
+    } 
     
-  }else{
+    zip_file = file.path(tmpdir, paste0("download-fs-", Sys.Date(), ".zip"))
     
-    res$status <- 404  
-    return(list(error=paste0(feature_set, " feature set is not available on the CaDrA portal")))
+    zip(zipfile=zip_file, files=fs, flags="-r9Xj")
     
-  }
-  
+    readBin(zip_file, what="raw", n=file.info(zip_file)$size)
+
+  }  
 }
 
 

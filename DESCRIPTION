@@ -26,6 +26,8 @@ Imports:
     GSVA,
     GSEABase,
     htmltools,
+    httr,
+    jsonlite,
     magrittr,
     methods,
     parallel,

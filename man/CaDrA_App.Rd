@@ -34,7 +34,7 @@ library(shiny)
 id = "myapp"
 
 # Create a Shiny app
-app <- CaDrA-shiny::CaDrA_App(id = id)
+app <- CaDrA.shiny::CaDrA_App(id = id)
 
 # Launch and deploy Shiny app (NOT RUN)
 # shiny::runApp(app, host='0.0.0.0', port=3838)

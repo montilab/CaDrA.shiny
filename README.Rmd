@@ -4,8 +4,6 @@ output: rmarkdown::github_document
 
 <!-- README.md is generated from README.Rmd. Please edit this file -->
 
-<script src='https://cdn.jsdelivr.net/gh/eddymens/markdown-external-link-script@v1.0.0/main.min.js'></script>
-
 ```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse = TRUE, comment="")
 library(SummarizedExperiment)
@@ -31,7 +29,7 @@ An R Shiny Dashboard for Interacting with **[CaDrA](https://montilab.github.io/C
 
 ## Overview
 
-**CaDrA-shiny** is an interactive R Shiny dashboard that was developed to allow users to directly interacting with **CaDrA** package. **CaDrA** is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit [our Github repo](https://github.com/montilab/CaDrA) for more details). 
+**CaDrA-shiny** is an interactive R Shiny dashboard that is developed to allow users to directly interacting with **CaDrA** package. **CaDrA** is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit [our Github repo](https://github.com/montilab/CaDrA) for more details). 
 
 The CaDrA's shiny dashboard has two distinctive features:
 
@@ -51,7 +49,7 @@ The **CaDrA.shiny** package is already containerized using **Docker** and can be
 
 # Run CaDrA Shiny App on RStudio Desktop
 
-Don't have RStudio Desktop installed, download [here](https://posit.co/download/rstudio-desktop/).
+Don't have RStudio Desktop installed, download it [here](https://posit.co/download/rstudio-desktop/).
 
 ### (1) Installation
 
@@ -75,7 +73,7 @@ CaDrA.shiny::CaDrA_App(id="myapp")
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
 
 **Required:** 
-a data file (in **csv** or **rds** format) that includes paths to your pre-proccessed dataset with the following column fields populated:
+a data file (in **csv** or **rds** format) that includes paths to your pre-proccessed dataset with required columns:
 
 - feature_set_names
 - feature_set_paths
@@ -84,8 +82,8 @@ a data file (in **csv** or **rds** format) that includes paths to your pre-procc
 - gene_expression_names
 - gene_expression_paths
 
-Here is an example of **mydatafile.csv**:
-![](man/figures/datalist.png)
+Here is an example of **mydatafile.csv**
+<a href="man/figures/datalist.png" target="_blank"><img src="man/figures/datalist.png"></a>
 
 To launch the app:
 ```r
@@ -96,7 +94,7 @@ mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
 ```
 
-### (6) Launch CaDrA's Shiny App with dataset download from our API portal
+### (6) Launch CaDrA's Shiny App with dataset download from our Rest API 
 
 #### (i) Retrieve pre-processed dataset from API
 
@@ -131,15 +129,12 @@ There are five tabs on CaDrA's Dashboard. Explore each tab and see what they do:
 - Publication
 - Contract Us
 
-# User Guide:
+# Additional User Guides
 
 - [Containerizing CaDrA.shiny with Docker](https://montilab.github.io/CaDrA/articles/docker.html)
-- [Launch CaDrA Shiny with Compose](https://montilab.github.io/CaDrA/articles/docker-compose.html)
-- [Getting started with CaDrA's Shiny Dashboard](https://montilab.github.io/CaDrA/articles/getting-started.html)
+- [Launching CaDrA's Shiny Dashboard with Compose](https://montilab.github.io/CaDrA/articles/docker-compose.html)
 
 # Getting Help
-
-See our **User Guide** for more complete documentation of **CaDrA.shiny**
 
 To get help with **CaDrA**, visit our [Github dicussion](https://github.com/montilab/CaDrA/discussions) or [Github issues](https://github.com/montilab/CaDrA/issues).
 

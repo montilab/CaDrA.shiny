@@ -35,11 +35,11 @@ library(shiny)
 id <- "myapp"
 
 ui <- shiny::fluidPage(
-   CaDrA-shiny::CaDrA_UI(id = id)
+   CaDrA.shiny::CaDrA_UI(id = id)
 )
 
 server <- function(input, output, session) {
-   CaDrA-shiny::CaDrA_Server(id = id)
+   CaDrA.shiny::CaDrA_Server(id = id)
 }
 
 app <-  shiny::shinyApp(ui=ui, server=server)

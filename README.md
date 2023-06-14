@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit this file -->
-<script src='https://cdn.jsdelivr.net/gh/eddymens/markdown-external-link-script@v1.0.0/main.min.js'></script>
 <p style="font-size: 40pt; front-weight: bold; padding-bottom: 0px; margin-bottom: 0;">
 CaDrA.shiny
 </p>
@@ -52,7 +51,7 @@ and can be deployed on any Cloud-based services.
 
 # Run CaDrA Shiny App on RStudio Desktop
 
-Don’t have RStudio Desktop installed, download
+Don’t have RStudio Desktop installed, download it
 [here](https://posit.co/download/rstudio-desktop/).
 
 ### (1) Installation
@@ -77,8 +76,7 @@ CaDrA.shiny::CaDrA_App(id="myapp")
 ### (4) Launch CaDrA’s Shiny App with your pre-proccessed dataset
 
 **Required:** a data file (in **csv** or **rds** format) that includes
-paths to your pre-proccessed dataset with the following column fields
-populated:
+paths to your pre-proccessed dataset with required columns:
 
 - feature_set_names
 - feature_set_paths
@@ -87,7 +85,8 @@ populated:
 - gene_expression_names
 - gene_expression_paths
 
-Here is an example of **mydatafile.csv**: ![](man/figures/datalist.png)
+Here is an example of **mydatafile.csv**
+<a href="man/figures/datalist.png" target="_blank"><img src="man/figures/datalist.png"></a>
 
 To launch the app:
 
@@ -99,7 +98,7 @@ mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
 ```
 
-### (6) Launch CaDrA’s Shiny App with dataset download from our API portal
+### (6) Launch CaDrA’s Shiny App with dataset download from our Rest API
 
 #### (i) Retrieve pre-processed dataset from API
 
@@ -135,19 +134,14 @@ they do:
 - Publication
 - Contract Us
 
-# User Guide:
+# Additional User Guides
 
 - [Containerizing CaDrA.shiny with
   Docker](https://montilab.github.io/CaDrA/articles/docker.html)
-- [Launch CaDrA Shiny with
+- [Launching CaDrA’s Shiny Dashboard with
   Compose](https://montilab.github.io/CaDrA/articles/docker-compose.html)
-- [Getting started with CaDrA’s Shiny
-  Dashboard](https://montilab.github.io/CaDrA/articles/getting-started.html)
 
 # Getting Help
-
-See our **User Guide** for more complete documentation of
-**CaDrA.shiny**
 
 To get help with **CaDrA**, visit our [Github
 dicussion](https://github.com/montilab/CaDrA/discussions) or [Github
