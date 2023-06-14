@@ -43,6 +43,7 @@ RUN R -e "install.packages('future', dependencies=TRUE, repos='http://cran.rstud
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('plumber', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('jsonlite', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "install.packages('httr', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 
 # Make ShinyApp available at port 3838
 EXPOSE 3838

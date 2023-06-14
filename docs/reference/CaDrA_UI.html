@@ -112,16 +112,14 @@ in CaDrA package.</p></dd>
 <span class="r-in"><span><span class="va">id</span> <span class="op">&lt;-</span> <span class="st">"myapp"</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>   <span class="va">CaDrA</span><span class="op">-</span><span class="fu">shiny</span><span class="fu">::</span><span class="fu">CaDrA_UI</span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu">CaDrA_UI</span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in dots_list(...):</span> object 'CaDrA' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>   <span class="va">CaDrA</span><span class="op">-</span><span class="fu">shiny</span><span class="fu">::</span><span class="fu">CaDrA_Server</span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
+<span class="r-in"><span>   <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="CaDrA_Server.html">CaDrA_Server</a></span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>ui<span class="op">=</span><span class="va">ui</span>, server<span class="op">=</span><span class="va">server</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in force(ui):</span> object 'ui' not found</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Launch Shiny app (NOT RUN)</span></span></span>
 <span class="r-in"><span><span class="co"># shiny::runApp(app, host='0.0.0.0', port=3838)</span></span></span>

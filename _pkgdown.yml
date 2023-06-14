@@ -27,13 +27,14 @@ reference:
   - '`CaDrA_Server`'
   - '`CaDrA_UI`'
   - '`CaDrA_App`'
-  
+
 - title: Plumber API Methods
   desc: ~
   contents:
-  - '`CaDrA_Server`'
-  - '`CaDrA_UI`'
-  - '`CaDrA_App`'
+  - '`get_feature_sets`'
+  - '`get_input_scores`'
+  - '`get_gene_expressions`'
+  - '`download_feature_sets`'
     
 navbar:
   left:

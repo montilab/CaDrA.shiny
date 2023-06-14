@@ -123,13 +123,13 @@
 <div class="section level3">
 <h3 id="clone-this-respitory">(1) Clone this respitory<a class="anchor" aria-label="anchor" href="#clone-this-respitory"></a>
 </h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="cd-to-cadra-shiny-folder-where-dockerfile-file-is-stored-and-build-the-docker-image-">(2) CD to <code>CaDrA.shiny</code> folder where
 <code>Dockerfile</code> file is stored and build the Docker image.<a class="anchor" aria-label="anchor" href="#cd-to-cadra-shiny-folder-where-dockerfile-file-is-stored-and-build-the-docker-image-"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> cadra-shiny:1.0.0 .</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> cadra-shiny:1.0.0 .</span></code></pre></div>
 <p><strong>-t</strong>: add a tag to an image such as the version of the
 application, e.g. <em>cadra-shiny:1.0.0</em> or
 <em>cadra-shiny:latest</em>. <br></p>
@@ -140,18 +140,18 @@ to build</em></p>
 <h3 id="after-the-build-is-completed-you-can-check-if-the-image-is-built-successfully">(3) After the build is completed, you can check if the image is
 built successfully<a class="anchor" aria-label="anchor" href="#after-the-build-is-completed-you-can-check-if-the-image-is-built-successfully"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> images</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="ex">REPOSITORY</span>        TAG        IMAGE ID        CREATED        SIZE</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="ex">cadra.shiny</span>       1.0.0      2c22887402d3    2 hours ago    2.56GB</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">docker</span> images</span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="ex">REPOSITORY</span>        TAG        IMAGE ID        CREATED        SIZE</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="ex">cadra.shiny</span>       1.0.0      2c22887402d3    2 hours ago    2.56GB</span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="to-run-the-container-with-the-built-image">(4) To run the container with the built image<a class="anchor" aria-label="anchor" href="#to-run-the-container-with-the-built-image"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /path/to/CaDrA.shiny:/CaDrA.shiny <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>           <span class="at">-v</span> /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh:/usr/bin/shiny-server.sh <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">-p</span> 8080:8050 <span class="at">--name</span> cadra-shiny <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">-d</span> cadra-shiny:1.0.0 </span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /path/to/CaDrA.shiny:/CaDrA.shiny <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>           <span class="at">-v</span> /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh:/usr/bin/shiny-server.sh <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>           <span class="at">-p</span> 8080:8050 <span class="at">--name</span> cadra-shiny <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>           <span class="at">-d</span> cadra-shiny:1.0.0 </span></code></pre></div>
 <p><strong>NOTE:</strong></p>
 <ul>
 <li>Change <strong>/path/to/CaDrA.shiny</strong> to your local
@@ -178,11 +178,11 @@ reference</a></p>
 <div class="section level3">
 <h3 id="to-check-if-the-container-is-built-sucessfully">(5) To check if the container is built sucessfully<a class="anchor" aria-label="anchor" href="#to-check-if-the-container-is-built-sucessfully"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">docker</span> container ps</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE               COMMAND                    CREATED        STATUS        PORTS                    NAMES</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="ex">b37b6b19c4e8</span>   cadra-shiny:1.0.0   <span class="st">"bash dashboard-kickoff"</span>   5 hours ago    Up 5 hours    0.0.0.0:4567-<span class="op">&gt;</span>3838/tcp   cadra-shiny</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">docker</span> container ps</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE               COMMAND                    CREATED        STATUS        PORTS                    NAMES</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="ex">b37b6b19c4e8</span>   cadra-shiny:1.0.0   <span class="st">"bash dashboard-kickoff"</span>   5 hours ago    Up 5 hours    0.0.0.0:4567-<span class="op">&gt;</span>3838/tcp   cadra-shiny</span></code></pre></div>
 <p><strong>NOTE:</strong> The <code>cadra-shiny</code> container is
 published on port <strong>4567</strong> on the host machine, and
 <strong>3838</strong> is the port of where the <code>cadra-shiny</code>
