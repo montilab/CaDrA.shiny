@@ -62,6 +62,8 @@ devtools::install_github("montilab/CaDrA.shiny")
 
 ```r
 library(CaDrA.shiny)
+library(httr)
+library(jsonlite)
 ```
 
 ### (3) Launch CaDrA's Shiny App with dataset included in the package
@@ -98,12 +100,32 @@ CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
 
 #### (i) Retrieve pre-processed dataset from API
 
-```r
+```{r}
+
+# API server to get a list of feature sets in the CaDrA Portal
+API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_sets"
+
+# Get a list of feature sets available on CaDrA Portal
+fs_list <- CaDrA.shiny::get_feature_sets(API_Server, orderby="asc")
+  
+# Download the feature set along with its input score and gene expression
+API_Server <- paste0("https://montilab.bu.edu/CaDrA_API/download_feature_set") 
+
+feature_sets <- paste0(fs_list$feature_set_names[1:2], collapse=",")
+
+include_input_score <- TRUE
+include_gene_expression <- TRUE
+out_dir <- "~/Github"
+
+
+
+
 # Read in the data file that includes paths to your pre-proccessed dataset
 mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 
 # Launch CaDrA's Shiny app with your loaded data file
 CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+
 ```
 
 #### (ii) Launch CaDrA's app with downloaded dataset

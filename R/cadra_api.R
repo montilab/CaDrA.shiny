@@ -14,13 +14,13 @@
 #' @import httr jsonlite dplyr
 #' 
 #' @export 
-get_feature_sets <- function(API_Server, orderby="asc"){
+get_feature_set <- function(API_Server, orderby="asc"){
   
   # Call the api server
   res <- httr::GET(url = API_Server, encode = 'json')
   
   # Check the status of the api
-  if(res$status_code=='200'){
+  if(res$status_code == '200'){
     
     fs_df <- jsonlite::fromJSON(fromJSON(rawToChar(res$content)))  
     
@@ -58,7 +58,7 @@ get_feature_sets <- function(API_Server, orderby="asc"){
 #' @import httr jsonlite dplyr
 #' 
 #' @export 
-get_input_scores <- function(API_Server, feature_set, orderby="asc"){
+get_input_score <- function(API_Server, feature_set, orderby="asc"){
   
   # Create the server string
   url <- paste0(API_Server, "?feature_set=", feature_set)
@@ -67,7 +67,7 @@ get_input_scores <- function(API_Server, feature_set, orderby="asc"){
   res <- httr::GET(url = url, encode = 'json')
   
   # Check the status of the api
-  if(res$status_code=='200'){
+  if(res$status_code == '200'){
     
     fs_df <- jsonlite::fromJSON(fromJSON(rawToChar(res$content)))  
     
@@ -82,7 +82,7 @@ get_input_scores <- function(API_Server, feature_set, orderby="asc"){
     
   }else{
     
-    return(res$message)
+    stop(res$message)
     
   }
   
@@ -105,7 +105,7 @@ get_input_scores <- function(API_Server, feature_set, orderby="asc"){
 #' @import httr jsonlite dplyr
 #' 
 #' @export 
-get_gene_expressions <- function(API_Server, feature_set, orderby="asc"){
+get_gene_expression <- function(API_Server, feature_set, orderby="asc"){
   
   # Create the server string
   url <- paste0(API_Server, "?feature_set=", feature_set)
@@ -114,7 +114,7 @@ get_gene_expressions <- function(API_Server, feature_set, orderby="asc"){
   res <- httr::GET(url = url, encode = 'json')
   
   # Check the status of the api
-  if(res$status_code=='200'){
+  if(res$status_code == '200'){
     
     fs_df <- jsonlite::fromJSON(fromJSON(rawToChar(res$content)))  
     
@@ -129,7 +129,7 @@ get_gene_expressions <- function(API_Server, feature_set, orderby="asc"){
     
   }else{
     
-    return(res$message)
+    stop(res$message)
     
   }
   
@@ -141,11 +141,13 @@ get_gene_expressions <- function(API_Server, feature_set, orderby="asc"){
 #' 
 #' @param API_Server an URL link to where the API is hosted 
 #' @param feature_sets a list of feature sets to look up and download the 
-#' appropriate dataset that associated with it. 
-#' @param include_input_score a Boolean value to determine whether to include input
-#' scores that associated with the given feature sets
-#' @param include_gene_expression a Boolean value to determine whether to include 
-#' gene expression sets that associated with the given feature sets
+#' appropriate data that are associated with it. 
+#' @param include_input_score a Boolean value to determine whether to include 
+#' input scores that associated with the given feature sets. Default is TRUE.
+#' @param include_gene_expression a Boolean value to determine whether to 
+#' include gene expression sets that associated with the given feature sets. 
+#' Default is TRUE.
+#' @param out_dir a directory to save the output. 
 #' 
 #' @return a zip file
 #'
@@ -157,48 +159,72 @@ get_gene_expressions <- function(API_Server, feature_set, orderby="asc"){
 #' @import httr jsonlite dplyr
 #' 
 #' @export 
-download_feature_sets <- function(API_Server, feature_sets, out_dir, include_input_score=TRUE, include_gene_expression=TRUE){
+download_feature_sets <- function(API_Server, feature_sets, include_input_score=TRUE, include_gene_expression=TRUE, out_dir){
   
-  # If the list of feature sets >= 2, concatenate them by a commas separator
-  if(length(feature_sets) == 0){
-    stop("feature_sets cannot be empty.")
-  }else{
-    feature_sets <- paste0(feature_sets, sep = ", ", collapse = TRUE)
-  }
+  # Check feature sets
+  if(length(feature_sets) == 0 | any(feature_sets %in% ""))
+    stop("feature_set cannot be empty.")
 
-  # Check the input parameters
+  # Check input score 
   if(!include_input_score %in% c(TRUE, FALSE))
     stop("include_input_score must be a Boolean value, TRUE or FALSE.")
   
+  # Check gene expression
   if(!include_gene_expression %in% c(TRUE, FALSE))
     stop("include_gene_expression must be Boolean value, TRUE or FALSE.")
   
   # Check output directory
+  if(length(out_dir) == 0 | out_dir == "")
+    stop("out_dir cannot be empty.")
+  
+  # Check if output directory exists
   if(!dir.exists(out_dir))
     stop(sprintf("Directory: %s does not exists"), out_dir)
   
+  # Create empty list to store datalist
+  datalist <- NULL
+  
+  # Required column names for datalist
+  datalist_colnames <- c('feature_set_name', 'feature_set_path', 'input_score_name', 'input_score_path', 'gene_expression_name', 'gene_expression_path')
+  
   # Create the server string
-  url <- paste0(API_Server, "?feature_sets=", feature_sets, "&include_input_score=", include_input_score, "&include_gene_expression=", include_gene_expression)
-  
-  # Call the api server
-  res <- httr::GET(url = url, encode = 'json')
-  
-  # Check the status of the api
-  if(res$status_code == '200'){
+  for(d in seq_along(feature_sets)){
+    #d=1;
+    feature_set <- feature_sets[d]
     
-    file_dir = file.path(out_dir, paste0("download-fs-", Sys.Date()))
+    # API Server
+    url <- paste0(API_Server, "?feature_set=", feature_set, "&include_input_score=", include_input_score, "&include_gene_expression=", include_gene_expression)
     
-    zip_file = paste0(file_dir, ".zip")
-    
-    download.file(url, zip_file)
-    
-    return(list.files(file_dir))
-    
-  }else{
-    
-    return(res$message)
-    
+    # Check the status of the api
+    tryCatch({
+      
+      file_dir = file.path(out_dir, paste0("download-fs-", Sys.Date()))
+      
+      zip_file = paste0(file_dir, ".zip")
+      
+      download.file(url, zip_file)
+      
+      unzip(zip_file, exdir=out_dir, list=FALSE)
+      
+      datalist <- datalist %>% 
+        rbind(
+          readRDS(file.path(file_dir, feature_set, "datalist.rds")) %>% 
+            dplyr::mutate(
+              feature_set_path = file.path(file_dir, feature_set, "feature_set", feature_set_path),
+              input_score_path = file.path(file_dir, feature_set, "input_score", input_score_path), 
+              gene_expression_path = file.path(file_dir, feature_set, "gene_expression", gene_expression_path) 
+            ) %>% 
+            dplyr::select(datalist_colnames)
+        )
+      
+    })
   }
+  
+  # Save datalist to an output directory
+  saveRDS(datalist, file.path(out_dir, "datalist.rds"))
+  
+  # Return datalist with appropriate paths to its downloaded dataset
+  return(datalist)
   
 }
 

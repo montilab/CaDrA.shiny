@@ -45,11 +45,13 @@ global_gene_expression_paths <- list(
   "sim_FS" = NA
 )
   
-# Required column names for datalist_file
+# Required column names for datalist
 datalist_colnames <- c('feature_set_names', 'feature_set_paths', 'input_score_names', 'input_score_paths', 'gene_expression_names', 'gene_expression_paths')
 
 # function to obtain the external data
-get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_score_choices, global_gene_expression_paths){
+get_extdata <- function(datalist=NULL, global_feature_set_paths, global_score_choices, global_gene_expression_paths){
+  
+  print(datalist)
   
   global_app_options <- data.frame(
     feature_set_names = names(global_feature_set_paths), 
@@ -60,27 +62,27 @@ get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_sco
     gene_expression_paths = global_gene_expression_paths %>% unlist()
   )
   
-  if(is.null(datalist_file)){
+  if(is.null(datalist)){
     return(global_app_options)
   }
   
   # Check if external data exists in package
-  if(file.exists(datalist_file)){
+  if(file.exists(datalist)){
     
-    if(tools::file_ext(datalist_file) == "csv"){
-      datalist_file <- utils::read.csv(datalist_file, header=TRUE) %>% dplyr::mutate_all(., as.character)
-    }else if(tools::file_ext(datalist_file) == "rds"){
-      datalist_file <- base::readRDS(datalist_file) %>% dplyr::mutate_all(., as.character)
+    if(tools::file_ext(datalist) == "csv"){
+      datalist <- utils::read.csv(datalist, header=TRUE) %>% dplyr::mutate_all(., as.character)
+    }else if(tools::file_ext(datalist) == "rds"){
+      datalist <- base::readRDS(datalist) %>% dplyr::mutate_all(., as.character)
     }else{
       stop("datalist file file must have a csv or rds format")
     }
     
-    if(all(datalist_colnames %in% colnames(datalist_file))){
+    if(all(datalist_colnames %in% colnames(datalist))){
       
-      datalist_file <- datalist_file[which(datalist_file$feature_set_paths != "" & !is.na(datalist_file$feature_set_paths) & datalist_file$feature_set_names != "" & !is.na(datalist_file$feature_set_names)),]
+      datalist <- datalist[which(datalist$feature_set_paths != "" & !is.na(datalist$feature_set_paths) & datalist$feature_set_names != "" & !is.na(datalist$feature_set_names)),]
       
       app_options <- global_app_options %>% 
-        dplyr::bind_rows(datalist_file)
+        dplyr::bind_rows(datalist)
       
       return(app_options)
       
@@ -92,7 +94,7 @@ get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_sco
     
   }else{
     
-    stop("File does not exist at ", datalist_file)
+    stop("File does not exist at ", datalist)
     
   }
   
@@ -101,10 +103,10 @@ get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_sco
 #' Shiny UI modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist_file A path to data file (in cvs or rds format) listing 
+#' @param datalist A path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
-#' The datalist_file must contains the following variables:
+#' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_paths' (repuired), 
 #' 'input_score_names' (required), input_score_paths' (required), 
 #' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
@@ -139,10 +141,10 @@ get_extdata <- function(datalist_file=NULL, global_feature_set_paths, global_sco
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' 
 #' @export 
-CaDrA_UI <- function(id, datalist_file=NULL){
+CaDrA_UI <- function(id, datalist=NULL){
   
   # Combine extdata with global expression set and scores dataset if it was provided
-  extdata <- get_extdata(datalist_file, global_feature_set_paths, global_score_choices, global_gene_expression_paths)
+  extdata <- get_extdata(datalist, global_feature_set_paths, global_score_choices, global_gene_expression_paths)
 
   cadra_fs_choices <- extdata %>% dplyr::distinct(feature_set_names, .keep_all=TRUE)
   cadra_feature_set_paths <- cadra_fs_choices$feature_set_paths
@@ -980,10 +982,10 @@ CaDrA_UI <- function(id, datalist_file=NULL){
 #' Shiny Server modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist_file A path to data file (in cvs or rds format) listing 
+#' @param datalist A path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
-#' The datalist_file must contains the following variables:
+#' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_paths' (repuired), 
 #' 'input_score_names' (required), input_score_paths' (required), 
 #' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
@@ -1018,14 +1020,14 @@ CaDrA_UI <- function(id, datalist_file=NULL){
 #' @rawNamespace import(dplyr, except = c(union, intersect, setdiff))
 #' 
 #' @export 
-CaDrA_Server <- function(id, datalist_file=NULL){
+CaDrA_Server <- function(id, datalist=NULL){
   
   shiny::moduleServer(
     id,
     function(input, output, session){
 
       ## Extract extdata ####
-      extdata <- shiny::reactiveVal(get_extdata(datalist_file, global_feature_set_paths, global_score_choices, global_gene_expression_paths))
+      extdata <- shiny::reactiveVal(get_extdata(datalist, global_feature_set_paths, global_score_choices, global_gene_expression_paths))
 
       ## Detect number of cores on machine ####
       num_of_cores <- parallel::detectCores()
@@ -2375,10 +2377,10 @@ CaDrA_Server <- function(id, datalist_file=NULL){
           
           new_input_score <- new_input_score %>% dplyr::mutate_all(., as.character)
           
-          if(tools::file_ext(datalist_file) == "csv"){
-            datalist_table <- read.csv(datalist_file, header=TRUE) %>% dplyr::mutate_all(., as.character)
-          }else if(tools::file_ext(datalist_file) == "rds"){
-            datalist_table <- readRDS(datalist_file) %>% dplyr::mutate_all(., as.character)
+          if(tools::file_ext(datalist) == "csv"){
+            datalist_table <- read.csv(datalist, header=TRUE) %>% dplyr::mutate_all(., as.character)
+          }else if(tools::file_ext(datalist) == "rds"){
+            datalist_table <- readRDS(datalist) %>% dplyr::mutate_all(., as.character)
           }
           
           # Save the updated list
@@ -2387,13 +2389,13 @@ CaDrA_Server <- function(id, datalist_file=NULL){
             dplyr::distinct(., .keep_all=TRUE)
           
           # Check if external data exists in package
-          if(tools::file_ext(datalist_file) == "csv"){
-            write.csv(updated_datalist, datalist_file, row.names = F)
-          }else if(tools::file_ext(datalist_file) == "rds"){
-            saveRDS(updated_datalist, datalist_file)
+          if(tools::file_ext(datalist) == "csv"){
+            write.csv(updated_datalist, datalist, row.names = F)
+          }else if(tools::file_ext(datalist) == "rds"){
+            saveRDS(updated_datalist, datalist)
           }
           
-          updated_extdata <- get_extdata(datalist_file, global_feature_set_paths, global_input_score_paths, global_gene_expression_paths)
+          updated_extdata <- get_extdata(datalist, global_feature_set_paths, global_input_score_paths, global_gene_expression_paths)
           
           extdata(updated_extdata)
           
@@ -2805,10 +2807,10 @@ CaDrA_Server <- function(id, datalist_file=NULL){
 #' Run both Shiny UI and Server Modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist_file A path to data file (in cvs or rds format) listing 
+#' @param datalist A path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
-#' The datalist_file must contains the following variables:
+#' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_paths' (repuired), 
 #' 'input_score_names' (required), input_score_paths' (required), 
 #' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
@@ -2832,16 +2834,16 @@ CaDrA_Server <- function(id, datalist_file=NULL){
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
 #' @export
-CaDrA_App <- function(id, datalist_file) {
+CaDrA_App <- function(id, datalist) {
   
   ui <- shiny::fluidPage(
     titlePanel("CaDrA: Candidate Drivers Analysis"),
     helpText("Multi-Omic Search for Candidate Drivers of Functional Signatures"),
-    CaDrA_UI(id = id, datalist_file = datalist_file)
+    CaDrA_UI(id = id, datalist = datalist)
   )
   
   server <- function(input, output, session) {
-    CaDrA_Server(id = id, datalist_file = datalist_file)
+    CaDrA_Server(id = id, datalist = datalist)
   }
   
   shiny::shinyApp(ui=ui, server=server)

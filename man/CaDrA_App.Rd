@@ -4,15 +4,15 @@
 \alias{CaDrA_App}
 \title{Run both Shiny UI and Server Modules}
 \usage{
-CaDrA_App(id, datalist_file)
+CaDrA_App(id, datalist)
 }
 \arguments{
 \item{id}{A unique namespace identifier}
 
-\item{datalist_file}{A path to data file (in cvs or rds format) listing 
+\item{datalist}{A path to data file (in cvs or rds format) listing 
 the absolute paths of necessary files to start the app. 
 
-The datalist_file must contains the following variables:
+The datalist must contains the following variables:
 'feature_set' (required), 'feature_set_paths' (repuired), 
 'input_score_names' (required), input_score_paths' (required), 
 'gene_expression_names' (optional), 'gene_expression_paths' (optional)

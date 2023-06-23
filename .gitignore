@@ -36,4 +36,7 @@
 *.knit.md
 
 .Rproj.user
+
+# Ignore docker-compose files
+docker-compose-montilab.yml
 docker-compose-local.yml

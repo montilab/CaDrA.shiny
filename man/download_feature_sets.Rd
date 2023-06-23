@@ -9,22 +9,25 @@ associated with that feature set}
 download_feature_sets(
   API_Server,
   feature_sets,
-  out_dir,
   include_input_score = TRUE,
-  include_gene_expression = TRUE
+  include_gene_expression = TRUE,
+  out_dir
 )
 }
 \arguments{
 \item{API_Server}{an URL link to where the API is hosted}
 
 \item{feature_sets}{a list of feature sets to look up and download the 
-appropriate dataset that associated with it.}
+appropriate data that are associated with it.}
 
-\item{include_input_score}{a Boolean value to determine whether to include input
-scores that associated with the given feature sets}
+\item{include_input_score}{a Boolean value to determine whether to include 
+input scores that associated with the given feature sets. Default is TRUE.}
 
-\item{include_gene_expression}{a Boolean value to determine whether to include 
-gene expression sets that associated with the given feature sets}
+\item{include_gene_expression}{a Boolean value to determine whether to 
+include gene expression sets that associated with the given feature sets. 
+Default is TRUE.}
+
+\item{out_dir}{a directory to save the output.}
 }
 \value{
 a zip file
