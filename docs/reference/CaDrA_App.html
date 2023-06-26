@@ -40,12 +40,12 @@
     <li>
       <a href="../articles/api.html">Retrieve Dataset from our Rest API</a>
     </li>
-    <li>
-      <a href="../articles/FAQs.html">FAQs</a>
-    </li>
   </ul></li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../articles/FAQs.html">FAQs</a>
 </li>
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="../news/index.html">Change Log</a>
@@ -75,7 +75,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">CaDrA_App</span><span class="op">(</span><span class="va">id</span>, <span class="va">datalist_file</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">CaDrA_App</span><span class="op">(</span><span class="va">id</span>, <span class="va">datalist</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -84,13 +84,13 @@
 <dd><p>A unique namespace identifier</p></dd>
 
 
-<dt>datalist_file</dt>
-<dd><p>A path to data file (in cvs or rds format) listing 
+<dt>datalist</dt>
+<dd><p>A data frame or path to data file (in cvs or rds format) listing 
 the absolute paths of necessary files to start the app.</p>
-<p>The datalist_file must contains the following variables:
-'feature_set' (required), 'feature_set_paths' (repuired), 
-'input_score_names' (required), input_score_paths' (required), 
-'gene_expression_names' (optional), 'gene_expression_paths' (optional)</p>
+<p>The datalist must contains the following variables:
+'feature_set' (required), 'feature_set_path' (repuired), 
+'input_score_name' (required), input_score_path' (required), 
+'gene_expression_name' (optional), 'gene_expression_path' (optional)</p>
 <p>Default is NULL. If NULL, the app will start with DEFAULT dataset included 
 in CaDrA package.</p></dd>
 
@@ -112,7 +112,7 @@ in CaDrA package.</p></dd>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Create a Shiny app</span></span></span>
 <span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu">CaDrA_App</span><span class="op">(</span>id <span class="op">=</span> <span class="va">id</span><span class="op">)</span></span></span>
-<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get_extdata(datalist_file, global_feature_set_paths, global_score_choices,     global_gene_expression_paths):</span> argument "datalist_file" is missing, with no default</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in get_extdata(datalist, global_feature_set_path, global_score_choices,     global_gene_expression_path):</span> argument "datalist" is missing, with no default</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Launch and deploy Shiny app (NOT RUN)</span></span></span>
 <span class="r-in"><span><span class="co"># shiny::runApp(app, host='0.0.0.0', port=3838)</span></span></span>

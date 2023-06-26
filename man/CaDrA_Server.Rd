@@ -9,13 +9,13 @@ CaDrA_Server(id, datalist = NULL)
 \arguments{
 \item{id}{A unique namespace identifier}
 
-\item{datalist}{A path to data file (in cvs or rds format) listing 
+\item{datalist}{A data frame or path to data file (in cvs or rds format) listing 
 the absolute paths of necessary files to start the app. 
 
 The datalist must contains the following variables:
-'feature_set' (required), 'feature_set_paths' (repuired), 
-'input_score_names' (required), input_score_paths' (required), 
-'gene_expression_names' (optional), 'gene_expression_paths' (optional)
+'feature_set' (required), 'feature_set_path' (repuired), 
+'input_score_name' (required), input_score_path' (required), 
+'gene_expression_name' (optional), 'gene_expression_path' (optional)
 
 Default is NULL. If NULL, the app will start with DEFAULT dataset included 
 in CaDrA package.}

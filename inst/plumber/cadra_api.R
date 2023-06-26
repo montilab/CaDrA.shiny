@@ -90,15 +90,22 @@ get_feature_set <- function(res, req){
   
   # Validate results
   if(nrow(fs_df) == 0){
-    fs_df <- data.frame(
-      warning = sprintf("There are currently no feature sets avaliable on our portal.")
-    )
+    
+    error_message <- sprintf("There are currently no feature sets avaliable on our portal.")
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
+    
   }else{
+    
     fs_df <- fs_df %>% 
       distinct(feature_set_name, .keep_all = TRUE)
+    
+    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    
   }
-  
-  return(jsonlite::toJSON(fs_df, pretty=TRUE))
   
 }
 
@@ -117,8 +124,8 @@ get_input_score <- function(res, req, feature_set){
     
     ## Initialize the serializers
     res$serializer <- serializers[["html"]]
-    res$status <- 500
-    res$body <- page_not_found(status="500", message=error_message)
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
   }
   
   # Validate parameters
@@ -135,15 +142,22 @@ get_input_score <- function(res, req, feature_set){
   
   # Validate results
   if(nrow(fs_df) == 0){
-    fs_df <- data.frame(
-      warning = sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
-    )
+    
+    error_message <- sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
+    
   }else{
+    
     fs_df <- fs_df %>% 
       dplyr::distinct(feature_set_name, input_score_name, .keep_all = TRUE)
+    
+    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    
   }
-  
-  return(jsonlite::toJSON(fs_df, pretty=TRUE))
   
 }
 
@@ -162,8 +176,8 @@ get_gene_expression <- function(res, req, feature_set){
     
     ## Initialize the serializers
     res$serializer <- serializers[["html"]]
-    res$status <- 500
-    res$body <- page_not_found(status="500", message=error_message)
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
   }
   
   # Validate parameters
@@ -180,15 +194,22 @@ get_gene_expression <- function(res, req, feature_set){
   
   # Validate results
   if(nrow(fs_df) == 0){
-    fs_df <- data.frame(
-      warning = sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
-    )
+    
+    error_message <- sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
+    
+    ## Initialize the serializers
+    res$serializer <- serializers[["html"]]
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
+    
   }else{
+    
     fs_df <- fs_df %>% 
       dplyr::distinct(feature_set_name, gene_expression_name, .keep_all = TRUE)
+    
+    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    
   }
-  
-  return(jsonlite::toJSON(fs_df, pretty=TRUE))
   
 }
 
@@ -230,20 +251,12 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
   # Validate results
   if(nrow(fs_df) == 0){
     
-    fs_df <- data.frame(
-      warning = sprintf(
-        "There %s no feature set%s with the name%s: %s avaliable on our portal.", 
-        ifelse(length(feature_set)==1, "is", "are"),
-        ifelse(length(feature_set)==1, "", "s"),
-        ifelse(length(feature_set)==1, "", "s"),
-        paste0(feature_set, collapse=", "))
-    )
+    error_message <- sprintf("There is no feature set with the name: %s avaliable on our portal.", feature_set)
     
     ## Initialize the serializers
-    res$serializer <- serializers[["json"]]
-    res$status <- 200
-    
-    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    res$serializer <- serializers[["html"]]
+    res$status <- 400
+    res$body <- page_not_found(status="400", message=error_message)
     
   }else{
     
@@ -350,7 +363,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     
     system(sprintf('bash -c "cd %s && zip -r %s %s"', tmpdir, zip_file_name, file_name))    
            
-    readBin(zip_file, what="raw", n=file.info(zip_file)$size)
+    return(readBin(zip_file, what="raw", n=file.info(zip_file)$size))
 
   }  
 }

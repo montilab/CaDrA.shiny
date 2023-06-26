@@ -58,13 +58,13 @@
     <li>
       <a href="../articles/api.html">Retrieve Dataset from our Rest API</a>
     </li>
-    <li>
-      <a href="../articles/FAQs.html">FAQs</a>
-    </li>
   </ul>
 </li>
 <li>
   <a href="../reference/index.html">Reference</a>
+</li>
+<li>
+  <a href="../articles/FAQs.html">FAQs</a>
 </li>
       </ul>
 <ul class="nav navbar-nav navbar-right">
@@ -100,12 +100,641 @@
 
     
     
+<script type="text/javascript">
 
+  function ToggleOperation(id) {
+    var x = document.getElementById(id+"-block");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+</script><div class="section level2">
+<h2 id="cadras-rest-api">CaDrA’s Rest API<a class="anchor" aria-label="anchor" href="#cadras-rest-api"></a>
+</h2>
+<p>
+Here we provide documentation on how to retrieve pre-processed dataset
+from our CaDrA web portal. All successful responses are returned in
+JSON. Only queries that respond with a 200 response code is considered
+successful.
+</p>
+<p>
+Here are standard HTTP codes that you will find in the “Status” element
+of the response body.
+</p>
+<table class="table status-table">
+<tr>
+<td>
+<strong>Status Code</strong>
+</td>
+<td>
+<strong>Description</strong>
+</td>
+</tr>
+<tr>
+<td>
+200 OK
+</td>
+<td>
+Standard HTTP successful response
+</td>
+</tr>
+<tr>
+<td>
+404 Bad Request or Source Not Found
+</td>
+<td>
+Standard HTTP invalid request response
+</td>
+</tr>
+<tr>
+<td>
+500 Internal Server Error
+</td>
+<td>
+There was an unexpected error on our server. If you see this error,
+please notify us about the issue on our
+<a target="blank" href="https://github.com/montilab/CaDrA.shiny/issues">GitHub
+page</a>
+</td>
+</tr>
+</table>
+<p><br></p>
+<div class="section level3">
+<h3 id="api_server-httpsmontilab-bu-educadra_api">API_Server: <a href="https://montilab.bu.edu/CaDrA_API" class="external-link uri">https://montilab.bu.edu/CaDrA_API</a><a class="anchor" aria-label="anchor" href="#api_server-httpsmontilab-bu-educadra_api"></a>
+</h3>
+<p><br></p>
+<p>
+There are four data sources that currently available from the API.
+</p>
+<table class="table source-table">
+<tr>
+<td>
+<strong>Data</strong>
+</td>
+<td>
+<strong>Description</strong>
+</td>
+<td>
+<strong>Return</strong>
+</td>
+</tr>
+<tr>
+<td>
+get_feature_set
+</td>
+<td>
+a list of pre-proccessed feature sets available on CaDrA’s web portal
+</td>
+<td>
+data frame
+</td>
+</tr>
+<tr>
+<td>
+get_input_score
+</td>
+<td>
+a list of input scores associated with a particular feature set
+available on CaDrA’s web portal
+</td>
+<td>
+data frame
+</td>
+</tr>
+<tr>
+<td>
+get_gene_expression
+</td>
+<td>
+a gene expression set associated with a particular feature set available
+on CaDrA’s web portal
+</td>
+<td>
+data frame
+</td>
+</tr>
+<tr>
+<td>
+download_feature_set
+</td>
+<td>
+a bundle of RDS files for a given feature set. Users also have the
+option to whether or not to include input scores and gene expression set
+that associated with that feature set.
+</td>
+<td>
+zip file
+</td>
+</tr>
+</table>
+<p><br></p>
+<!-- get_feature_set: start -->
+<div class="section level4">
+<h4 id="get_feature_set">get_feature_set<a class="anchor" aria-label="anchor" href="#get_feature_set"></a>
+</h4>
+<table class="table get-table"><tr>
+<td>
+<button type="button" onclick="ToggleOperation('get_feature_set')" class="btn btn-default action-button">
+GET
+</button>
+</td>
+<td>
+/get_feature_set
+</td>
+<td>
+Return a list of pre-proccessed feature sets available on CaDrA’s web
+portal
+</td>
+</tr></table>
+<div id="get_feature_set-block" style="display: none;">
+<h5>
+Implementation
+</h5>
+<p>
+<a target="blank" href="https://montilab.bu.edu/CaDrA_API/get_feature_set" class="external-link">https://montilab.bu.edu/CaDrA_API/get_feature_set</a>
+</p>
+<h5>
+Return
+</h5>
+<p>
+A data frame with two columns: description and feature_set_name
+</p>
+<p><br></p>
+<h5>
+Example in R
+</h5>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># url for local testing</span></span>
+<span><span class="va">url0</span> <span class="op">&lt;-</span> <span class="st">"https://montilab.bu.edu/CaDrA_API/get_feature_set"</span></span>
+<span></span>
+<span><span class="co"># Send GET Request to API</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">GET</span><span class="op">(</span>url <span class="op">=</span> <span class="va">url0</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check the status of GET request </span></span>
+<span><span class="va">test_request</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu">stop_for_status</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="st">"pass"</span></span>
+<span>  </span>
+<span><span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="st">"fail"</span></span>
+<span>  </span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<h5>
+Output
+</h5>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># If GET request is successful, return the results</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="va">test_request</span> <span class="op">==</span> <span class="st">"pass"</span><span class="op">)</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">projects</span> <span class="op">&lt;-</span> <span class="fu">fromJSON</span><span class="op">(</span><span class="fu">fromJSON</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rawConversion.html" class="external-link">rawToChar</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">content</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">projects</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
+<table class="table">
+<thead><tr class="header">
+<th align="left">description</th>
+<th align="left">feature_set_name</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">ACC</td>
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="even">
+<td align="left">BLCA</td>
+<td align="left">TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="odd">
+<td align="left">BRCA</td>
+<td align="left">TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="even">
+<td align="left">CESC</td>
+<td align="left">TCGA_CESC_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="odd">
+<td align="left">CHOL</td>
+<td align="left">TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="even">
+<td align="left">COAD</td>
+<td align="left">TCGA_COAD_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<!-- get_input_score: start -->
+</div>
+<div class="section level4">
+<h4 id="get_input_score">get_input_score<a class="anchor" aria-label="anchor" href="#get_input_score"></a>
+</h4>
+<table class="table get-table"><tr>
+<td>
+<button type="button" onclick="ToggleOperation('get_input_score')" class="btn btn-default action-button">
+GET
+</button>
+</td>
+<td>
+/get_input_score
+</td>
+<td>
+Return a list of input scores associated with a given feature set
+available on CaDrA’s web portal
+</td>
+</tr></table>
+<div id="get_input_score-block" style="display: none;">
+<h5>
+Implementation
+</h5>
+<p>
+<a target="blank" href="https://montilab.bu.edu/CaDrA_API/https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG" class="external-link">https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</a>
+</p>
+<p><br></p>
+<table class="table api-table">
+<tr>
+<td>
+<strong>Parameter</strong>
+</td>
+<td>
+<strong>Description</strong>
+</td>
+<td>
+<strong>Data Type</strong>
+</td>
+</tr>
+<tr>
+<td>
+feature_set
+</td>
+<td>
+a feature set name
+</td>
+<td>
+string
+</td>
+</tr>
+</table>
+<p><br></p>
+<h5>
+Return
+</h5>
+<p>
+A data frame with two columns: feature_set_name and input_score_name
+</p>
+<p><br></p>
+<h5>
+Example in R
+</h5>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># url for local testing</span></span>
+<span><span class="va">url1</span> <span class="op">&lt;-</span> <span class="st">"https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span></span>
+<span></span>
+<span><span class="co"># Send GET Request to API</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">GET</span><span class="op">(</span>url <span class="op">=</span> <span class="va">url1</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check the status of GET request </span></span>
+<span><span class="va">test_request</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu">stop_for_status</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="st">"pass"</span></span>
+<span>  </span>
+<span><span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="st">"fail"</span></span>
+<span>  </span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<h5>
+Output
+</h5>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># If GET request is successful, return the results</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="va">test_request</span> <span class="op">==</span> <span class="st">"pass"</span><span class="op">)</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">projects</span> <span class="op">&lt;-</span> <span class="fu">fromJSON</span><span class="op">(</span><span class="fu">fromJSON</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rawConversion.html" class="external-link">rawToChar</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">content</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">projects</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="49%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">feature_set_name</th>
+<th align="left">input_score_name</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">NA</td>
+</tr>
+<tr class="even">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">HALLMARK_TNFA_SIGNALING_VIA_NFKB</td>
+</tr>
+<tr class="odd">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">HALLMARK_HYPOXIA</td>
+</tr>
+<tr class="even">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">HALLMARK_CHOLESTEROL_HOMEOSTASIS</td>
+</tr>
+<tr class="odd">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">HALLMARK_MITOTIC_SPINDLE</td>
+</tr>
+<tr class="even">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">HALLMARK_WNT_BETA_CATENIN_SIGNALING</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+<!-- get_gene_expression: start -->
+</div>
+<div class="section level4">
+<h4 id="get_gene_expression">get_gene_expression<a class="anchor" aria-label="anchor" href="#get_gene_expression"></a>
+</h4>
+<table class="table get-table"><tr>
+<td>
+<button type="button" onclick="ToggleOperation('get_gene_expression')" class="btn btn-default action-button">
+GET
+</button>
+</td>
+<td>
+/get_gene_expression
+</td>
+<td>
+Return a gene expression set associated with a given feature set
+available on CaDrA’s web portal
+</td>
+</tr></table>
+<div id="get_gene_expression-block" style="display: none;">
+<h5>
+Implementation
+</h5>
+<p>
+<a target="blank" href="https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG" class="external-link">https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</a>
+</p>
+<p><br></p>
+<table class="table api-table">
+<tr>
+<td>
+<strong>Parameter</strong>
+</td>
+<td>
+<strong>Description</strong>
+</td>
+<td>
+<strong>Data Type</strong>
+</td>
+</tr>
+<tr>
+<td>
+feature_set
+</td>
+<td>
+a feature set name
+</td>
+<td>
+string
+</td>
+</tr>
+</table>
+<p><br></p>
+<h5>
+Return
+</h5>
+<p>
+A data frame with two columns: feature_set_name and gene_expression_name
+</p>
+<p><br></p>
+<h5>
+Example in R
+</h5>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># url for local testing</span></span>
+<span><span class="va">url3</span> <span class="op">&lt;-</span> <span class="st">"https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span></span>
+<span></span>
+<span><span class="co"># Send GET Request to API</span></span>
+<span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu">GET</span><span class="op">(</span>url <span class="op">=</span> <span class="va">url3</span>, encode <span class="op">=</span> <span class="st">"json"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Check the status of GET request </span></span>
+<span><span class="va">test_request</span> <span class="op">&lt;-</span> <span class="kw"><a href="https://rdrr.io/r/base/conditions.html" class="external-link">tryCatch</a></span><span class="op">(</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="fu">stop_for_status</span><span class="op">(</span><span class="va">res</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="st">"pass"</span></span>
+<span>  </span>
+<span><span class="op">}</span>, error <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">e</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="st">"fail"</span></span>
+<span>  </span>
+<span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
+<h5>
+Output
+</h5>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># If GET request is successful, return the results</span></span>
+<span><span class="kw">if</span><span class="op">(</span><span class="va">test_request</span> <span class="op">==</span> <span class="st">"pass"</span><span class="op">)</span><span class="op">{</span></span>
+<span>  </span>
+<span>  <span class="va">projects</span> <span class="op">&lt;-</span> <span class="fu">fromJSON</span><span class="op">(</span><span class="fu">fromJSON</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/rawConversion.html" class="external-link">rawToChar</a></span><span class="op">(</span><span class="va">res</span><span class="op">$</span><span class="va">content</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">projects</span><span class="op">)</span><span class="op">)</span></span>
+<span>  </span>
+<span><span class="op">}</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="49%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">feature_set_name</th>
+<th align="left">gene_expression_name</th>
+</tr></thead>
+<tbody><tr class="odd">
+<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
+</tr></tbody>
+</table>
+<p><br></p>
+</div>
+<!-- download_feature_set: start -->
+</div>
+<div class="section level4">
+<h4 id="download_feature_set">download_feature_set<a class="anchor" aria-label="anchor" href="#download_feature_set"></a>
+</h4>
+<table class="table get-table"><tr>
+<td>
+<button type="button" onclick="ToggleOperation('download_feature_set')" class="btn btn-default action-button">
+GET
+</button>
+</td>
+<td>
+/download_feature_set
+</td>
+<td>
+Return a zip file with a bundle of RDS files for a given feature set.
+Users also have the option to whether or not to include input scores and
+gene expression set that associated with that feature set.
+</td>
+</tr></table>
+<div id="download_feature_set-block" style="display: none;">
+<h5>
+Implementation
+</h5>
+<p>
+<a target="blank" href="https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&amp;include_input_score=TRUE&amp;inclue_gene_expression=TRUE" class="external-link">https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&amp;include_input_score=TRUE&amp;inclue_gene_expression=TRUE</a>
+</p>
+<p><br></p>
+<table class="table api-table">
+<tr>
+<td>
+<strong>Parameter</strong>
+</td>
+<td>
+<strong>Description</strong>
+</td>
+<td>
+<strong>Data Type</strong>
+</td>
+</tr>
+<tr>
+<td>
+feature_set
+</td>
+<td>
+a feature set name
+</td>
+<td>
+string
+</td>
+</tr>
+<tr>
+<td>
+include_input_score
+</td>
+<td>
+whether to include input score. Default is TRUE.
+</td>
+<td>
+string
+</td>
+</tr>
+<tr>
+<td>
+include_gene_expression
+</td>
+<td>
+whether to include gene expresion set. Default is TRUE.
+</td>
+<td>
+string
+</td>
+</tr>
+</table>
+<p><br></p>
+<h5>
+Return
+</h5>
+<p>
+A zip file
+</p>
+<p><br></p>
+<h5>
+Example in R
+</h5>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="co"># url for local testing</span></span>
+<span><span class="va">url4</span> <span class="op">&lt;-</span> <span class="st">"https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&amp;include_input_score=TRUE&amp;inclue_gene_expression=TRUE"</span></span></code></pre></div>
+<h5>
+Output
+</h5>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span></span>
+<span><span class="va">out_dir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempdir</a></span><span class="op">(</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">file_dir</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">out_dir</span>, <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"download-fs-"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.Date</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">zip_file</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">file_dir</span>, <span class="st">".zip"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/download.file.html" class="external-link">download.file</a></span><span class="op">(</span><span class="va">url4</span>, <span class="va">zip_file</span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">file_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/unzip.html" class="external-link">unzip</a></span><span class="op">(</span><span class="va">zip_file</span>, exdir<span class="op">=</span><span class="va">out_dir</span>, list<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">file_list</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<table class="table">
+<colgroup>
+<col width="80%">
+<col width="5%">
+<col width="14%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Name</th>
+<th align="right">Length</th>
+<th align="left">Date</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">download-fs-2023-06-26/</td>
+<td align="right">0</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+<tr class="even">
+<td align="left">download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/</td>
+<td align="right">0</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+<tr class="odd">
+<td align="left">download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/</td>
+<td align="right">0</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+<tr class="even">
+<td align="left">download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.RDS</td>
+<td align="right">109811</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+<tr class="odd">
+<td align="left">download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/</td>
+<td align="right">0</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+<tr class="even">
+<td align="left">download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.RDS</td>
+<td align="right">956</td>
+<td align="left">2023-06-26 17:47:00</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+</div>
+</div>
+</div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
 
-      </div>
+        <nav id="toc" data-toggle="toc"><h2 data-toc-skip>Contents</h2>
+    </nav>
+</div>
 
 </div>
 

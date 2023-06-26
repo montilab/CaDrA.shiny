@@ -9,5 +9,403 @@ vignette: >
 
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+library(knitr)
+library(httr)
+library(jsonlite)
 ```
+
+<script type="text/javascript">
+
+  function ToggleOperation(id) {
+    var x = document.getElementById(id+"-block");
+    if (x.style.display === "none") {
+      x.style.display = "block";
+    } else {
+      x.style.display = "none";
+    }
+  }
+
+</script>
+
+# CaDrA's Rest API
+
+<p>Here we provide documentation on how to retrieve pre-processed dataset from our CaDrA web portal. All successful responses are returned in JSON. Only queries that respond with a 200 response code is considered successful.</p>
+
+<p>Here are standard HTTP codes that you will find in the “Status” element of the response body.</p>
+
+```{r status-table, include=TRUE, echo=TRUE, results='asis'}
+```
+<table class="status-table">
+  <tr>
+    <td><strong>Status Code</strong></td>
+    <td><strong>Description</strong></td>
+  </tr>
+  <tr>
+    <td>200 OK</td>
+    <td>Standard HTTP successful response</td>
+  </tr>
+  <tr>
+    <td>404 Bad Request or Source Not Found</td>
+    <td>Standard HTTP invalid request response</td>
+  </tr>
+  <tr>
+    <td>500 Internal Server Error</td>
+    <td>There was an unexpected error on our server. If you see this error, please notify us about the issue on our <a target="blank" href="https://github.com/montilab/CaDrA.shiny/issues">GitHub page</a></td>
+  </tr>
+</table>
+
+<br>
+
+## API_Server: https://montilab.bu.edu/CaDrA_API
+
+<br>
+
+<p>There are four data sources that currently available from the API.</p>
+
+```{r source-table, include=TRUE, echo=TRUE, results='asis'}
+```
+<table class="source-table">
+  <tr>
+    <td><strong>Data</strong></td>
+    <td><strong>Description</strong></td>
+    <td><strong>Return</strong></td>
+  </tr>
+  <tr>
+    <td>get_feature_set</td>
+    <td>a list of pre-proccessed feature sets available on CaDrA's web portal</td>
+    <td>data frame</td>
+  </tr>
+  <tr>
+    <td>get_input_score</td>
+    <td>a list of input scores associated with a particular feature set available on CaDrA's web portal</td>
+    <td>data frame</td>
+  </tr>
+  <tr>
+    <td>get_gene_expression</td>
+    <td>a gene expression set associated with a particular feature set available on CaDrA's web portal</td>
+    <td>data frame</td>
+  </tr>
+  <tr>
+    <td>download_feature_set</td>
+    <td>a bundle of RDS files for a given feature set. Users also have the option to whether or not to include input scores and gene expression set that associated with that feature set.</td>
+    <td>zip file</td>
+  </tr> 
+</table>
+
+<br>
+
+<!-- get_feature_set: start -->
+### get_feature_set
+
+<table class="get-table">
+  <tr>
+    <td><button type="button" onclick="ToggleOperation('get_feature_set')" class="btn btn-default action-button">GET</button></td>
+    <td>&#47;get_feature_set</td>
+    <td>Return a list of pre-proccessed feature sets available on CaDrA's web portal</td>
+  </tr>
+</table>
+
+<div id="get_feature_set-block" style="display: none;">
+
+<h4>Implementation</h4>
+
+<p><a target="blank" href="https://montilab.bu.edu/CaDrA_API/get_feature_set">https://montilab.bu.edu/CaDrA_API/get_feature_set</a></p>
+
+<h4>Return</h4>
+
+<p>A data frame with two columns: description and feature_set_name</p>
+
+<br>
+
+<h4>Example in R</h4>
+
+```{r}
+
+# url for local testing
+url0 <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
+
+# Send GET Request to API
+res <- GET(url = url0, encode = "json")
+
+# Check the status of GET request 
+test_request <- tryCatch({
+  
+  stop_for_status(res)
+  
+  "pass"
+  
+}, error = function(e) {
+  
+  "fail"
+  
+})
+
+```
+
+<h4>Output</h4>
+
+```{r}
+
+# If GET request is successful, return the results
+if(test_request == "pass"){
+  
+  projects <- fromJSON(fromJSON(rawToChar(res$content)))
+  knitr::kable(head(projects))
+  
+}
+      
+```
+
+<br>
+
+</div>
+
+<!-- get_input_score: start -->
+### get_input_score
+
+<table class="get-table">
+  <tr>
+    <td><button type="button" onclick="ToggleOperation('get_input_score')" class="btn btn-default action-button">GET</button></td>
+    <td>&#47;get_input_score</td>
+    <td>Return a list of input scores associated with a given feature set available on CaDrA's web portal</td>
+  </tr>
+</table>
+
+<div id="get_input_score-block" style="display: none;">
+
+<h4>Implementation</h4>
+
+<p><a target="blank" href="https://montilab.bu.edu/CaDrA_API/https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG">https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</a></p>
+
+<br>
+
+<table class="api-table">
+  <tr>
+    <td><strong>Parameter</strong></td>
+    <td><strong>Description</strong></td>
+    <td><strong>Data Type</strong></td>
+  </tr>
+  <tr>
+    <td>feature_set</td>
+    <td>a feature set name</td>
+    <td>string</td>
+  </tr>
+</table>
+
+<br>
+
+<h4>Return</h4>
+
+<p>A data frame with two columns: feature_set_name and input_score_name</p>
+
+<br>
+
+<h4>Example in R</h4>
+
+```{r}
+
+# url for local testing
+url1 <- "https://montilab.bu.edu/CaDrA_API/get_input_score?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"
+
+# Send GET Request to API
+res <- GET(url = url1, encode = "json")
+
+# Check the status of GET request 
+test_request <- tryCatch({
+  
+  stop_for_status(res)
+  
+  "pass"
+  
+}, error = function(e) {
+  
+  "fail"
+  
+})
+
+```
+
+<h4>Output</h4>
+
+```{r}
+
+# If GET request is successful, return the results
+if(test_request == "pass"){
+  
+  projects <- fromJSON(fromJSON(rawToChar(res$content)))
+  knitr::kable(head(projects))
+  
+}
+      
+```
+
+<br>
+
+</div>
+
+<!-- get_gene_expression: start -->
+### get_gene_expression
+
+<table class="get-table">
+  <tr>
+    <td><button type="button" onclick="ToggleOperation('get_gene_expression')" class="btn btn-default action-button">GET</button></td>
+    <td>&#47;get_gene_expression</td>
+    <td>Return a gene expression set associated with a given feature set available on CaDrA's web portal</td>
+  </tr>
+</table>
+
+<div id="get_gene_expression-block" style="display: none;">
+
+<h4>Implementation</h4>
+
+<p><a target="blank" href="https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG">https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</a></p>
+
+<br>
+
+<table class="api-table">
+  <tr>
+    <td><strong>Parameter</strong></td>
+    <td><strong>Description</strong></td>
+    <td><strong>Data Type</strong></td>
+  </tr>
+  <tr>
+    <td>feature_set</td>
+    <td>a feature set name</td>
+    <td>string</td>
+  </tr>
+</table>
+
+<br>
+
+<h4>Return</h4>
+
+<p>A data frame with two columns: feature_set_name and gene_expression_name</p>
+
+<br>
+
+<h4>Example in R</h4>
+
+```{r}
+
+# url for local testing
+url3 <- "https://montilab.bu.edu/CaDrA_API/get_gene_expression?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"
+
+# Send GET Request to API
+res <- GET(url = url3, encode = "json")
+
+# Check the status of GET request 
+test_request <- tryCatch({
+  
+  stop_for_status(res)
+  
+  "pass"
+  
+}, error = function(e) {
+  
+  "fail"
+  
+})
+
+```
+
+<h4>Output</h4>
+
+```{r}
+
+# If GET request is successful, return the results
+if(test_request == "pass"){
+  
+  projects <- fromJSON(fromJSON(rawToChar(res$content)))
+  knitr::kable(head(projects))
+  
+}
+      
+```
+
+<br>
+
+</div>
+
+<!-- download_feature_set: start -->
+### download_feature_set
+
+<table class="get-table">
+  <tr>
+    <td><button type="button" onclick="ToggleOperation('download_feature_set')" class="btn btn-default action-button">GET</button></td>
+    <td>&#47;download_feature_set</td>
+    <td>Return a zip file with a bundle of RDS files for a given feature set. Users also have the option to whether or not to include input scores and gene expression set that associated with that feature set.</td>
+  </tr>
+</table>
+
+<div id="download_feature_set-block" style="display: none;">
+
+<h4>Implementation</h4>
+
+<p><a target="blank" href="https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&include_input_score=TRUE&inclue_gene_expression=TRUE">https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&include_input_score=TRUE&inclue_gene_expression=TRUE</a></p>
+
+<br>
+
+<table class="api-table">
+  <tr>
+    <td><strong>Parameter</strong></td>
+    <td><strong>Description</strong></td>
+    <td><strong>Data Type</strong></td>
+  </tr>
+  <tr>
+    <td>feature_set</td>
+    <td>a feature set name</td>
+    <td>string</td>
+  </tr>
+  <tr>
+    <td>include_input_score</td>
+    <td>whether to include input score. Default is TRUE.</td>
+    <td>string</td>
+  </tr>
+  <tr>
+    <td>include_gene_expression</td>
+    <td>whether to include gene expresion set. Default is TRUE.</td>
+    <td>string</td>
+  </tr>
+</table>
+
+<br>
+
+<h4>Return</h4>
+
+<p>A zip file</p>
+
+<br>
+
+<h4>Example in R</h4>
+
+```{r}
+
+# url for local testing
+url4 <- "https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=TCGA_ACC_2016_01_28_GISTIC_MUT_SIG&include_input_score=TRUE&inclue_gene_expression=TRUE"
+
+```
+
+<h4>Output</h4>
+
+```{r}
+
+out_dir <- tempdir()
+
+file_dir = file.path(out_dir, paste0("download-fs-", Sys.Date()))
+
+zip_file = paste0(file_dir, ".zip")
+
+download.file(url4, zip_file)
+
+file_list <- unzip(zip_file, exdir=out_dir, list=TRUE)
+
+knitr::kable(head(file_list))
+
+```
+
+<br>
+
+</div>
+
+
 

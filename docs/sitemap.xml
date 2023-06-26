@@ -55,10 +55,19 @@
     <loc>https://github.com/montilab/CaDrA.shiny/reference/download_feature_sets.html</loc>
   </url>
   <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_feature_set.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/montilab/CaDrA.shiny/reference/get_feature_sets.html</loc>
   </url>
   <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_gene_expression.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/montilab/CaDrA.shiny/reference/get_gene_expressions.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_input_score.html</loc>
   </url>
   <url>
     <loc>https://github.com/montilab/CaDrA.shiny/reference/get_input_scores.html</loc>

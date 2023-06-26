@@ -2,7 +2,7 @@
 % Please edit documentation in R/cadra_api.R
 \name{download_feature_sets}
 \alias{download_feature_sets}
-\title{Get a specific feature set available on CaDrA's API Portal
+\title{Get a specific feature set available on CaDrA API Portal
 and determine whether to include input scores and gene expression that 
 associated with that feature set}
 \usage{
@@ -33,13 +33,46 @@ Default is TRUE.}
 a zip file
 }
 \description{
-Get a specific feature set available on CaDrA's API Portal
+Get a specific feature set available on CaDrA API Portal
 and determine whether to include input scores and gene expression that 
 associated with that feature set
 }
 \examples{
 
 # Load R library
-# examples will go here
+library(shiny)
+
+# API server to retrieve a list of feature sets from CaDrA Portal
+fs_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
+
+# Retrieve a list of feature sets available from CaDrA Portal
+fs_list <- CaDrA.shiny::get_feature_set(
+  API_Server = fs_API_Server, 
+  order_by = "asc"
+)
+
+# Download the feature set along with its input score and gene expression
+dl_API_Server <- paste0("https://montilab.bu.edu/CaDrA_API/download_feature_set") 
+
+# Define query parameters
+feature_sets <- fs_list$feature_set_name[1:2]
+include_input_score <- TRUE
+include_gene_expression <- TRUE
+out_dir <- "~/Github"
+
+# Download feature sets and return a datalist with appropriate paths to its dataset
+mydatafile <- download_feature_sets(
+  API_Server = dl_API_Server,
+  feature_sets = feature_sets,
+  include_input_score = include_input_score,
+  include_gene_expression = include_gene_expression,
+  out_dir = out_dir
+)
+
+# Launch CaDrA Shiny app with your downloaded datalist
+app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
+
+# Launch Shiny app (NOT RUN)
+# shiny::runApp(app, host='0.0.0.0', port=3838)
 
 }

@@ -25,76 +25,80 @@ create_hover_txt <- function(table){
 }
 
 # Global expression sets ####
-global_feature_set_paths <- list(
+global_feature_set_path <- list(
   "CCLE SCNAs + Mutations" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA"),
   "TCGA BRCA SCNAs + Mutations" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA"),
   "Simulated Feature Set" = system.file("data/sim_FS.rda", package = "CaDrA")
 )
 
 # Global input scores ####
-global_input_score_paths <- list(
+global_input_score_path <- list(
   "B-catenin Activity in CCLE" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA"),
   "YAP/TAZ Activity in TCGA BrCa" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA"),
   "Simulated Input Scores" =  system.file("data/sim_Scores.rda", package = "CaDrA")
 )
 
 # Global gene expression ####
-global_gene_expression_paths <- list(
+global_gene_expression_path <- list(
   "CCLE_MUT_SCNA" = NA,
   "BRCA_GISTIC_MUT_SIG" = NA,
   "sim_FS" = NA
 )
   
 # Required column names for datalist
-datalist_colnames <- c('feature_set_names', 'feature_set_paths', 'input_score_names', 'input_score_paths', 'gene_expression_names', 'gene_expression_paths')
+datalist_colnames <- c('feature_set_name', 'feature_set_path', 'input_score_name', 'input_score_path', 'gene_expression_name', 'gene_expression_path')
 
 # function to obtain the external data
-get_extdata <- function(datalist=NULL, global_feature_set_paths, global_score_choices, global_gene_expression_paths){
-  
-  print(datalist)
-  
+get_extdata <- function(datalist=NULL, global_feature_set_path, global_score_choices, global_gene_expression_path){
+
   global_app_options <- data.frame(
-    feature_set_names = names(global_feature_set_paths), 
-    feature_set_paths = global_feature_set_paths %>% unlist(), 
-    input_score_names = names(global_input_score_paths), 
-    input_score_paths = global_input_score_paths %>% unlist(), 
-    gene_expression_names = names(global_gene_expression_paths),
-    gene_expression_paths = global_gene_expression_paths %>% unlist()
+    feature_set_name = names(global_feature_set_path), 
+    feature_set_path = global_feature_set_path %>% unlist(), 
+    input_score_name = names(global_input_score_path), 
+    input_score_path = global_input_score_path %>% unlist(), 
+    gene_expression_name = names(global_gene_expression_path),
+    gene_expression_path = global_gene_expression_path %>% unlist()
   )
   
   if(is.null(datalist)){
+    
     return(global_app_options)
-  }
-  
-  # Check if external data exists in package
-  if(file.exists(datalist)){
     
-    if(tools::file_ext(datalist) == "csv"){
-      datalist <- utils::read.csv(datalist, header=TRUE) %>% dplyr::mutate_all(., as.character)
-    }else if(tools::file_ext(datalist) == "rds"){
-      datalist <- base::readRDS(datalist) %>% dplyr::mutate_all(., as.character)
-    }else{
-      stop("datalist file file must have a csv or rds format")
-    }
+  }else if(is.data.frame(datalist)){
     
-    if(all(datalist_colnames %in% colnames(datalist))){
-      
-      datalist <- datalist[which(datalist$feature_set_paths != "" & !is.na(datalist$feature_set_paths) & datalist$feature_set_names != "" & !is.na(datalist$feature_set_names)),]
-      
-      app_options <- global_app_options %>% 
-        dplyr::bind_rows(datalist)
-      
-      return(app_options)
-      
-    }else{
-      
-      stop("The provided datalist file must contain the following column names: ", paste0(datalist_colnames, collapse=", "))
-      
-    }
+    datalist <- datalist
     
   }else{
     
-    stop("File does not exist at ", datalist)
+    datalist <- as.character(datalist)
+    
+    if(file.exists(datalist)){
+      if(tools::file_ext(datalist) == "csv"){
+        datalist <- utils::read.csv(datalist, header=TRUE) %>% dplyr::mutate_all(., as.character)
+      }else if(tools::file_ext(datalist) == "rds"){
+        datalist <- base::readRDS(datalist) %>% dplyr::mutate_all(., as.character)
+      }else{
+        stop("datalist file file must have a csv or rds format")
+      }
+    }else{
+      stop("File does not exist at ", datalist)
+    } 
+    
+  }
+  
+  # Check if datalist has appropriate column names
+  if(all(datalist_colnames %in% colnames(datalist))){
+    
+    datalist <- datalist[which(datalist$feature_set_path != "" & !is.na(datalist$feature_set_path) & datalist$feature_set_name != "" & !is.na(datalist$feature_set_name)),]
+    
+    app_options <- global_app_options %>% 
+      dplyr::bind_rows(datalist)
+    
+    return(app_options)
+    
+  }else{
+    
+    stop("The provided datalist file must contain the following column names: ", paste0(datalist_colnames, collapse=", "))
     
   }
   
@@ -103,13 +107,13 @@ get_extdata <- function(datalist=NULL, global_feature_set_paths, global_score_ch
 #' Shiny UI modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist A path to data file (in cvs or rds format) listing 
+#' @param datalist A data frame or path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
 #' The datalist must contains the following variables:
-#' 'feature_set' (required), 'feature_set_paths' (repuired), 
-#' 'input_score_names' (required), input_score_paths' (required), 
-#' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
+#' 'feature_set' (required), 'feature_set_path' (repuired), 
+#' 'input_score_name' (required), input_score_path' (required), 
+#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
 #' 
 #' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
 #' in CaDrA package.
@@ -144,15 +148,15 @@ get_extdata <- function(datalist=NULL, global_feature_set_paths, global_score_ch
 CaDrA_UI <- function(id, datalist=NULL){
   
   # Combine extdata with global expression set and scores dataset if it was provided
-  extdata <- get_extdata(datalist, global_feature_set_paths, global_score_choices, global_gene_expression_paths)
+  extdata <- get_extdata(datalist, global_feature_set_path, global_score_choices, global_gene_expression_path)
 
-  cadra_fs_choices <- extdata %>% dplyr::distinct(feature_set_names, .keep_all=TRUE)
-  cadra_feature_set_paths <- cadra_fs_choices$feature_set_paths
-  names(cadra_feature_set_paths) <- cadra_fs_choices$feature_set_names
+  cadra_fs_choices <- extdata %>% dplyr::distinct(feature_set_name, .keep_all=TRUE)
+  cadra_feature_set_path <- cadra_fs_choices$feature_set_path
+  names(cadra_feature_set_path) <- cadra_fs_choices$feature_set_name
 
-  gsva_fs_choices <- extdata %>% dplyr::distinct(feature_set_names, .keep_all=TRUE) %>% dplyr::filter(gene_expression_paths != "" & !is.na(gene_expression_paths))
-  gsva_feature_set_paths <- gsva_fs_choices$feature_set_paths
-  names(gsva_feature_set_paths) <- gsva_fs_choices$feature_set_names
+  gsva_fs_choices <- extdata %>% dplyr::distinct(feature_set_name, .keep_all=TRUE) %>% dplyr::filter(gene_expression_path != "" & !is.na(gene_expression_path))
+  gsva_feature_set_path <- gsva_fs_choices$feature_set_path
+  names(gsva_feature_set_path) <- gsva_fs_choices$feature_set_name
 
   ns <- shiny::NS(id)
 
@@ -294,7 +298,7 @@ CaDrA_UI <- function(id, datalist=NULL){
             selectizeInput(
               inputId = ns("feature_set"),
               label = "Feature Set",
-              choices = c(cadra_feature_set_paths, "Import Data"),
+              choices = c(cadra_feature_set_path, "Import Data"),
               width = "100%"
             ),
 
@@ -678,45 +682,6 @@ CaDrA_UI <- function(id, datalist=NULL){
 
             br(),
 
-            h4("Feature Set:"),
-
-            selectizeInput(
-              inputId = ns("gsva_feature_set"),
-              label = NULL,
-              choices = c(gsva_feature_set_paths, "Import Data"),
-              width = "600px"
-            ),
-
-            conditionalPanel(
-              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_feature_set")),
-
-              fileInput(
-                inputId = ns("gsva_feature_set_file"),
-                label = strong(span(style = "color: red;", "*"),
-                               "Feature Set file:"),
-                width = "600px"
-              ),
-
-              radioButtons(
-                inputId = ns("gsva_feature_set_file_type"),
-                label = HTML(paste0(
-                  'File type ',
-                  '<a class="tooltip-txt" data-html="true" ',
-                  'data-tooltip-toggle="tooltip" data-placement=',
-                  '"top" title=\"NOTE: If file is in csv format, ',
-                  'the \'Feature Set\' must be a data ',
-                  'frame including a \'Features\' column name ',
-                  'that contains unique names or labels to ',
-                  'search for best features. Otherwise, \'Feature ',
-                  'Set\' must be an object of class SummarizedExperiment ',
-                  'from SummarizedExperiment package.\">?</a>')),
-                choices = c(".csv", ".rds"),
-                selected = ".csv",
-                inline = TRUE,
-                width = "600px"
-              )
-            ),
-
             h4("Gene Expression:"),
 
             selectInput(
@@ -750,6 +715,45 @@ CaDrA_UI <- function(id, datalist=NULL){
                   'Otherwise, \'Input Score\' must be a list of  ',
                   'vectors and have names or labels that match the ',
                   'colnames of the \'Feature Set\'.\">?</a>')),
+                choices = c(".csv", ".rds"),
+                selected = ".csv",
+                inline = TRUE,
+                width = "600px"
+              )
+            ),
+            
+            h4("Feature Set:"),
+            
+            selectizeInput(
+              inputId = ns("gsva_feature_set"),
+              label = NULL,
+              choices = c(gsva_feature_set_path, "Import Data"),
+              width = "600px"
+            ),
+            
+            conditionalPanel(
+              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_feature_set")),
+              
+              fileInput(
+                inputId = ns("gsva_feature_set_file"),
+                label = strong(span(style = "color: red;", "*"),
+                               "Feature Set file:"),
+                width = "600px"
+              ),
+              
+              radioButtons(
+                inputId = ns("gsva_feature_set_file_type"),
+                label = HTML(paste0(
+                  'File type ',
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement=',
+                  '"top" title=\"NOTE: If file is in csv format, ',
+                  'the \'Feature Set\' must be a data ',
+                  'frame including a \'Features\' column name ',
+                  'that contains unique names or labels to ',
+                  'search for best features. Otherwise, \'Feature ',
+                  'Set\' must be an object of class SummarizedExperiment ',
+                  'from SummarizedExperiment package.\">?</a>')),
                 choices = c(".csv", ".rds"),
                 selected = ".csv",
                 inline = TRUE,
@@ -859,7 +863,7 @@ CaDrA_UI <- function(id, datalist=NULL){
             selectizeInput(
               inputId = ns("download_fs_options"),
               label = NULL,
-              choices = cadra_feature_set_paths,
+              choices = cadra_feature_set_path,
               width = "600px"
             ),
 
@@ -982,13 +986,13 @@ CaDrA_UI <- function(id, datalist=NULL){
 #' Shiny Server modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist A path to data file (in cvs or rds format) listing 
+#' @param datalist A data frame or path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
 #' The datalist must contains the following variables:
-#' 'feature_set' (required), 'feature_set_paths' (repuired), 
-#' 'input_score_names' (required), input_score_paths' (required), 
-#' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
+#' 'feature_set' (required), 'feature_set_path' (repuired), 
+#' 'input_score_name' (required), input_score_path' (required), 
+#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
 #' 
 #' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
 #' in CaDrA package.
@@ -1027,7 +1031,7 @@ CaDrA_Server <- function(id, datalist=NULL){
     function(input, output, session){
 
       ## Extract extdata ####
-      extdata <- shiny::reactiveVal(get_extdata(datalist, global_feature_set_paths, global_score_choices, global_gene_expression_paths))
+      extdata <- shiny::reactiveVal(get_extdata(datalist, global_feature_set_path, global_score_choices, global_gene_expression_path))
 
       ## Detect number of cores on machine ####
       num_of_cores <- parallel::detectCores()
@@ -1104,9 +1108,9 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         if(selected_fs != "Import Data"){
 
-          input_score_data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs) %>% dplyr::distinct(input_score_paths, .keep_all=TRUE)
-          input_score_selection <- input_score_data$input_score_paths
-          names(input_score_selection) <- input_score_data$input_score_names
+          input_score_data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs) %>% dplyr::distinct(input_score_path, .keep_all=TRUE)
+          input_score_selection <- input_score_data$input_score_path
+          names(input_score_selection) <- input_score_data$input_score_name
 
           # print(input_score_selection)
 
@@ -1145,9 +1149,9 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         if(selected_fs != "Import Data"){
 
-          gene_expression_data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs) %>% dplyr::distinct(gene_expression_paths, .keep_all=TRUE)
-          gene_expression_selection <- gene_expression_data$gene_expression_paths
-          names(gene_expression_selection) <- gene_expression_data$gene_expression_names
+          gene_expression_data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs) %>% dplyr::distinct(gene_expression_path, .keep_all=TRUE)
+          gene_expression_selection <- gene_expression_data$gene_expression_path
+          names(gene_expression_selection) <- gene_expression_data$gene_expression_name
 
           if(all(is.na(gene_expression_selection)) || all(gene_expression_selection == "")){
             updateSelectInput(session, inputId = "gsva_gene_expression", choices = "Import Data")
@@ -1174,11 +1178,11 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         selected_fs <- isolate({ input$download_fs_options })
 
-        input_score_data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs) %>% dplyr::distinct(input_score_paths, .keep_all=TRUE)
-        input_score_selection <- input_score_data$input_score_paths
+        input_score_data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs) %>% dplyr::distinct(input_score_path, .keep_all=TRUE)
+        input_score_selection <- input_score_data$input_score_path
 
-        gene_expression_data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs) %>% dplyr::distinct(gene_expression_paths, .keep_all=TRUE)
-        gene_expression_selection <- gene_expression_data$gene_expression_paths
+        gene_expression_data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs) %>% dplyr::distinct(gene_expression_path, .keep_all=TRUE)
+        gene_expression_selection <- gene_expression_data$gene_expression_path
 
         #print(selected_fs); print(input_score_selection); print(gene_expression_selection);
 
@@ -1210,7 +1214,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         filename = function() {
           selected_fs <- isolate({ input$download_fs_options })
           type <- isolate({ input$download_fs_type })
-          filename <- extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)] %>% unique()
+          filename <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique()
           paste0(filename, ".rds")
         },
 
@@ -1241,19 +1245,19 @@ CaDrA_Server <- function(id, datalist=NULL){
 
           if(include_scores){
 
-            data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs & !is.na(input_score_paths) & input_score_paths != "") %>% dplyr::distinct(input_score_paths, .keep_all=TRUE)
-            input_score_paths <- data$input_score_paths
-            input_score_names <- data$input_score_names
+            data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs & !is.na(input_score_path) & input_score_path != "") %>% dplyr::distinct(input_score_path, .keep_all=TRUE)
+            input_score_path <- data$input_score_path
+            input_score_name <- data$input_score_name
 
-            for(d in 1:length(input_score_paths)){
+            for(d in 1:length(input_score_path)){
               #d=1;
-              if(tools::file_ext(input_score_paths[d]) == "rda"){
-                envir_name <- base::load(input_score_paths[d])
+              if(tools::file_ext(input_score_path[d]) == "rda"){
+                envir_name <- base::load(input_score_path[d])
                 input_score <- base::get(envir_name)
               }else{
-                input_score <- base::readRDS(input_score_paths[d])
+                input_score <- base::readRDS(input_score_path[d])
               }
-              dl_data_names <- c(names(dl_data), input_score_names[d])
+              dl_data_names <- c(names(dl_data), input_score_name[d])
               dl_data <- c(dl_data, list(input_score))
               names(dl_data) <- dl_data_names
             }
@@ -1262,20 +1266,20 @@ CaDrA_Server <- function(id, datalist=NULL){
 
           if(include_gene_expression){
 
-            data <- extdata() %>% dplyr::filter(feature_set_paths == selected_fs & !is.na(gene_expression_paths) & gene_expression_paths != "") %>% dplyr::distinct(gene_expression_paths, .keep_all=TRUE)
-            gene_expression_paths <- data$gene_expression_paths
-            gene_expression_names <- data$gene_expression_names
+            data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs & !is.na(gene_expression_path) & gene_expression_path != "") %>% dplyr::distinct(gene_expression_path, .keep_all=TRUE)
+            gene_expression_path <- data$gene_expression_path
+            gene_expression_name <- data$gene_expression_name
 
-            for(d in 1:length(gene_expression_paths)){
+            for(d in 1:length(gene_expression_path)){
               #d=1;
-              #print(gene_expression_paths[d])
-              if(tools::file_ext(gene_expression_paths[d]) == "rda"){
-                envir_name <- base::load(gene_expression_paths[d])
+              #print(gene_expression_path[d])
+              if(tools::file_ext(gene_expression_path[d]) == "rda"){
+                envir_name <- base::load(gene_expression_path[d])
                 ge_set <- base::get(envir_name)
               }else{
-                ge_set <- base::readRDS(gene_expression_paths[d])
+                ge_set <- base::readRDS(gene_expression_path[d])
               }
-              dl_data_names <- c(names(dl_data), gene_expression_names[d])
+              dl_data_names <- c(names(dl_data), gene_expression_name[d])
               dl_data <- c(dl_data, list(gene_expression=ge_set))
               names(dl_data) <- dl_data_names
             }
@@ -2166,7 +2170,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         req(gVal$gsva_search_result)
         
         selected_fs = isolate({ input$gsva_feature_set })
-        selected_fs_name = extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)] %>% unique()
+        selected_fs_name = extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique()
         
         h3(paste0("Enrichment Scores for ", selected_fs_name))
 
@@ -2252,7 +2256,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         filename = function() {
           selected_fs <- isolate({ input$gsva_feature_set })
-          fsname <- extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)]
+          fsname <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)]
           paste0("CaDrA-", fsname, "-GSVA.csv")
         },
 
@@ -2268,7 +2272,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         filename = function() {
           selected_fs <- isolate({ input$gsva_feature_set })
-          fsname <- extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)]
+          fsname <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)]
           paste0("CaDrA-", fsname, "-GSVA.rds")
         },
 
@@ -2338,18 +2342,18 @@ CaDrA_Server <- function(id, datalist=NULL){
           }
           
           selected_fs = isolate({ input$gsva_feature_set })
-          selected_fs_name = extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)] %>% unique()
+          selected_fs_name = extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique()
           
           selected_gene_expression = isolate({ input$gsva_gene_expression })
-          selected_gene_expression_name <- extdata()$gene_expression_names[which(extdata()$gene_expression_paths == selected_gene_expression)] %>% unique()
+          selected_gene_expression_name <- extdata()$gene_expression_name[which(extdata()$gene_expression_path == selected_gene_expression)] %>% unique()
           
           new_input_score <- data.frame(
-            feature_set_names = rep(selected_fs_name, length(row)),
-            feature_set_paths = rep(selected_fs, length(row)),
-            input_score_names = NA,
-            input_score_paths = NA,
-            gene_expression_names = rep(selected_gene_expression_name, length(row)),
-            gene_expression_paths = rep(selected_gene_expression, length(row)),
+            feature_set_name = rep(selected_fs_name, length(row)),
+            feature_set_path = rep(selected_fs, length(row)),
+            input_score_name = NA,
+            input_score_path = NA,
+            gene_expression_name = rep(selected_gene_expression_name, length(row)),
+            gene_expression_path = rep(selected_gene_expression, length(row)),
             stringsAsFactors = FALSE
           )
           
@@ -2371,8 +2375,8 @@ CaDrA_Server <- function(id, datalist=NULL){
             
             saveRDS(new_scores, selected_score_path)
             
-            new_input_score$input_score_names[r] <- selected_geneset
-            new_input_score$input_score_paths[r] <- selected_score_path
+            new_input_score$input_score_name[r] <- selected_geneset
+            new_input_score$input_score_path[r] <- selected_score_path
           }
           
           new_input_score <- new_input_score %>% dplyr::mutate_all(., as.character)
@@ -2395,11 +2399,11 @@ CaDrA_Server <- function(id, datalist=NULL){
             saveRDS(updated_datalist, datalist)
           }
           
-          updated_extdata <- get_extdata(datalist, global_feature_set_paths, global_input_score_paths, global_gene_expression_paths)
+          updated_extdata <- get_extdata(datalist, global_feature_set_path, global_input_score_path, global_gene_expression_path)
           
           extdata(updated_extdata)
           
-          genelist_names <- paste0(new_input_score$input_score_names, collapse = ", ")
+          genelist_names <- paste0(new_input_score$input_score_name, collapse = ", ")
           
           enrichment_table_message(paste0("<em style='font-weight: bold;'>", genelist_names, "</em>", ifelse(length(genelist_names) == 1, " has", " have"), " been added as 'Input Scores' for <em style='font-weight: bold;'>", selected_fs_name , "</em>."))
           
@@ -2466,7 +2470,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         if (selected_fs == "Import Data"){
           title <- "Dataset: Imported Data"
         }else{
-          title <- paste0("Feature Set: ", extdata()$feature_set_names[which(extdata()$feature_set_paths == selected_fs)] %>% unique())
+          title <- paste0("Feature Set: ", extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique())
         }
 
         div(
@@ -2607,7 +2611,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         if(selected_input_score == "Import Data"){
           title <- "Imported Data"
         }else{
-          title <- extdata()$input_score_names[which(extdata()$input_score_paths == selected_input_score)]
+          title <- extdata()$input_score_name[which(extdata()$input_score_path == selected_input_score)]
         }
 
         h3("Input Score:", title)
@@ -2807,13 +2811,13 @@ CaDrA_Server <- function(id, datalist=NULL){
 #' Run both Shiny UI and Server Modules 
 #' 
 #' @param id A unique namespace identifier
-#' @param datalist A path to data file (in cvs or rds format) listing 
+#' @param datalist A data frame or path to data file (in cvs or rds format) listing 
 #' the absolute paths of necessary files to start the app. 
 #' 
 #' The datalist must contains the following variables:
-#' 'feature_set' (required), 'feature_set_paths' (repuired), 
-#' 'input_score_names' (required), input_score_paths' (required), 
-#' 'gene_expression_names' (optional), 'gene_expression_paths' (optional)
+#' 'feature_set' (required), 'feature_set_path' (repuired), 
+#' 'input_score_name' (required), input_score_path' (required), 
+#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
 #' 
 #' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
 #' in CaDrA package.

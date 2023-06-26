@@ -12,12 +12,20 @@ knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 ```
 
 ```{css, echo=FALSE}
+
+table{
+  padding: 5px 5px 5px 5px;
+  border: 1px solid black;
+}
+
 thead {
   font-weight: bold;
 }
-thead, td {
-  border: 1px solid black
+
+table, thead, tbody {
+  padding: 5px 5px 5px 5px;
 }
+
 ```
 
 # Frequently asked questions

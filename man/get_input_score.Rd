@@ -4,7 +4,7 @@
 \alias{get_input_score}
 \title{Get a list of input scores associated with a given feature set}
 \usage{
-get_input_score(API_Server, feature_set, orderby = "asc")
+get_input_score(API_Server, feature_set, order_by = "asc")
 }
 \arguments{
 \item{API_Server}{an URL link to where the API is hosted}
@@ -12,17 +12,33 @@ get_input_score(API_Server, feature_set, orderby = "asc")
 \item{feature_set}{a specific feature set to look up and retrieve 
 appropriate input scores that are associated with it}
 
-\item{orderby}{sort results by ascending or descending order}
+\item{order_by}{sort results by ascending or descending order}
 }
 \value{
-a data frame with two columns: feature_set_names, input_score_names
+a data frame with two columns: feature_set_name, input_score_name
 }
 \description{
 Get a list of input scores associated with a given feature set
 }
 \examples{
 
-# Load R library
-# examples will go here
+# API server to retrieve a list of feature sets from CaDrA Portal
+fs_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
+
+# Retrieve a list of feature sets available from CaDrA Portal
+fs_list <- CaDrA.shiny::get_feature_set(
+  API_Server = fs_API_Server, 
+  order_by = "asc"
+)
+
+# API server to retrieve a list of input scores associated with a specific 
+feature set from CaDrA Portal
+scores_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_input_score"
+
+scores_list <- CaDrA.shiny::get_input_score(
+  API_Server = scores_API_Server, 
+  feature_set = fs_list$feature_set_name[1], 
+  order_by = "asc"
+)
 
 }

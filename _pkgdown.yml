@@ -31,11 +31,25 @@ reference:
 - title: Plumber API Methods
   desc: ~
   contents:
-  - '`get_feature_sets`'
-  - '`get_input_scores`'
-  - '`get_gene_expressions`'
+  - '`get_feature_set`'
+  - '`get_input_score`'
+  - '`get_gene_expression`'
   - '`download_feature_sets`'
-    
+  
+home:
+  sidebar: 
+    structure: [cadra_github_links, cadra_shiny_github_links, cadra_shiny_github_issues, license, citation, authors]
+    components:
+      cadra_github_links:
+        title: Browse CaDrA source code
+        text: https://github.com/montilab/CaDrA   
+      cadra_shiny_github_links:
+        title: Browse CaDrA.shiny source code
+        text: https://github.com/montilab/CaDrA.shiny
+      cadra_shiny_github_issues:
+        title: Report a bug
+        text: https://github.com/montilab/CaDrA.shiny/issues  
+        
 navbar:
   left:
     - text: "Home"
@@ -48,10 +62,10 @@ navbar:
         href: articles/docker-compose.html        
       - text: "Retrieve Dataset from our Rest API"
         href: articles/api.html
-      - text: "FAQs"
-        href: articles/FAQs.html
     - text: "Reference"
       href: reference/index.html
+    - text: "FAQs"
+      href: articles/FAQs.html      
   right:
     - text: "Change Log"
       href: news/index.html

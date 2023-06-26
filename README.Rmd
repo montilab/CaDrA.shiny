@@ -6,8 +6,7 @@ output: rmarkdown::github_document
 
 ```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse = TRUE, comment="")
-library(SummarizedExperiment)
-library(CaDrA)
+library(knitr)
 library(devtools)
 load_all()
 ```
@@ -41,15 +40,16 @@ Data visualization includes:
 - Meta-feature plot 
 - Kolmogorov Smirnov (KS) enrichment plot
 - Top N candidates overlapping heatmap
-- Permutation-based testing plot 
+- Permutation plot 
 
 The **CaDrA.shiny** package is already containerized using **Docker** and can be deployed on any Cloud-based services.
 
 #### **Docker image: [montilab/cadra-shiny](https://hub.docker.com/r/montilab/cadra-shiny)**
 
-# Run CaDrA Shiny App on RStudio Desktop
+####  Useful Guides
 
-Don't have RStudio Desktop installed, download it [here](https://posit.co/download/rstudio-desktop/).
+- <a href="articles/docker.html" target="_blank">Containerizing CaDrA.shiny with Docker</a>
+- <a href="articles/docker-compose.html" target="_blank">Launching CaDrA's Shiny Dashboard with Compose</a>
 
 ### (1) Installation
 
@@ -62,27 +62,29 @@ devtools::install_github("montilab/CaDrA.shiny")
 
 ```r
 library(CaDrA.shiny)
-library(httr)
-library(jsonlite)
+library(knitr)
 ```
 
 ### (3) Launch CaDrA's Shiny App with dataset included in the package
 
 ```r
-CaDrA.shiny::CaDrA_App(id="myapp")
+app <- CaDrA.shiny::CaDrA_App(id="myapp")
+
+# NOT RUN: Launch app on localhost with port 3838
+# shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
 
 **Required:** 
-a data file (in **csv** or **rds** format) that includes paths to your pre-proccessed dataset with required columns:
+a data frame or data file (in **csv** or **rds** format) that includes paths to your pre-proccessed dataset with required columns:
 
-- feature_set_names
-- feature_set_paths
-- input_score_names
-- input_score_paths
-- gene_expression_names
-- gene_expression_paths
+- feature_set_name
+- feature_set_path
+- input_score_name
+- input_score_path
+- gene_expression_name
+- gene_expression_path
 
 Here is an example of **mydatafile.csv**
 <a href="man/figures/datalist.png" target="_blank"><img src="man/figures/datalist.png"></a>
@@ -96,46 +98,58 @@ mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
 ```
 
-### (6) Launch CaDrA's Shiny App with dataset download from our Rest API 
+### (6) Launch CaDrA's Shiny App with dataset downloaded from our web portal using our REST API
 
-#### (i) Retrieve pre-processed dataset from API
+#### (i) Retrieve a list of pre-processed feature sets available on the portal
 
 ```{r}
-
 # API server to get a list of feature sets in the CaDrA Portal
-API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_sets"
+API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
 
 # Get a list of feature sets available on CaDrA Portal
-fs_list <- CaDrA.shiny::get_feature_sets(API_Server, orderby="asc")
-  
+fs_list <- CaDrA.shiny::get_feature_set(API_Server, order_by="asc")
+```
+
+```{r}
+# Look at the first 6 feature sets
+knitr::kable(head(fs_list))
+```
+
+#### (ii) Download pre-processed feature sets using our REST API
+
+```{r}
 # Download the feature set along with its input score and gene expression
 API_Server <- paste0("https://montilab.bu.edu/CaDrA_API/download_feature_set") 
 
-feature_sets <- paste0(fs_list$feature_set_names[1:2], collapse=",")
-
+# Define query parameters
+feature_sets <- fs_list$feature_set_name[1:2]
 include_input_score <- TRUE
 include_gene_expression <- TRUE
 out_dir <- "~/Github"
 
-
-
-
-# Read in the data file that includes paths to your pre-proccessed dataset
-mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
-
-# Launch CaDrA's Shiny app with your loaded data file
-CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
-
+# Download feature sets and return a datalist with appropriate paths to its dataset
+mydatafile <- CaDrA.shiny::download_feature_sets(
+  API_Server = API_Server,
+  feature_sets = feature_sets,
+  include_input_score = include_input_score,
+  include_gene_expression = include_gene_expression,
+  out_dir = out_dir
+)
 ```
 
-#### (ii) Launch CaDrA's app with downloaded dataset
+```{r}
+# Look at the top 6 rows
+knitr::kable(head(mydatafile))
+```
 
-```r
-# Read in the data file that includes paths to your pre-proccessed dataset
-mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
+#### (iii) Launch CaDrA's app with the downloaded dataset
 
-# Launch CaDrA's Shiny app with your loaded data file
-CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+```{r}
+# Launch CaDrA's Shiny app with your downloaded datalist
+app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
+
+# NOT RUN: Launch app on localhost with port 3838
+# shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
 # A Glimpse of CaDrA's Dashboard
@@ -146,20 +160,15 @@ There are five tabs on CaDrA's Dashboard. Explore each tab and see what they do:
 
 - <a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a>
 - <a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a>
-- <a href="articles/dataset-tab.html" target="_blank">Dataset</a>
+- <a href="articles/api.html" target="_blank">Dataset</a>
 - Help
 - Publication
 - Contract Us
-
-# Additional User Guides
-
-- [Containerizing CaDrA.shiny with Docker](https://montilab.github.io/CaDrA/articles/docker.html)
-- [Launching CaDrA's Shiny Dashboard with Compose](https://montilab.github.io/CaDrA/articles/docker-compose.html)
 
 # Getting Help
 
 To get help with **CaDrA**, visit our [Github dicussion](https://github.com/montilab/CaDrA/discussions) or [Github issues](https://github.com/montilab/CaDrA/issues).
 
-To get help with **CaDrA.shiny**, visit our the [Github dicussion](https://github.com/montilab/CaDrA.shiny/discussions) or [Github issues](https://github.com/montilab/CaDrA.shiny/issues).
+To get help with **CaDrA.shiny**, visit our [Github dicussion](https://github.com/montilab/CaDrA.shiny/discussions) or [Github issues](https://github.com/montilab/CaDrA.shiny/issues).
 
 

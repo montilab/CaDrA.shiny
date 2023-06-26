@@ -2,24 +2,30 @@
 % Please edit documentation in R/cadra_api.R
 \name{get_feature_set}
 \alias{get_feature_set}
-\title{Get a list of pre-processed feature sets available on CaDrA's API Portal}
+\title{Get a list of pre-processed feature sets available on CaDrA API Portal}
 \usage{
-get_feature_set(API_Server, orderby = "asc")
+get_feature_set(API_Server, order_by = "asc")
 }
 \arguments{
 \item{API_Server}{an URL link to where the API is hosted}
 
-\item{orderby}{sort results by ascending or descending order}
+\item{order_by}{sort results by ascending or descending order}
 }
 \value{
-a data frame with two columns: description, feature_set_names
+a data frame with two columns: description, feature_set_name
 }
 \description{
-Get a list of pre-processed feature sets available on CaDrA's API Portal
+Get a list of pre-processed feature sets available on CaDrA API Portal
 }
 \examples{
 
-# Load R library
-# examples will go here
+# API server to retrieve a list of feature sets from CaDrA Portal
+API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
+
+# Retrieve a list of feature sets available from CaDrA Portal
+fs_list <- CaDrA.shiny::get_feature_set(
+  API_Server = API_Server, 
+  order_by = "asc"
+)
 
 }
