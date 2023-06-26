@@ -273,22 +273,23 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     zip_file_dir <- file.path(tmpdir, file_name)
     dir.create(zip_file_dir, showWarnings=FALSE, recursive=TRUE)
   
+    # Retrieve feature set name and path
+    feature_set_name = unique(fs_df$feature_set_name)
+    feature_set_path = unique(fs_df$feature_set_path)
+    
+    # Create a directory
+    fs_file_dir <- file.path(zip_file_dir, feature_set_name, "feature_set")
+    dir.create(fs_file_dir, showWarnings=FALSE, recursive=TRUE)
+    
+    # Create a file path
+    file_path <- file.path(fs_file_dir, paste0(feature_set_name, ".RDS"))
+    
+    # Copy FS to zip directory
+    file.copy(from=feature_set_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+    
     # Read in feature sets 
     for(f in 1:nrow(fs_df)){
       #f=1;
-      feature_set_name = fs_df$feature_set_name[f]
-      feature_set_path = fs_df$feature_set_path[f]
-      
-      # Create a directory
-      fs_file_dir <- file.path(zip_file_dir, feature_set_name, "feature_set")
-      dir.create(fs_file_dir, showWarnings=FALSE, recursive=TRUE)
-      
-      # Create a file path
-      file_path <- file.path(fs_file_dir, paste0(feature_set_name, ".RDS"))
-      
-      # Copy FS to zip directory
-      file.copy(from=feature_set_path, to=file_path, overwrite=TRUE, recursive=FALSE)
-      
       # Whether to include input scores
       if(include_input_score == TRUE){
   
@@ -343,7 +344,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
         gene_expression_path = sapply(seq_along(gene_expression_path), function(s){ ifelse(include_gene_expression==TRUE, basename(gene_expression_path[s]), NULL) }),
       )
     
-    saveRDS(fs_df, file.path(zip_file_dir, feature_set, "datalist.rds"))
+    saveRDS(fs_df, file.path(zip_file_dir, feature_set_name, "datalist.RDS"))
     
     zip_file <- file.path(tmpdir, zip_file_name)
     
