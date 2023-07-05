@@ -1,8 +1,8 @@
 ---
-title: "CaDrA's Rest API"
+title: "CaDrA Rest API"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{CaDrA's Rest API}
+  %\VignetteIndexEntry{CaDrA Rest API}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -27,11 +27,9 @@ library(jsonlite)
 
 </script>
 
-# CaDrA's Rest API
+<p>Here we provide documentation on how to retrieve pre-processed dataset from our CaDrA's web portal. All successful responses are returned in JSON. Only queries that respond with a **200 response code** is considered successful.</p>
 
-<p>Here we provide documentation on how to retrieve pre-processed dataset from our CaDrA web portal. All successful responses are returned in JSON. Only queries that respond with a 200 response code is considered successful.</p>
-
-<p>Here are standard HTTP codes that you will find in the “Status” element of the response body.</p>
+<p>Here are standard HTTP codes that you will find in the **Status** element of the response body:</p>
 
 ```{r status-table, include=TRUE, echo=TRUE, results='asis'}
 ```
