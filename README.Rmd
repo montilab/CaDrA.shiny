@@ -70,8 +70,8 @@ library(knitr)
 ```r
 app <- CaDrA.shiny::CaDrA_App(id="myapp")
 
-# NOT RUN: Launch app on localhost with port 3838
-# shiny::runApp(app, host='0.0.0.0', port=3838)
+# Launch app on localhost with port 3838
+shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
@@ -95,7 +95,10 @@ To launch the app:
 mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
 
 # Launch CaDrA's Shiny app with your loaded data file
-CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
+
+# Launch app on localhost with port 3838
+shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
 ### (6) Launch CaDrA's Shiny App with dataset downloaded from our web portal using our REST API
@@ -118,10 +121,11 @@ knitr::kable(head(fs_list))
 #### (ii) Download pre-processed feature sets using our REST API
 
 ```{r}
-# Download the feature set along with its input score and gene expression
+# Download the feature sets along with its input score and gene expression
 API_Server <- paste0("https://montilab.bu.edu/CaDrA_API/download_feature_set") 
 
-# Define query parameters
+# Retrieve first two feature sets received from (i)
+# e.g., TCGA_ACC_2016_01_28_GISTIC_MUT_SIG, TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG
 feature_sets <- fs_list$feature_set_name[1:2]
 include_input_score <- TRUE
 include_gene_expression <- TRUE
@@ -144,12 +148,12 @@ knitr::kable(head(mydatafile))
 
 #### (iii) Launch CaDrA's app with the downloaded dataset
 
-```{r}
-# Launch CaDrA's Shiny app with your downloaded datalist
+```r
+# Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)
 app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
 
-# NOT RUN: Launch app on localhost with port 3838
-# shiny::runApp(app, host='0.0.0.0', port=3838)
+# Launch app on localhost with port 3838
+shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
 # A Glimpse of CaDrA's Dashboard

@@ -22,22 +22,13 @@ Get a list of input scores associated with a given feature set
 }
 \examples{
 
-# API server to retrieve a list of feature sets from CaDrA Portal
-fs_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
-
-# Retrieve a list of feature sets available from CaDrA Portal
-fs_list <- CaDrA.shiny::get_feature_set(
-  API_Server = fs_API_Server, 
-  order_by = "asc"
-)
-
 # API server to retrieve a list of input scores associated with a specific 
 feature set from CaDrA Portal
 scores_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_input_score"
 
 scores_list <- CaDrA.shiny::get_input_score(
   API_Server = scores_API_Server, 
-  feature_set = fs_list$feature_set_name[1], 
+  feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG", 
   order_by = "asc"
 )
 

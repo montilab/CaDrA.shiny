@@ -40,7 +40,7 @@ table, thead, tbody {
 
 ## Where can I find examples of CaDrA?
 
-- See our [User Guides on how to use CaDrA package](getting-started.html)
+- See our [User Guides on how to run CaDrA package](getting-started.html)
 
 ## How to start, restart, stop or remove services listed in docker-compose.yml?
 

@@ -17,6 +17,9 @@
 #'   order_by = "asc"
 #' )
 #' 
+#' # View top 6 rows
+#' head(fs_list)
+#' 
 #' @import httr jsonlite dplyr
 #' 
 #' @export 
@@ -58,22 +61,13 @@ get_feature_set <- function(API_Server, order_by="asc"){
 #'
 #' @examples
 #' 
-#' # API server to retrieve a list of feature sets from CaDrA Portal
-#' fs_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
-#' 
-#' # Retrieve a list of feature sets available from CaDrA Portal
-#' fs_list <- CaDrA.shiny::get_feature_set(
-#'   API_Server = fs_API_Server, 
-#'   order_by = "asc"
-#' )
-#' 
 #' # API server to retrieve a list of input scores associated with a specific 
 #' feature set from CaDrA Portal
 #' scores_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_input_score"
 #' 
 #' scores_list <- CaDrA.shiny::get_input_score(
 #'   API_Server = scores_API_Server, 
-#'   feature_set = fs_list$feature_set_name[1], 
+#'   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG", 
 #'   order_by = "asc"
 #' )
 #' 
@@ -120,15 +114,6 @@ get_input_score <- function(API_Server, feature_set, order_by="asc"){
 #' @return a data frame with two columns: feature_set_name, gene_expression_name
 #'
 #' @examples
-#' 
-#' # API server to retrieve a list of feature sets from CaDrA Portal
-#' fs_API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
-#' 
-#' # Retrieve a list of feature sets available from CaDrA Portal
-#' fs_list <- CaDrA.shiny::get_feature_set(
-#'   API_Server = fs_API_Server, 
-#'   order_by = "asc"
-#' )
 #'  
 #' # API server to retrieve a gene expression set that associated with a 
 #' specific feature set from CaDrA Portal
@@ -136,7 +121,7 @@ get_input_score <- function(API_Server, feature_set, order_by="asc"){
 #' 
 #' ge_list <- CaDrA.shiny::get_gene_expression(
 #'   API_Server = ge_API_Server, 
-#'   feature_set = fs_list$feature_set_name[1], 
+#'   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG", 
 #'   order_by = "asc"
 #' )
 #' 

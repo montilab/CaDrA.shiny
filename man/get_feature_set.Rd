@@ -28,4 +28,7 @@ fs_list <- CaDrA.shiny::get_feature_set(
   order_by = "asc"
 )
 
+# View top 6 rows
+head(fs_list)
+
 }

@@ -32,10 +32,13 @@
     <span class="caret"></span>
   </a>
   <ul class="dropdown-menu" role="menu"><li>
+      <a href="../articles/getting-started.html">How to run CaDrA</a>
+    </li>
+    <li>
       <a href="../articles/docker.html">Containerizing CaDrA.shiny with Docker</a>
     </li>
     <li>
-      <a href="../articles/docker-compose.html">Launch CaDrA Shiny with Compose</a>
+      <a href="../articles/docker-compose.html">Launch CaDrA.shiny with Compose</a>
     </li>
     <li>
       <a href="../articles/api.html">Retrieve Dataset from our Rest API</a>
@@ -106,6 +109,16 @@
 <span class="r-in"><span>  API_Server <span class="op">=</span> <span class="va">API_Server</span>, </span></span>
 <span class="r-in"><span>  order_by <span class="op">=</span> <span class="st">"asc"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># View top 6 rows</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs_list</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   description                        feature_set_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1         ACC      TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 2        BLCA     TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 3        BRCA     TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 4        CESC     TCGA_CESC_2016_01_28_GISTIC_MUT_SIG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 5        CHOL     TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 6    COADREAD TCGA_COADREAD_2016_01_28_GISTIC_MUT_SIG</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -14,8 +14,6 @@ authors:
     href: https://github.com/tetomonti
   Katia Bulekova:
     href: https://github.com/katgit
-  Vinay Kartha:
-    href: https://github.com/vkartha
 
 news:
   one_page: false
@@ -56,9 +54,11 @@ navbar:
       href: index.html
     - text: "Getting Started"
       menu:
+      - text: "How to run CaDrA"
+        href: articles/getting-started.html
       - text: "Containerizing CaDrA.shiny with Docker"
         href: articles/docker.html
-      - text: "Launch CaDrA Shiny with Compose"
+      - text: "Launch CaDrA.shiny with Compose"
         href: articles/docker-compose.html        
       - text: "Retrieve Dataset from our Rest API"
         href: articles/api.html
