@@ -1,0 +1,42 @@
+---
+title: "&#32;"
+output: html_document
+---
+
+```{r, include=FALSE, messages=FALSE, warnings=FALSE}
+knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+```
+
+<h1 style="text-align: center; color: #8B008B; font-weight: bold;">Instructions</h1>
+
+![](figures/run-cadra-tab.png)
+
+There are two panels on this page:
+
+- Right-side: [User Inputs](#user-inputs)
+- Left-side: [CaDrA Results](#cadra-results)
+
+## 1. User Inputs
+
+![](figures/cadra.png)
+
+## 2. CaDrA Results
+
+There are several results returned from running **CaDrA** search:
+
+- Filtered feature set based on given filtered parameters
+- Provided observed input scores
+- Best meta-feature set was identified from the heuristic search 
+- Meta-plot shows complementary features with their overlapping union and its enrichment score
+- Overlapping heatmap shows best-features returned from repeating the search with top N features
+
+![](figures/filtered-FS.png)
+
+![](figures/input-scores.png)
+
+![](figures/best-meta-feature-set.png)
+
+![](figures/meta-feature-plot.png)
+
+![](figures/overlapping-heatmap.png)
+

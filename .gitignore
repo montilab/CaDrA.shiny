@@ -40,3 +40,7 @@
 # Ignore docker-compose files
 docker-compose-montilab.yml
 docker-compose-local.yml
+docker-compose-nerc.yml
+docker-compose-*.yml
+
+

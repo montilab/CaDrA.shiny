@@ -33,6 +33,7 @@ Imports:
     parallel,
     purrr,
     shiny,
+    shinyjs,
     SummarizedExperiment,
     tibble,
     tools,

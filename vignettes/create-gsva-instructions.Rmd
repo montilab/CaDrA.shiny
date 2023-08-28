@@ -1,0 +1,26 @@
+---
+title: "&#32;"
+output: html_document
+---
+
+```{r, include=FALSE, messages=FALSE, warnings=FALSE}
+knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+```
+
+<h1 style="text-align: center; color: #8B008B; font-weight: bold;">Instructions</h1>
+
+![](figures/run-gsva-tab.png)
+
+There are two panels on this page:
+
+- Right-side: [User Inputs](#user-inputs)
+- Left-side: [GSVA Results](#gsva-results)
+
+## 1. User Inputs
+
+![](figures/gsva.png)
+
+## 2. GSVA Results
+
+![](figures/gsva-results.png)
+
