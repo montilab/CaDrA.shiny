@@ -2,10 +2,10 @@
 # Create a cadra_version argument
 # to allow the package to build according to its R version
 ARG CADRA_VERSION
-ARG CADRA_VERSION=${CADRA_VERSION:-2.0.0}
+ARG CADRA_VERSION=${CADRA_VERSION:-montilab/cadra:2.0.0}
 
 # Get shiny+tidyverse+devtools packages from rocker image
-FROM montilab/cadra:${CADRA_VERSION}
+FROM ${CADRA_VERSION}
 
 # Set up the maintainer information
 MAINTAINER Reina Chau (lilychau999@gmail.com)
