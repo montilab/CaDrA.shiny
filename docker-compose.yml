@@ -1,9 +1,5 @@
 version: '3.9'
 
-x-cadra-git-repo:
-  &cadra-git-repo
-  https://raw.githubusercontent.com/montilab/CaDrA/devel/inst/docker/Dockerfile
-
 x-cadra-shiny-git-repo:
   &cadra-shiny-git-repo
   https://github.com/montilab/CaDrA.shiny.git#main
@@ -13,35 +9,16 @@ x-cadra-shiny-code:
   type: bind
   source: /path/to/CaDrA.shiny
   target: /CaDrA-shiny
-
-x-cadra-shiny-server:
-  &cadra-shiny-server
-  type: bind
-  source: /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh
-  target: /usr/bin/shiny-server.sh 
-  
-x-cadra-api-server:
-  &cadra-api-server
-  type: bind
-  source: /path/to/CaDrA.shiny/inst/plumber/shiny-server.sh
-  target: /usr/bin/shiny-server.sh 
   
 services:
-  cadra:
-    container_name: cadra
-    image: montilab/cadra:2.0.0
-    build: 
-      context: *cadra-git-repo
-    restart: always
-    networks:
-      - backend
-    command: tail -f /dev/null
-      
   cadra-shiny:
     container_name: cadra-shiny
     image: montilab/cadra-shiny:latest
     build: 
       context: *cadra-shiny-git-repo
+      dockerfile: Dockerfile
+      args:
+        - R_VERSION=4.3.0
     restart: always
     networks:
       - frontend
@@ -52,21 +29,6 @@ services:
     volumes:
       - *cadra-shiny-code
       - *cadra-shiny-server
-      
-  cadra-api:
-    container_name: cadra-api
-    image: montilab/cadra-shiny:latest
-    restart: always
-    networks:
-      - api 
-    depends_on:
-      - cadra
-      - cadra-shiny
-    ports:
-      - 5678:3838
-    volumes:
-      - *cadra-shiny-code
-      - *cadra-api-server
       
 networks:
   frontend: 
