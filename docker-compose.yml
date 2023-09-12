@@ -28,8 +28,6 @@ services:
     restart: always
     networks:
       - frontend
-    depends_on:
-      - cadra
     ports:
       - 4567:3838
     volumes:
