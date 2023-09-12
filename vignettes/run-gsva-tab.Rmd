@@ -15,8 +15,8 @@ knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 
 There are two panels on this page:
 
-- Right-side: [User Inputs](#user-inputs)
-- Left-side: [GSVA Results](#gsva-results)
+- Left-side: [User Inputs](#user-inputs)
+- Right-side: [GSVA Results](#gsva-results)
 
 ## 1. User Inputs
 

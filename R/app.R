@@ -1,12 +1,12 @@
 
 # function to hover columns in data table
-create_hover_txt <- function(table){
+create_hover_txt <- function(table, n_char=100){
   
   column_names <- colnames(table)
   
   th_tr <- lapply(seq_along(column_names), function(l){ 
     title <- column_names[l]
-    name <- ifelse(nchar(title) > 5, paste0(substr(title, 1, 5), "..."), title)
+    name <- ifelse(nchar(title) > n_char, paste0(substr(title, 1, n_char), "..."), title)
     th <- sprintf('<th title = "%s">%s</th>\n', title, name) 
   }) %>% purrr::flatten_chr() %>% paste0(., collapse = "")
   
@@ -35,7 +35,7 @@ global_feature_set_path <- c(
 global_input_score_path <- c(
   "B-catenin Activity in CCLE" = system.file("data/CTNBB1_reporter.rda", package = "CaDrA"),
   "YAP/TAZ Activity in TCGA BrCa" = system.file("data/TAZYAP_BRCA_ACTIVITY.rda", package = "CaDrA"),
-  "Simulated Input Scores" =  system.file("data/sim_Scores.rda", package = "CaDrA")
+  "Simulated Input Score" =  system.file("data/sim_Scores.rda", package = "CaDrA")
 )
 
 # Global gene expression ####
@@ -56,7 +56,7 @@ global_datalist_options <- data.frame(
 )
 
 # Create a list of scoring methods
-scoring_methods <- c("Kolmogorov-Smirnov"="ks", "Wilcoxon Rank-Sum"="wilcox", "Conditional Mutual Information"="revealer")
+scoring_methods <- c("ks_pval", "ks_score", "wilcox_pval", "wilcox_score", "revealer")
   
 # Required column names for datalist
 datalist_colnames <- c('feature_set_name', 'feature_set_path', 'input_score_name', 'input_score_path', 'gene_expression_name', 'gene_expression_path')
@@ -328,7 +328,7 @@ get_extdata <- function(datalist=NULL){
                   'data-tooltip-toggle="tooltip" data-placement=',
                   '"top" title=\"NOTE: If file is in csv format, ',
                   'the \'Feature Set\' must be a data ',
-                  'frame including a \'Features\' column name ',
+                  'frame including a \'Feature\' column name ',
                   'that contains unique names or labels to ',
                   'search for best features. Otherwise, \'Feature ',
                   'Set\' must be an object of class SummarizedExperiment ',
@@ -367,7 +367,7 @@ get_extdata <- function(datalist=NULL){
                   '"top" title=\"NOTE: If file is in csv format, ',
                   'then the \'Input Score\' file ',
                   'must be a data frame with two columns ',
-                  '(Samples and Scores) and the \'Samples\' column ',
+                  '(Sample and Score) and the \'Sample\' column ',
                   'must match the colnames of \'Feature Set\'. ',
                   'Otherwise, \'Input Score\' must be a list of  ',
                   'vectors and have names or labels that match the ',
@@ -426,36 +426,11 @@ get_extdata <- function(datalist=NULL){
               width = "100%"
             ),
             
-            conditionalPanel(
-              condition = sprintf("input['%s'] == 'ks' ||
-                                   input['%s'] == 'wilcox'", 
-                                  ns("method"), ns("method")),
-              
-              selectInput(
-                inputId = ns("metric"),
-                label = strong(span(style="color:red;", "*"), "Metric:"),
-                choices = c("P-value"="pval", "Score Statistic"="stat"),
-                selected = "pval", 
-                width = "100%"
-              )
-            ),
-            
-            conditionalPanel(
-              condition = sprintf("input['%s'] == 'revealer'", ns("method")),
-              
-              selectInput(
-                inputId = ns("metric"),
-                label = strong(span(style="color:red;", "*"), "Metric:"),
-                choices = c("Score Statistic"="stat"),
-                selected = "stat", 
-                width = "100%"
-              )
-            ),
-            
             # weighted KS ####
             conditionalPanel(
-              condition = sprintf("input['%s'] == 'ks'", ns("method")),
-              
+              condition = sprintf("input['%s'] == 'ks_pval' ||
+                                   input['%s'] == 'ks_score'", 
+                                  ns("method"), ns("method")),
               checkboxInput(
                 inputId = ns("weighted_ks"),
                 label = HTML(paste0(
@@ -485,8 +460,8 @@ get_extdata <- function(datalist=NULL){
                     'data-placement="top" title=\"NOTE: ',
                     'If file is in csv format, then ',
                     'the \'Weights\' file must be a data frame ',
-                    'with two columns (Samples and Weights) and ',
-                    'the \'Samples\' column must match the colnames of ',
+                    'with two columns (Sample and Weights) and ',
+                    'the \'Sample\' column must match the colnames of ',
                     '\'Feature Set\'. Otherwise, \'Weights\' in RDS file',
                     'must contain a list of vectors and have names or ',
                     'labels that match the colnames of \'Feature Set\'.\">?</a>')),
@@ -768,7 +743,7 @@ get_extdata <- function(datalist=NULL){
                   'data-tooltip-toggle="tooltip" data-placement=',
                   '"top" title=\"NOTE: If file is in csv format, ',
                   'the \'Feature Set\' must be a data ',
-                  'frame including a \'Features\' column name ',
+                  'frame including a \'Feature\' column name ',
                   'that contains unique names or labels to ',
                   'search for best features. Otherwise, \'Feature ',
                   'Set\' must be an object of class SummarizedExperiment ',
@@ -809,7 +784,7 @@ get_extdata <- function(datalist=NULL){
                   'data-tooltip-toggle="tooltip" data-placement=',
                   '"top" title=\"NOTE: If file is in csv format, ',
                   'the \'Feature Set\' must be a data ',
-                  'frame including a \'Features\' column name ',
+                  'frame including a \'Feature\' column name ',
                   'that contains unique names or labels to ',
                   'search for best features. Otherwise, \'Feature ',
                   'Set\' must be an object of class SummarizedExperiment ',
@@ -840,7 +815,7 @@ get_extdata <- function(datalist=NULL){
                 'data-tooltip-toggle="tooltip" data-placement=',
                 '"top" title=\"NOTE: If file is in csv format, ',
                 'the \'Feature Set\' must be a data ',
-                'frame including a \'Features\' column name ',
+                'frame including a \'Feature\' column name ',
                 'that contains unique names or labels to ',
                 'search for best features. Otherwise, \'Feature ',
                 'Set\' must be an object of class SummarizedExperiment ',
@@ -942,10 +917,10 @@ get_extdata <- function(datalist=NULL){
               checkboxInput(
                 inputId = ns("include_scores"),
                 label = HTML(paste0(
-                  'Include Input Scores ',
+                  'Include Input Score ',
                   '<a class="tooltip-txt" data-html="true" ',
                   'data-tooltip-toggle="tooltip" data-placement="top" ',
-                  'title=\"Whether to download \'Input Scores\' that is associated with \'Feature Set\'\">?</a>')),
+                  'title=\"Whether to download \'Input Score\' that is associated with \'Feature Set\'\">?</a>')),
                 value = FALSE
               )
             ),
@@ -1333,7 +1308,7 @@ CaDrA_Server <- function(id, datalist=NULL){
       )
 
       #
-      # Start CaDrA Search ####
+      # START CADRA SEARCH ####
       #
 
       observeEvent(input$run_cadra, {
@@ -1372,12 +1347,12 @@ CaDrA_Server <- function(id, datalist=NULL){
 
             FS <- utils::read.csv(inputfile$datapath, header=TRUE, check.names=FALSE)
 
-            if("Features" %in% colnames(FS)){
-              FS <- FS %>% tibble::column_to_rownames(var="Features") %>%
+            if("Feature" %in% colnames(FS)){
+              FS <- FS %>% tibble::column_to_rownames(var="Feature") %>%
                 dplyr::mutate_all(as.numeric) %>% 
                 as.matrix()
             }else{
-              cadra_error_message("The 'Feature Set' file must contain a 'Features' column name which contains unique names or labels for the features.")
+              cadra_error_message("The 'Feature Set' file must contain a 'Feature' column name which contains unique names or labels for the features.")
               return(NULL)
             }
 
@@ -1401,12 +1376,12 @@ CaDrA_Server <- function(id, datalist=NULL){
             FS <- base::readRDS(feature_set)
           }else if(tools::file_ext(feature_set) == "csv"){
             FS <- utils::read.csv(feature_set, header=TRUE, check.names=FALSE)
-            if("Features" %in% colnames(FS)){
-              FS <- FS %>% tibble::column_to_rownames(var="Features") %>%
+            if("Feature" %in% colnames(FS)){
+              FS <- FS %>% tibble::column_to_rownames(var="Feature") %>%
                 dplyr::mutate_all(as.numeric) %>% 
                 as.matrix()
             }else{
-              cadra_error_message("The 'Feature Set' file must contain a 'Features' column name which contains unique names or labels for the features.")
+              cadra_error_message("The 'Feature Set' file must contain a 'Feature' column name which contains unique names or labels for the features.")
               return(NULL)
             }
           }
@@ -1432,11 +1407,11 @@ CaDrA_Server <- function(id, datalist=NULL){
 
             dat <- utils::read.csv(inputfile$datapath, header = TRUE, check.names = FALSE)
 
-            if(all(c("Samples", "Scores") %in% colnames(dat))){
-              input_score <- as.numeric(dat$Scores)
-              names(input_score) <- as.character(dat$Samples)
+            if(all(c("Sample", "Score") %in% colnames(dat))){
+              input_score <- as.numeric(dat$Score)
+              names(input_score) <- as.character(dat$Sample)
             }else{
-              cadra_error_message("The 'Input Score' file must be a data frame with two columns: Samples and Scores.")
+              cadra_error_message("The 'Input Score' file must be a data frame with two columns: Sample and Score.")
               return(NULL)
             }
 
@@ -1460,11 +1435,11 @@ CaDrA_Server <- function(id, datalist=NULL){
             input_score <- base::readRDS(input_score)
           }else if(tools::file_ext(input_score) == "csv"){
             dat <- utils::read.csv(input_score, header = TRUE, check.names = FALSE)
-            if(all(c("Samples", "Scores") %in% colnames(dat))){
-              input_score <- as.numeric(dat$Scores)
-              names(input_score) <- as.character(dat$Samples)
+            if(all(c("Sample", "Score") %in% colnames(dat))){
+              input_score <- as.numeric(dat$Score)
+              names(input_score) <- as.character(dat$Sample)
             }else{
-              cadra_error_message("The 'Input Score' file must be a data frame with two columns: Samples and Scores.")
+              cadra_error_message("The 'Input Score' file must be a data frame with two columns: Sample and Score.")
               return(NULL)
             }
           }
@@ -1489,8 +1464,8 @@ CaDrA_Server <- function(id, datalist=NULL){
         # Obtain maximum cutoff parameter ####
         max_event_cutoff <- as.numeric(input$max_cutoff)
         
-        if(is.na(max_event_cutoff) || length(max_event_cutoff)==0 || max_event_cutoff <= 0 || max_event_cutoff > 100){
-          cadra_error_message("Please specify a value for Max Event Frequency between 1 and 100\n")
+        if(is.na(max_event_cutoff) || length(max_event_cutoff)==0 || max_event_cutoff <= 0 || max_event_cutoff > 90){
+          cadra_error_message("Please specify a Max Event Frequency between 1 and 90 \n")
           return(NULL)
         }else{
           max_cutoff <- max_event_cutoff/100
@@ -1530,17 +1505,11 @@ CaDrA_Server <- function(id, datalist=NULL){
         })
  
         # Get scoring method ####
-        method <- input$method;
+        method <- input$method
         
-        # Get metric ####
-        metric <- input$metric
-        
-        # Combined method + metric
-        method <- paste0(method, "_", metric)
-
         # Whether to perform a weighted-KS test ####
         if(method == "ks_pval" || method == "ks_score"){
-
+          
           if(input$weighted_ks == TRUE){
 
             inputfile <- input$weight_file;
@@ -1720,7 +1689,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
           })
 
-          #print(paste0("cadra permutation process: ", rVal$cadra_permutation_process$pid, " started"))
+          print(paste0("cadra permutation process: ", rVal$cadra_permutation_process$pid, " started"))
 
         }
 
@@ -1767,7 +1736,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         })
 
-        #print(paste0("candidate search process: ", rVal$candidate_search_process$pid, " started"))
+        print(paste0("candidate search process: ", rVal$candidate_search_process$pid, " started"))
 
         cadra_error_message("NONE")
 
@@ -1832,6 +1801,8 @@ CaDrA_Server <- function(id, datalist=NULL){
 
             ns <- session$ns
             result <- parallel::mccollect(rVal$candidate_search_process, wait = FALSE)
+            
+            #print(result)
 
             if(!is.null(result)) {
               rVal$candidate_search_result <- result[[1]]
@@ -1937,7 +1908,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         },
         
         content = function(file) {
-          FS_table <- feature_set_data() %>% as.data.frame(.) %>% rownames_to_column(var="Features")
+          FS_table <- feature_set_data() %>% as.data.frame(.) %>% rownames_to_column(var="Feature")
           write.csv(FS_table, file, row.names=FALSE)
         }
       )
@@ -1961,7 +1932,8 @@ CaDrA_Server <- function(id, datalist=NULL){
         topn_best_meta <- topn_best(topn_list=rVal$candidate_search_result)
         FS <- topn_best_meta[["feature_set"]]
         meta_indices <- topn_best_meta[["best_indices"]]
-        meta_scores <- topn_best_meta[["best_scores"]]
+        marginal_scores <- topn_best_meta[["marginal_best_scores"]] %>% signif(., digits = 4)
+        cumulative_best_scores <- topn_best_meta[["cumulative_best_scores"]] %>% signif(., digits = 4)
         
         # Retrieve the binary feature matrix
         if(is(FS, "SummarizedExperiment")){
@@ -1978,13 +1950,10 @@ CaDrA_Server <- function(id, datalist=NULL){
         }
         
         FS_table <- data.frame(
-          Index = meta_indices
+          Top_Index = meta_indices,
+          Marginal_Score = marginal_scores,
+          Cumulative_Score = cumulative_best_scores
         ) %>% 
-          cbind(
-            data.frame(
-              Score = meta_scores
-            )
-          ) %>% 
           cbind(FS_table)
         
         hover_columns <- create_hover_txt(table = FS_table)
@@ -2086,7 +2055,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         
       )
       
-      ## Title for Input Scores ####
+      ## Title for Input Score ####
       output$inputScoreData_title <- shiny::renderUI({
         
         req(rVal$candidate_search_result, input_score_data())
@@ -2103,7 +2072,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         
       })
       
-      ## Output Input Scores ####
+      ## Output Input Score ####
       output$inputScoreData <- DT::renderDataTable({
         
         req(rVal$candidate_search_result, input_score_data())
@@ -2160,7 +2129,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         
         shiny::showModal(
           shiny::modalDialog(
-            title = "Download Observed Input Scores",
+            title = "Download Observed Input Score",
             downloadButton(outputId = ns("downloadScoreCSV"),
                            "Download Table as CSV file"),
             br(), br(),
@@ -2174,7 +2143,7 @@ CaDrA_Server <- function(id, datalist=NULL){
       output$downloadScoreCSV <- downloadHandler(
         
         filename = function() {
-          paste0("CaDrA-Observed-Input-Scores.csv")
+          paste0("CaDrA-Observed-Input-Score.csv")
         },
         
         content = function(file) {
@@ -2182,8 +2151,8 @@ CaDrA_Server <- function(id, datalist=NULL){
           input_score <- input_score_data() %>% signif(., digits = 4)
           
           score_table <- data.frame(
-            Samples = names(input_score),
-            Scores = input_score,
+            Sample = names(input_score),
+            Score = input_score,
             stringsAsFactors = FALSE
           )
           
@@ -2196,7 +2165,7 @@ CaDrA_Server <- function(id, datalist=NULL){
       output$downloadScoreRDS <- downloadHandler(
         
         filename = function() {
-          paste0("CaDrA-Observed-Input-Scores.rds")
+          paste0("CaDrA-Observed-Input-Score.rds")
         },
         
         content = function(file) {
@@ -2204,8 +2173,8 @@ CaDrA_Server <- function(id, datalist=NULL){
           input_score <- input_score_data() %>% signif(., digits = 4)
           
           score_table <- data.frame(
-            Samples = names(input_score),
-            Scores = input_score,
+            Sample = names(input_score),
+            Score = input_score,
             stringsAsFactors = FALSE
           )
           
@@ -2246,7 +2215,7 @@ CaDrA_Server <- function(id, datalist=NULL){
             h3("Top N Overlapping Heatmap"),
             br(),
             h4(style="color: red; font-weight: bold;",
-               "NOTE: Cannot plot overlap matrix with provided top N seed = 1 or the number of provided feature names = 1.")
+               "NOTE: Cannot plot overlapping heatmap with provided top N seed = 1 or number of custom seed features = 1.")
           )
           
         }else{
@@ -2343,22 +2312,21 @@ CaDrA_Server <- function(id, datalist=NULL){
             # read in the FS file
             FS <- utils::read.csv(inputfile$datapath, header=TRUE, check.names=FALSE)
 
-            if("Features" %in% colnames(FS)){
+            if("Feature" %in% colnames(FS)){
 
-              # Convert FS to SummarizedExperiment class object
               # Convert FS to SummarizedExperiment object
-              FS <- FS %>% tibble::column_to_rownames(var="Features")  %>%
+              FS <- FS %>% tibble::column_to_rownames(var="Feature")  %>%
                 dplyr::mutate_all(as.numeric) %>% 
                 as.matrix() %>% 
                 SummarizedExperiment::SummarizedExperiment(
-                  assays=SimpleList(counts=.),
+                  assays=.,
                   rowData=data.frame(features=rownames(.), row.names = rownames(.)), 
                   colData=data.frame(samples=colnames(.), row.names = colnames(.))
                 )
               
             }else{
               
-              gsva_cadra_error_message("The 'Feature Set' file must contain a 'Features' column name that contains unique names or labels to search for best features.")
+              gsva_cadra_error_message("The 'Feature Set' file must contain a 'Feature' column name that contains unique names or labels to search for best features.")
               return(NULL)
               
             }
@@ -2402,21 +2370,21 @@ CaDrA_Server <- function(id, datalist=NULL){
 
             gene_expression <- utils::read.csv(inputfile$datapath, header = TRUE, check.names = FALSE)
 
-            if("Features" %in% colnames(gene_expression)){
+            if("Feature" %in% colnames(gene_expression)){
 
               gene_expression <- gene_expression %>% 
-                tibble::column_to_rownames(var="Features")  %>%
+                tibble::column_to_rownames(var="Feature")  %>%
                 dplyr::mutate_all(as.numeric) %>%
                 as.matrix() %>% 
                 SummarizedExperiment::SummarizedExperiment(
-                  assays=SimpleList(counts=.),
+                  assays=.,
                   rowData=data.frame(features=rownames(.), row.names = rownames(.)), 
                   colData=data.frame(samples=colnames(.), row.names = colnames(.))
                 )
               
             }else{
 
-              gsva_cadra_error_message("The 'Feature Set' file must contain a 'Features' column name that contains unique names or labels to search for best features.")
+              gsva_cadra_error_message("The 'Feature Set' file must contain a 'Feature' column name that contains unique names or labels to search for best features.")
               return(NULL)
 
             }
@@ -2608,7 +2576,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         selected_fs = isolate({ input$gsva_feature_set })
         selected_fs_name = extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique()
         
-        h3(paste0("Enrichment Scores for ", selected_fs_name))
+        h3(paste0("Enrichment Score for ", selected_fs_name))
 
       })
 
@@ -2676,7 +2644,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         shiny::showModal(
           shiny::modalDialog(
-            title = "Download Enrichment Scores",
+            title = "Download Enrichment Score",
             downloadButton(outputId = ns("downloadEnrichmentCSV"),
                            "Download Table as CSV file"),
             br(), br(),
@@ -2693,7 +2661,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         filename = function() {
           selected_fs <- isolate({ input$gsva_feature_set })
           fsname <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)]
-          paste0("CaDrA-", fsname, "-GSVA.csv")
+          paste0("CaDrA-", fsname, "-GSVA-Results.csv")
         },
 
         content = function(file) {
@@ -2709,7 +2677,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         filename = function() {
           selected_fs <- isolate({ input$gsva_feature_set })
           fsname <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)]
-          paste0("CaDrA-", fsname, "-GSVA.rds")
+          paste0("CaDrA-", fsname, "-GSVA-Results.rds")
         },
 
         content = function(file) {
@@ -2718,9 +2686,9 @@ CaDrA_Server <- function(id, datalist=NULL){
           geneset <- gVal$gsva_search_result %>% 
             as.matrix() %>% 
             SummarizedExperiment::SummarizedExperiment(
-              assays=SimpleList(counts=FS),
-              rowData=data.frame(features=rownames(FS), row.names = rownames(FS)), 
-              colData=data.frame(samples=colnames(FS), row.names = colnames(FS))
+              assays=.,
+              rowData=data.frame(features=rownames(.), row.names = rownames(.)), 
+              colData=data.frame(samples=colnames(.), row.names = colnames(.))
             )
           
           saveRDS(geneset, file)
@@ -2743,7 +2711,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
           actionButton(
             inputId = ns("add_to_input_scores"),
-            label = strong("Add to CaDrA's Input Scores"),
+            label = strong("Add to CaDrA's Input Score"),
             style = "background: blue; color: white;",
             onclick = paste0("gsva_selected_checkbox('", id, "')")
           ),
@@ -2756,7 +2724,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
       })
 
-      # Add Enrichment Scores to CaDrA's Input Scores ####
+      # Add Enrichment Score to CaDrA's Input Score ####
       observeEvent(input$add_to_input_scores, {
 
         enrichment_scores <- gVal$gsva_search_result %>% as.data.frame(.) %>% tibble::rownames_to_column(., var="Geneset")
@@ -2841,11 +2809,11 @@ CaDrA_Server <- function(id, datalist=NULL){
           
           genelist_names <- paste0(new_input_score$input_score_name, collapse = ", ")
           
-          enrichment_table_message(paste0("<em style='font-weights: bold;'>", genelist_names, "</em>", ifelse(length(genelist_names) == 1, " has", " have"), " been added as <em style='font-weights: bold; color: red;'>'Input Scores'</em> for <em style='font-weights: bold; color: red;'>'", selected_fs_name , "'</em>."))
+          enrichment_table_message(paste0("<em style='font-weights: bold;'>", genelist_names, "</em>", ifelse(length(genelist_names) == 1, " has", " have"), " been added as <em style='font-weights: bold; color: red;'>'Input Score'</em> for <em style='font-weights: bold; color: red;'>'", selected_fs_name , "'</em>."))
           
         }else{
           
-          enrichment_table_message("<span style='color: red; font-weights: bold;'>Select a geneset above to add to CaDrA's Input Scores</span>")
+          enrichment_table_message("<span style='color: red; font-weights: bold;'>Select a geneset above to add to CaDrA's Input Score</span>")
           
         }
 

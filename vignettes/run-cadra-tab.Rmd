@@ -15,8 +15,8 @@ knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 
 There are two panels on this page:
 
-- Right-side: [User Inputs](#user-inputs)
-- Left-side: [CaDrA Results](#cadra-results)
+- Left-side: [User Inputs](#user-inputs)
+- Right-side: [CaDrA Results](#cadra-results)
 
 ## 1. User Inputs
 
@@ -28,9 +28,9 @@ There are several results returned from running **CaDrA** search:
 
 - Filtered feature set based on given filtered parameters
 - Provided input scores
-- Best meta-feature set was identified from the heuristic search 
+- Best meta-features were identified from the heuristic search 
 - Meta-plot shows complementary features with their overlapping union and enrichment scores 
-- Overlapping heatmap shows best-features returned from repeating the search with the top N features
+- Overlapping heatmap shows best meta-features returned from repeating the search with top N features
 
 ![](figures/filtered-FS.png)
 
