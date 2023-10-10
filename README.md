@@ -102,7 +102,31 @@ datasets <- CaDrA.shiny::pull_datasets(
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
   include_gene_expression = TRUE
 )
+
+datasets
 ```
+
+    $feature_set
+    class: RangedSummarizedExperiment 
+    dim: 7119 88 
+    metadata(3): experimentData annotation protocolData
+    assays(1): exprs
+    rownames(7119): Amp1q22 Amp4p16.3 ... ZZEF1 ZZZ3
+    rowData names(1): Feature
+    colnames(88): TCGA-OR-A5J1-01 TCGA-OR-A5J2-01 ... TCGA-PK-A5HB-01
+      TCGA-PK-A5HC-01
+    colData names(0):
+
+    $gene_expression
+    class: RangedSummarizedExperiment 
+    dim: 19777 79 
+    metadata(3): experimentData annotation protocolData
+    assays(1): exprs
+    rownames(19777): IGF2 DLK1 ... TGM6 SPANXA2
+    rowData names(1): Genes
+    colnames(79): TCGA-OR-A5J1-01 TCGA-OR-A5J2-01 ... TCGA-PK-A5HA-01
+      TCGA-PK-A5HB-01
+    colData names(1): Samples
 
 #### (iii) Run GSVA with downloaded datasets
 

@@ -207,12 +207,35 @@ CaDrA.shiny
 <code class="sourceCode R"><span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/pull_datasets.html">pull_datasets</a></span><span class="op">(</span></span>
 <span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
 <span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span></code></pre></div>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="va">datasets</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">$</span>feature_set</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>class<span class="sc">:</span> RangedSummarizedExperiment </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">7119</span> <span class="dv">88</span> </span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">metadata</span>(<span class="dv">3</span>)<span class="sc">:</span> experimentData annotation protocolData</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">assays</span>(<span class="dv">1</span>)<span class="sc">:</span> exprs</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">7119</span>)<span class="sc">:</span> Amp1q22 Amp4p16<span class="fl">.3</span> ... ZZEF1 ZZZ3</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>rowData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Feature</span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">88</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J1<span class="dv">-01</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J2<span class="dv">-01</span> ... TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HB<span class="dv">-01</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HC<span class="dv">-01</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>colData <span class="fu">names</span>(<span class="dv">0</span>)<span class="sc">:</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="er">$</span>gene_expression</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>class<span class="sc">:</span> RangedSummarizedExperiment </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">19777</span> <span class="dv">79</span> </span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="fu">metadata</span>(<span class="dv">3</span>)<span class="sc">:</span> experimentData annotation protocolData</span>
+<span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="fu">assays</span>(<span class="dv">1</span>)<span class="sc">:</span> exprs</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">19777</span>)<span class="sc">:</span> IGF2 DLK1 ... TGM6 SPANXA2</span>
+<span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>rowData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Genes</span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">79</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J1<span class="dv">-01</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J2<span class="dv">-01</span> ... TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HA<span class="dv">-01</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HB<span class="dv">-01</span></span>
+<span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>colData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Samples</span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="iii-run-gsva-with-downloaded-datasets">(iii) Run GSVA with downloaded datasets<a class="anchor" aria-label="anchor" href="#iii-run-gsva-with-downloaded-datasets"></a>
 </h4>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Get the first 10 features of the feature set</span></span>
 <span><span class="va">feature_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="va">gene_expression</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">feature_list</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">feature_list</span></span>
@@ -224,16 +247,16 @@ CaDrA.shiny
 <span>  method <span class="op">=</span> <span class="st">"gsva"</span>,</span>
 <span>  mx.diff <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>Warning<span class="sc">:</span> useNames <span class="ot">=</span> <span class="cn">NA</span> is deprecated. Instead, specify either useNames <span class="ot">=</span> <span class="cn">TRUE</span></span>
-<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>or useNames <span class="ot">=</span> TRUE.</span>
-<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>Warning <span class="cf">in</span> <span class="fu">.gsva</span>(expr, mapped.gset.idx.list, method, kcdf, rnaseq, abs.ranking,</span>
-<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="sc">:</span> Some gene sets have size one. Consider setting <span class="st">'min.sz &gt; 1'</span>.</span>
-<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
-<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>Estimating GSVA scores <span class="cf">for</span> <span class="dv">10</span> gene sets.</span>
-<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>Estimating ECDFs with Gaussian kernels</span>
-<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="sc">|</span>                                                                              <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span><span class="sc">%  |                                                                              |=======                                                               |  10%</span>  <span class="er">|</span>                                                                              <span class="er">|==============</span>                                                        <span class="er">|</span>  <span class="dv">20</span><span class="sc">%  |                                                                              |=====================                                                 |  30%</span>  <span class="er">|</span>                                                                              <span class="er">|============================</span>                                          <span class="er">|</span>  <span class="dv">40</span><span class="sc">%  |                                                                              |===================================                                   |  50%</span>  <span class="er">|</span>                                                                              <span class="er">|==========================================</span>                            <span class="er">|</span>  <span class="dv">60</span><span class="sc">%  |                                                                              |=================================================                     |  70%</span>  <span class="er">|</span>                                                                              <span class="er">|========================================================</span>              <span class="er">|</span>  <span class="dv">80</span><span class="sc">%  |                                                                              |===============================================================       |  90%</span>  <span class="er">|</span>                                                                              <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>Warning<span class="sc">:</span> useNames <span class="ot">=</span> <span class="cn">NA</span> is deprecated. Instead, specify either useNames <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>or useNames <span class="ot">=</span> TRUE.</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>Warning <span class="cf">in</span> <span class="fu">.gsva</span>(expr, mapped.gset.idx.list, method, kcdf, rnaseq, abs.ranking,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="sc">:</span> Some gene sets have size one. Consider setting <span class="st">'min.sz &gt; 1'</span>.</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>Estimating GSVA scores <span class="cf">for</span> <span class="dv">10</span> gene sets.</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>Estimating ECDFs with Gaussian kernels</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="sc">|</span>                                                                              <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span><span class="sc">%  |                                                                              |=======                                                               |  10%</span>  <span class="er">|</span>                                                                              <span class="er">|==============</span>                                                        <span class="er">|</span>  <span class="dv">20</span><span class="sc">%  |                                                                              |=====================                                                 |  30%</span>  <span class="er">|</span>                                                                              <span class="er">|============================</span>                                          <span class="er">|</span>  <span class="dv">40</span><span class="sc">%  |                                                                              |===================================                                   |  50%</span>  <span class="er">|</span>                                                                              <span class="er">|==========================================</span>                            <span class="er">|</span>  <span class="dv">60</span><span class="sc">%  |                                                                              |=================================================                     |  70%</span>  <span class="er">|</span>                                                                              <span class="er">|========================================================</span>              <span class="er">|</span>  <span class="dv">80</span><span class="sc">%  |                                                                              |===============================================================       |  90%</span>  <span class="er">|</span>                                                                              <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at the gsva scores of the first 10 features</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">input_score_list</span><span class="op">)</span></span></code></pre></div>
 <table style="width:100%;" class="table">
@@ -1228,7 +1251,7 @@ CaDrA.shiny
 <div class="section level4">
 <h4 id="iv-run-candidate-search-with-input-scores-obtained-in-iii">(iv) Run candidate search with input scores obtained in (iii)<a class="anchor" aria-label="anchor" href="#iv-run-candidate-search-with-input-scores-obtained-in-iii"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Samples to keep based on the overlap between the two inputs</span></span>
 <span><span class="va">overlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">input_score_list</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="va">feature_set</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">input_score</span> <span class="op">&lt;-</span> <span class="va">input_score_list</span><span class="op">[</span><span class="fl">1</span>, <span class="va">overlap</span><span class="op">]</span></span>
@@ -1259,14 +1282,14 @@ CaDrA.shiny
 <div class="section level3">
 <h3 id="v-visualize-best-results">(v) Visualize Best Results<a class="anchor" aria-label="anchor" href="#v-visualize-best-results"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Fetch the meta-feature set corresponding to its best scores over top N features searches</span></span>
 <span><span class="va">topn_best_meta</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/topn_best.html" class="external-link">topn_best</a></span><span class="op">(</span><span class="va">topn_result</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Visualize the best results with the meta-feature plot</span></span>
 <span><span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/meta_plot.html" class="external-link">meta_plot</a></span><span class="op">(</span>topn_best_list <span class="op">=</span> <span class="va">topn_best_meta</span>, input_score_label <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
 <p><img src="./reference/figures/unnamed-chunk-8-1.png"><!-- --></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Set seed for permutation</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
@@ -1292,7 +1315,7 @@ CaDrA.shiny
 <div class="section level4">
 <h4 id="i-pull-pre-processed-feature-sets-using-our-rest-api">(i) Pull pre-processed feature sets using our REST API<a class="anchor" aria-label="anchor" href="#i-pull-pre-processed-feature-sets-using-our-rest-api"></a>
 </h4>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Download feature sets and return a datalist with appropriate paths to dataset</span></span>
 <span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/download_feature_sets.html">download_feature_sets</a></span><span class="op">(</span></span>
 <span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
@@ -1300,7 +1323,7 @@ CaDrA.shiny
 <span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  out_dir <span class="op">=</span> <span class="st">"~/Github"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at the top 6 rows</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mydatafile</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -1375,7 +1398,7 @@ CaDrA.shiny
 <div class="section level4">
 <h4 id="iii-launch-cadras-app-with-the-downloaded-dataset">(iii) Launch CaDrA’s app with the downloaded dataset<a class="anchor" aria-label="anchor" href="#iii-launch-cadras-app-with-the-downloaded-dataset"></a>
 </h4>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)</span></span>
 <span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span>
 <span></span>
