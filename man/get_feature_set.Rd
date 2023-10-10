@@ -4,10 +4,10 @@
 \alias{get_feature_set}
 \title{Get a list of pre-processed feature sets available on CaDrA API Portal}
 \usage{
-get_feature_set(API_Server, order_by = "asc")
+get_feature_set(collection = "TCGA", order_by = "asc")
 }
 \arguments{
-\item{API_Server}{an URL link to where the API is hosted}
+\item{collection}{a specific collection of feature sets on CaDrA portal. Default is TCGA.}
 
 \item{order_by}{sort results by ascending or descending order}
 }
@@ -19,12 +19,9 @@ Get a list of pre-processed feature sets available on CaDrA API Portal
 }
 \examples{
 
-# API server to retrieve a list of feature sets from CaDrA Portal
-API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
-
 # Retrieve a list of feature sets available from CaDrA Portal
 fs_list <- CaDrA.shiny::get_feature_set(
-  API_Server = API_Server, 
+  collection = "TCGA",
   order_by = "asc"
 )
 

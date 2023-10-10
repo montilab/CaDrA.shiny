@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Shiny Interface for CaDrA">
-<meta property="og:description" content="This is a web interface tool for interacting with the R package CaDrA.">
+<meta property="og:description" content="An R Shiny Dashboard for Interacting with CaDrA Package.">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -100,8 +100,8 @@ CaDrA.shiny
 <p><img src="https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg" alt="build"><img src="https://img.shields.io/gitter/room/montilab/cadra.shiny" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/cadra.shiny" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/cadra.shiny" alt="GitHub last commit"></p>
 <p>An R Shiny Dashboard for Interacting with <strong><a href="https://montilab.github.io/CaDrA/" class="external-link">CaDrA</a></strong> Package</p>
 <div class="section level3">
-<h3 id="documentation-httpsmontilabgithubiocadra">
-<strong>Documentation: <a href="https://montilab.github.io/CaDrA/" class="external-link uri">https://montilab.github.io/CaDrA/</a></strong><a class="anchor" aria-label="anchor" href="#documentation-httpsmontilabgithubiocadra"></a>
+<h3 id="cadra-httpsmontilabgithubiocadra">
+<strong>CaDrA: <a href="https://montilab.github.io/CaDrA/" class="external-link uri">https://montilab.github.io/CaDrA/</a></strong><a class="anchor" aria-label="anchor" href="#cadra-httpsmontilabgithubiocadra"></a>
 </h3>
 </div>
 <div class="section level3">
@@ -151,51 +151,20 @@ CaDrA.shiny
 </h3>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA.shiny/">CaDrA.shiny</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA/" class="external-link">CaDrA</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rcastelo/GSVA" class="external-link">GSVA</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="id_3-launch-cadras-shiny-app-with-dataset-included-in-the-package">(3) Launch CaDrA’s Shiny App with dataset included in the package<a class="anchor" aria-label="anchor" href="#id_3-launch-cadras-shiny-app-with-dataset-included-in-the-package"></a>
-</h3>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># NOT RUN: Launch app on localhost with port 3838</span></span>
-<span><span class="co"># shiny::runApp(app, host='0.0.0.0', port=3838)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset">(4) Launch CaDrA’s Shiny App with your pre-proccessed dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset"></a>
-</h3>
-<p><strong>Required:</strong> a data frame or data file (in <strong>csv</strong> or <strong>rds</strong> format) that includes paths to your pre-proccessed dataset with required columns:</p>
-<ul>
-<li>feature_set_name</li>
-<li>feature_set_path</li>
-<li>input_score_name</li>
-<li>input_score_path</li>
-<li>gene_expression_name</li>
-<li>gene_expression_path</li>
-</ul>
-<p>Here is an example of <strong>mydatafile.csv</strong> <a href="man/figures/datalist.png" target="_blank"><img src="reference/figures/datalist.png"></a></p>
-<p>To launch the app:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Read in the data file that includes paths to your pre-proccessed dataset</span></span>
-<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">'/path/to/mydatafile.csv'</span>, header<span class="op">=</span><span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Launch CaDrA's Shiny app with your loaded data file</span></span>
-<span><span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist_file<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="id_6-launch-cadras-shiny-app-with-dataset-downloaded-from-our-web-portal-using-our-rest-api">(6) Launch CaDrA’s Shiny App with dataset downloaded from our web portal using our REST API<a class="anchor" aria-label="anchor" href="#id_6-launch-cadras-shiny-app-with-dataset-downloaded-from-our-web-portal-using-our-rest-api"></a>
+<h3 id="id_4-run-cadra-with-dataset-downloaded-from-cadra-portal">(4) Run CaDrA with dataset downloaded from CaDrA Portal<a class="anchor" aria-label="anchor" href="#id_4-run-cadra-with-dataset-downloaded-from-cadra-portal"></a>
 </h3>
 <div class="section level4">
 <h4 id="i-retrieve-a-list-of-pre-processed-feature-sets-available-on-the-portal">(i) Retrieve a list of pre-processed feature sets available on the portal<a class="anchor" aria-label="anchor" href="#i-retrieve-a-list-of-pre-processed-feature-sets-available-on-the-portal"></a>
 </h4>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># API server to get a list of feature sets in the CaDrA Portal</span></span>
-<span><span class="va">API_Server</span> <span class="op">&lt;-</span> <span class="st">"https://montilab.bu.edu/CaDrA_API/get_feature_set"</span></span>
-<span></span>
-<span><span class="co"># Get a list of feature sets available on CaDrA Portal</span></span>
-<span><span class="va">fs_list</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/get_feature_set.html">get_feature_set</a></span><span class="op">(</span><span class="va">API_Server</span>, order_by<span class="op">=</span><span class="st">"asc"</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get a list of feature sets available on CaDrA Portal</span></span>
+<span><span class="va">fs_list</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/get_feature_set.html">get_feature_set</a></span><span class="op">(</span>order_by<span class="op">=</span><span class="st">"asc"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at the first 6 feature sets</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">fs_list</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -232,27 +201,1106 @@ CaDrA.shiny
 </table>
 </div>
 <div class="section level4">
-<h4 id="ii-download-pre-processed-feature-sets-using-our-rest-api">(ii) Download pre-processed feature sets using our REST API<a class="anchor" aria-label="anchor" href="#ii-download-pre-processed-feature-sets-using-our-rest-api"></a>
+<h4 id="ii-pull-down-datasets-from-the-portal">(ii) Pull down datasets from the portal<a class="anchor" aria-label="anchor" href="#ii-pull-down-datasets-from-the-portal"></a>
 </h4>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Download the feature set along with its input score and gene expression</span></span>
-<span><span class="va">API_Server</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="st">"https://montilab.bu.edu/CaDrA_API/download_feature_set"</span><span class="op">)</span> </span>
-<span></span>
-<span><span class="co"># Define query parameters</span></span>
-<span><span class="va">feature_sets</span> <span class="op">&lt;-</span> <span class="va">fs_list</span><span class="op">$</span><span class="va">feature_set_name</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">2</span><span class="op">]</span></span>
-<span><span class="va">include_input_score</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span><span class="va">include_gene_expression</span> <span class="op">&lt;-</span> <span class="cn">TRUE</span></span>
-<span><span class="va">out_dir</span> <span class="op">&lt;-</span> <span class="st">"~/Github"</span></span>
-<span></span>
-<span><span class="co"># Download feature sets and return a datalist with appropriate paths to its dataset</span></span>
-<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/download_feature_sets.html">download_feature_sets</a></span><span class="op">(</span></span>
-<span>  API_Server <span class="op">=</span> <span class="va">API_Server</span>,</span>
-<span>  feature_sets <span class="op">=</span> <span class="va">feature_sets</span>,</span>
-<span>  include_input_score <span class="op">=</span> <span class="va">include_input_score</span>,</span>
-<span>  include_gene_expression <span class="op">=</span> <span class="va">include_gene_expression</span>,</span>
-<span>  out_dir <span class="op">=</span> <span class="va">out_dir</span></span>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/pull_datasets.html">pull_datasets</a></span><span class="op">(</span></span>
+<span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
+<span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level4">
+<h4 id="iii-run-gsva-with-downloaded-datasets">(iii) Run GSVA with downloaded datasets<a class="anchor" aria-label="anchor" href="#iii-run-gsva-with-downloaded-datasets"></a>
+</h4>
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Get the first 10 features of the feature set</span></span>
+<span><span class="va">feature_list</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="va">gene_expression</span><span class="op">)</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">]</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">feature_list</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">feature_list</span></span>
+<span></span>
+<span><span class="co"># Compute the gsva scores of the first 10 features</span></span>
+<span><span class="va">input_score_list</span> <span class="op">&lt;-</span> <span class="fu">GSVA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/GSVA/man/gsva.html" class="external-link">gsva</a></span><span class="op">(</span></span>
+<span>  expr <span class="op">=</span> <span class="fu">SummarizedExperiment</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/SummarizedExperiment-class.html" class="external-link">assay</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="va">gene_expression</span><span class="op">)</span>, </span>
+<span>  gset.idx.list <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">as.list</a></span><span class="op">(</span><span class="va">feature_list</span><span class="op">)</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"gsva"</span>,</span>
+<span>  mx.diff <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>Warning<span class="sc">:</span> useNames <span class="ot">=</span> <span class="cn">NA</span> is deprecated. Instead, specify either useNames <span class="ot">=</span> <span class="cn">TRUE</span></span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>or useNames <span class="ot">=</span> TRUE.</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>Warning <span class="cf">in</span> <span class="fu">.gsva</span>(expr, mapped.gset.idx.list, method, kcdf, rnaseq, abs.ranking,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a><span class="sc">:</span> Some gene sets have size one. Consider setting <span class="st">'min.sz &gt; 1'</span>.</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>Estimating GSVA scores <span class="cf">for</span> <span class="dv">10</span> gene sets.</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>Estimating ECDFs with Gaussian kernels</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="sc">|</span>                                                                              <span class="er">|</span>                                                                      <span class="er">|</span>   <span class="dv">0</span><span class="sc">%  |                                                                              |=======                                                               |  10%</span>  <span class="er">|</span>                                                                              <span class="er">|==============</span>                                                        <span class="er">|</span>  <span class="dv">20</span><span class="sc">%  |                                                                              |=====================                                                 |  30%</span>  <span class="er">|</span>                                                                              <span class="er">|============================</span>                                          <span class="er">|</span>  <span class="dv">40</span><span class="sc">%  |                                                                              |===================================                                   |  50%</span>  <span class="er">|</span>                                                                              <span class="er">|==========================================</span>                            <span class="er">|</span>  <span class="dv">60</span><span class="sc">%  |                                                                              |=================================================                     |  70%</span>  <span class="er">|</span>                                                                              <span class="er">|========================================================</span>              <span class="er">|</span>  <span class="dv">80</span><span class="sc">%  |                                                                              |===============================================================       |  90%</span>  <span class="er">|</span>                                                                              <span class="er">|======================================================================|</span> <span class="dv">100</span>%</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Look at the gsva scores of the first 10 features</span></span>
+<span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="va">input_score_list</span><span class="op">)</span></span></code></pre></div>
+<table style="width:100%;" class="table">
+<colgroup>
+<col width="0%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+<col width="1%">
+</colgroup>
+<thead><tr class="header">
+<th align="left"></th>
+<th align="right">TCGA-OR-A5J1-01</th>
+<th align="right">TCGA-OR-A5J2-01</th>
+<th align="right">TCGA-OR-A5J3-01</th>
+<th align="right">TCGA-OR-A5J5-01</th>
+<th align="right">TCGA-OR-A5J6-01</th>
+<th align="right">TCGA-OR-A5J7-01</th>
+<th align="right">TCGA-OR-A5J8-01</th>
+<th align="right">TCGA-OR-A5J9-01</th>
+<th align="right">TCGA-OR-A5JA-01</th>
+<th align="right">TCGA-OR-A5JB-01</th>
+<th align="right">TCGA-OR-A5JC-01</th>
+<th align="right">TCGA-OR-A5JD-01</th>
+<th align="right">TCGA-OR-A5JE-01</th>
+<th align="right">TCGA-OR-A5JF-01</th>
+<th align="right">TCGA-OR-A5JG-01</th>
+<th align="right">TCGA-OR-A5JI-01</th>
+<th align="right">TCGA-OR-A5JJ-01</th>
+<th align="right">TCGA-OR-A5JK-01</th>
+<th align="right">TCGA-OR-A5JL-01</th>
+<th align="right">TCGA-OR-A5JM-01</th>
+<th align="right">TCGA-OR-A5JO-01</th>
+<th align="right">TCGA-OR-A5JP-01</th>
+<th align="right">TCGA-OR-A5JQ-01</th>
+<th align="right">TCGA-OR-A5JR-01</th>
+<th align="right">TCGA-OR-A5JS-01</th>
+<th align="right">TCGA-OR-A5JT-01</th>
+<th align="right">TCGA-OR-A5JV-01</th>
+<th align="right">TCGA-OR-A5JW-01</th>
+<th align="right">TCGA-OR-A5JX-01</th>
+<th align="right">TCGA-OR-A5JY-01</th>
+<th align="right">TCGA-OR-A5JZ-01</th>
+<th align="right">TCGA-OR-A5K0-01</th>
+<th align="right">TCGA-OR-A5K1-01</th>
+<th align="right">TCGA-OR-A5K2-01</th>
+<th align="right">TCGA-OR-A5K3-01</th>
+<th align="right">TCGA-OR-A5K4-01</th>
+<th align="right">TCGA-OR-A5K5-01</th>
+<th align="right">TCGA-OR-A5K6-01</th>
+<th align="right">TCGA-OR-A5K8-01</th>
+<th align="right">TCGA-OR-A5K9-01</th>
+<th align="right">TCGA-OR-A5KO-01</th>
+<th align="right">TCGA-OR-A5KT-01</th>
+<th align="right">TCGA-OR-A5KU-01</th>
+<th align="right">TCGA-OR-A5KV-01</th>
+<th align="right">TCGA-OR-A5KW-01</th>
+<th align="right">TCGA-OR-A5KX-01</th>
+<th align="right">TCGA-OR-A5KY-01</th>
+<th align="right">TCGA-OR-A5KZ-01</th>
+<th align="right">TCGA-OR-A5L3-01</th>
+<th align="right">TCGA-OR-A5L4-01</th>
+<th align="right">TCGA-OR-A5L5-01</th>
+<th align="right">TCGA-OR-A5L6-01</th>
+<th align="right">TCGA-OR-A5L8-01</th>
+<th align="right">TCGA-OR-A5L9-01</th>
+<th align="right">TCGA-OR-A5LA-01</th>
+<th align="right">TCGA-OR-A5LB-01</th>
+<th align="right">TCGA-OR-A5LC-01</th>
+<th align="right">TCGA-OR-A5LD-01</th>
+<th align="right">TCGA-OR-A5LE-01</th>
+<th align="right">TCGA-OR-A5LG-01</th>
+<th align="right">TCGA-OR-A5LH-01</th>
+<th align="right">TCGA-OR-A5LJ-01</th>
+<th align="right">TCGA-OR-A5LK-01</th>
+<th align="right">TCGA-OR-A5LL-01</th>
+<th align="right">TCGA-OR-A5LM-01</th>
+<th align="right">TCGA-OR-A5LN-01</th>
+<th align="right">TCGA-OR-A5LO-01</th>
+<th align="right">TCGA-OR-A5LP-01</th>
+<th align="right">TCGA-OR-A5LR-01</th>
+<th align="right">TCGA-OR-A5LS-01</th>
+<th align="right">TCGA-OR-A5LT-01</th>
+<th align="right">TCGA-OU-A5PI-01</th>
+<th align="right">TCGA-P6-A5OF-01</th>
+<th align="right">TCGA-P6-A5OG-01</th>
+<th align="right">TCGA-PA-A5YG-01</th>
+<th align="right">TCGA-PK-A5H8-01</th>
+<th align="right">TCGA-PK-A5H9-01</th>
+<th align="right">TCGA-PK-A5HA-01</th>
+<th align="right">TCGA-PK-A5HB-01</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">IGF2</td>
+<td align="right">0.4401294</td>
+<td align="right">0.3702468</td>
+<td align="right">-0.8832929</td>
+<td align="right">-0.2458536</td>
+<td align="right">0.8877427</td>
+<td align="right">0.0593649</td>
+<td align="right">0.3953277</td>
+<td align="right">-0.4104976</td>
+<td align="right">-0.4707727</td>
+<td align="right">-0.7734628</td>
+<td align="right">0.9533778</td>
+<td align="right">-0.8892597</td>
+<td align="right">0.4402306</td>
+<td align="right">-0.9711772</td>
+<td align="right">-0.9181837</td>
+<td align="right">0.4406351</td>
+<td align="right">-0.6980178</td>
+<td align="right">0.0839401</td>
+<td align="right">0.2690129</td>
+<td align="right">0.5054612</td>
+<td align="right">-0.8243325</td>
+<td align="right">0.2347290</td>
+<td align="right">-0.3618528</td>
+<td align="right">0.5295307</td>
+<td align="right">-0.8326254</td>
+<td align="right">0.8352549</td>
+<td align="right">0.1472492</td>
+<td align="right">-0.8497168</td>
+<td align="right">0.5430825</td>
+<td align="right">0.5303398</td>
+<td align="right">0.2945995</td>
+<td align="right">-0.8086570</td>
+<td align="right">0.8111853</td>
+<td align="right">0.7093447</td>
+<td align="right">0.5689725</td>
+<td align="right">0.1854773</td>
+<td align="right">0.6341019</td>
+<td align="right">-0.9241505</td>
+<td align="right">-0.5950647</td>
+<td align="right">-0.7335154</td>
+<td align="right">0.3203883</td>
+<td align="right">-0.8618528</td>
+<td align="right">-0.0843447</td>
+<td align="right">0.2522249</td>
+<td align="right">0.2451456</td>
+<td align="right">0.4707727</td>
+<td align="right">-0.1843649</td>
+<td align="right">-0.3805623</td>
+<td align="right">-0.8130057</td>
+<td align="right">0.8610437</td>
+<td align="right">0.1230785</td>
+<td align="right">0.5800971</td>
+<td align="right">-0.3089604</td>
+<td align="right">0.9808859</td>
+<td align="right">0.2535396</td>
+<td align="right">-0.9542880</td>
+<td align="right">-0.5532969</td>
+<td align="right">0.9047330</td>
+<td align="right">0.6999393</td>
+<td align="right">0.4234426</td>
+<td align="right">-0.6408778</td>
+<td align="right">-0.9073625</td>
+<td align="right">0.8366707</td>
+<td align="right">-0.8083536</td>
+<td align="right">0.7804409</td>
+<td align="right">0.8600324</td>
+<td align="right">-0.4331513</td>
+<td align="right">-0.5918285</td>
+<td align="right">0.7663835</td>
+<td align="right">-0.6307646</td>
+<td align="right">0.5888956</td>
+<td align="right">-0.8806634</td>
+<td align="right">-0.6570591</td>
+<td align="right">-0.8323220</td>
+<td align="right">-0.7879248</td>
+<td align="right">0.9581311</td>
+<td align="right">0.7633495</td>
+<td align="right">0.4181837</td>
+<td align="right">-0.2944984</td>
+</tr>
+<tr class="even">
+<td align="left">DLK1</td>
+<td align="right">-0.8167476</td>
+<td align="right">0.2766990</td>
+<td align="right">0.6021440</td>
+<td align="right">0.2727549</td>
+<td align="right">-0.1587783</td>
+<td align="right">0.5433859</td>
+<td align="right">-0.7791262</td>
+<td align="right">0.0063714</td>
+<td align="right">-0.2169296</td>
+<td align="right">-0.7237055</td>
+<td align="right">0.8574029</td>
+<td align="right">-0.9221278</td>
+<td align="right">0.5488471</td>
+<td align="right">-0.5813107</td>
+<td align="right">-0.0378236</td>
+<td align="right">-0.0884911</td>
+<td align="right">-0.6826456</td>
+<td align="right">-0.9099919</td>
+<td align="right">0.4448827</td>
+<td align="right">0.3636731</td>
+<td align="right">-0.4898867</td>
+<td align="right">0.6155947</td>
+<td align="right">-0.8851133</td>
+<td align="right">0.9775485</td>
+<td align="right">0.5748382</td>
+<td align="right">0.9702670</td>
+<td align="right">0.7764968</td>
+<td align="right">-0.8875405</td>
+<td align="right">0.9266788</td>
+<td align="right">-0.4021036</td>
+<td align="right">0.7919701</td>
+<td align="right">-0.7417071</td>
+<td align="right">0.7821602</td>
+<td align="right">0.3325243</td>
+<td align="right">0.9064523</td>
+<td align="right">0.4542880</td>
+<td align="right">-0.2426173</td>
+<td align="right">-0.5329693</td>
+<td align="right">0.7339199</td>
+<td align="right">0.4340615</td>
+<td align="right">0.6879045</td>
+<td align="right">-0.3300971</td>
+<td align="right">-0.8983617</td>
+<td align="right">0.2336165</td>
+<td align="right">0.6127629</td>
+<td align="right">0.8644822</td>
+<td align="right">-0.9063511</td>
+<td align="right">-0.0846481</td>
+<td align="right">-0.3273665</td>
+<td align="right">0.2683050</td>
+<td align="right">0.5775688</td>
+<td align="right">0.9885720</td>
+<td align="right">0.3366707</td>
+<td align="right">0.7794296</td>
+<td align="right">0.7994539</td>
+<td align="right">-0.6146845</td>
+<td align="right">0.4589401</td>
+<td align="right">0.3300971</td>
+<td align="right">0.5629045</td>
+<td align="right">0.5417678</td>
+<td align="right">0.1412824</td>
+<td align="right">-0.8849110</td>
+<td align="right">-0.5604773</td>
+<td align="right">-0.5352953</td>
+<td align="right">0.3054207</td>
+<td align="right">-0.7467638</td>
+<td align="right">-0.7470672</td>
+<td align="right">-0.8794498</td>
+<td align="right">0.7968244</td>
+<td align="right">0.4102953</td>
+<td align="right">-0.8351537</td>
+<td align="right">-0.8407160</td>
+<td align="right">-0.8941141</td>
+<td align="right">-0.7960154</td>
+<td align="right">-0.8741909</td>
+<td align="right">0.7875202</td>
+<td align="right">-0.4432646</td>
+<td align="right">-0.8739887</td>
+<td align="right">-0.8169498</td>
+</tr>
+<tr class="odd">
+<td align="left">SLPI</td>
+<td align="right">-0.0002023</td>
+<td align="right">-0.0769620</td>
+<td align="right">0.1256068</td>
+<td align="right">-0.1709142</td>
+<td align="right">0.0237662</td>
+<td align="right">-0.0207322</td>
+<td align="right">-0.1002225</td>
+<td align="right">-0.0270024</td>
+<td align="right">-0.2147047</td>
+<td align="right">0.3164442</td>
+<td align="right">-0.1724312</td>
+<td align="right">0.2180421</td>
+<td align="right">0.0310477</td>
+<td align="right">-0.1306634</td>
+<td align="right">0.0273058</td>
+<td align="right">-0.0341828</td>
+<td align="right">-0.1614078</td>
+<td align="right">-0.1673746</td>
+<td align="right">0.0369134</td>
+<td align="right">0.0468244</td>
+<td align="right">-0.0373180</td>
+<td align="right">0.0088997</td>
+<td align="right">0.1345065</td>
+<td align="right">0.7971278</td>
+<td align="right">0.0031351</td>
+<td align="right">0.8340413</td>
+<td align="right">-0.0196197</td>
+<td align="right">0.0001011</td>
+<td align="right">-0.0723099</td>
+<td align="right">-0.0670510</td>
+<td align="right">0.7637540</td>
+<td align="right">0.0643204</td>
+<td align="right">0.1724312</td>
+<td align="right">0.0547128</td>
+<td align="right">0.0122371</td>
+<td align="right">-0.0131472</td>
+<td align="right">0.0157767</td>
+<td align="right">0.0326659</td>
+<td align="right">0.1316748</td>
+<td align="right">0.1046723</td>
+<td align="right">-0.0635113</td>
+<td align="right">0.0079895</td>
+<td align="right">0.0262945</td>
+<td align="right">0.0179005</td>
+<td align="right">0.0255866</td>
+<td align="right">-0.0073827</td>
+<td align="right">-0.2035801</td>
+<td align="right">-0.0188107</td>
+<td align="right">0.1456311</td>
+<td align="right">0.1708131</td>
+<td align="right">0.1554409</td>
+<td align="right">0.3934061</td>
+<td align="right">0.0229571</td>
+<td align="right">0.3049150</td>
+<td align="right">0.9801780</td>
+<td align="right">-0.0159790</td>
+<td align="right">0.0351942</td>
+<td align="right">0.1177184</td>
+<td align="right">0.0904126</td>
+<td align="right">0.0449029</td>
+<td align="right">-0.1576659</td>
+<td align="right">-0.1345065</td>
+<td align="right">1.0000000</td>
+<td align="right">0.1449231</td>
+<td align="right">-0.0483414</td>
+<td align="right">0.2185477</td>
+<td align="right">-0.1052791</td>
+<td align="right">0.0192152</td>
+<td align="right">-0.0402508</td>
+<td align="right">-0.0287217</td>
+<td align="right">0.2595065</td>
+<td align="right">-0.0548139</td>
+<td align="right">-0.1726335</td>
+<td align="right">-0.1082120</td>
+<td align="right">-0.1131675</td>
+<td align="right">-0.1069984</td>
+<td align="right">0.0703883</td>
+<td align="right">0.1746561</td>
+<td align="right">-0.0373180</td>
+</tr>
+<tr class="even">
+<td align="left">CYP17A1</td>
+<td align="right">-0.6969053</td>
+<td align="right">-0.7985437</td>
+<td align="right">0.7181432</td>
+<td align="right">0.3725728</td>
+<td align="right">0.9116100</td>
+<td align="right">0.9454895</td>
+<td align="right">-0.7607201</td>
+<td align="right">-0.8793487</td>
+<td align="right">0.7041869</td>
+<td align="right">-0.6896238</td>
+<td align="right">0.8898665</td>
+<td align="right">-0.8990696</td>
+<td align="right">0.7537419</td>
+<td align="right">0.4558050</td>
+<td align="right">0.4320388</td>
+<td align="right">-0.8639765</td>
+<td align="right">-0.7299757</td>
+<td align="right">0.6067961</td>
+<td align="right">0.4569175</td>
+<td align="right">0.8028924</td>
+<td align="right">-0.3462783</td>
+<td align="right">0.6895227</td>
+<td align="right">-0.9077670</td>
+<td align="right">-0.7513147</td>
+<td align="right">0.0721076</td>
+<td align="right">-0.8803600</td>
+<td align="right">-0.6814320</td>
+<td align="right">0.9846278</td>
+<td align="right">-0.3159385</td>
+<td align="right">0.1653519</td>
+<td align="right">-0.7147047</td>
+<td align="right">0.0502629</td>
+<td align="right">-0.8314118</td>
+<td align="right">0.9946400</td>
+<td align="right">0.8239280</td>
+<td align="right">-0.4113066</td>
+<td align="right">-0.2422128</td>
+<td align="right">0.5946602</td>
+<td align="right">0.9111044</td>
+<td align="right">0.4799757</td>
+<td align="right">0.6538228</td>
+<td align="right">-0.0563309</td>
+<td align="right">-0.8270631</td>
+<td align="right">0.3503236</td>
+<td align="right">0.8722694</td>
+<td align="right">0.3771238</td>
+<td align="right">0.4638956</td>
+<td align="right">-0.6853762</td>
+<td align="right">0.9092840</td>
+<td align="right">0.5811084</td>
+<td align="right">0.1147856</td>
+<td align="right">-0.3168487</td>
+<td align="right">-0.3707524</td>
+<td align="right">-0.0931432</td>
+<td align="right">-0.7940939</td>
+<td align="right">0.4205097</td>
+<td align="right">0.5064725</td>
+<td align="right">0.2547532</td>
+<td align="right">-0.3812702</td>
+<td align="right">0.5333738</td>
+<td align="right">0.3402104</td>
+<td align="right">-0.5954693</td>
+<td align="right">-0.8454693</td>
+<td align="right">-0.2829693</td>
+<td align="right">0.6429005</td>
+<td align="right">-0.7975324</td>
+<td align="right">-0.4244539</td>
+<td align="right">-0.8887540</td>
+<td align="right">-0.1952872</td>
+<td align="right">0.0599717</td>
+<td align="right">-0.8045105</td>
+<td align="right">-0.1849717</td>
+<td align="right">0.2918689</td>
+<td align="right">-0.7659790</td>
+<td align="right">-0.9092840</td>
+<td align="right">0.7615291</td>
+<td align="right">0.2512136</td>
+<td align="right">-0.8452670</td>
+<td align="right">0.5505663</td>
+</tr>
+<tr class="odd">
+<td align="left">APOE</td>
+<td align="right">-0.1803196</td>
+<td align="right">-0.6128641</td>
+<td align="right">-0.4194984</td>
+<td align="right">-0.6391586</td>
+<td align="right">0.8217031</td>
+<td align="right">0.5306432</td>
+<td align="right">-0.2172330</td>
+<td align="right">-0.7652710</td>
+<td align="right">-0.7114684</td>
+<td align="right">-0.3883495</td>
+<td align="right">-0.7744741</td>
+<td align="right">-0.3639765</td>
+<td align="right">0.8833940</td>
+<td align="right">-0.6774879</td>
+<td align="right">0.0106189</td>
+<td align="right">-0.7067152</td>
+<td align="right">0.4881675</td>
+<td align="right">0.0781756</td>
+<td align="right">0.5188107</td>
+<td align="right">0.2430218</td>
+<td align="right">0.7106594</td>
+<td align="right">0.5033374</td>
+<td align="right">-0.7819579</td>
+<td align="right">-0.7189523</td>
+<td align="right">0.4754248</td>
+<td align="right">-0.6784992</td>
+<td align="right">0.0555218</td>
+<td align="right">-0.1930623</td>
+<td align="right">-0.7035801</td>
+<td align="right">0.2753843</td>
+<td align="right">-0.5426780</td>
+<td align="right">-0.5612864</td>
+<td align="right">0.8901699</td>
+<td align="right">0.6743528</td>
+<td align="right">-0.6406756</td>
+<td align="right">-0.3967435</td>
+<td align="right">0.4016990</td>
+<td align="right">0.7560680</td>
+<td align="right">-0.3283778</td>
+<td align="right">0.7676982</td>
+<td align="right">-0.1610032</td>
+<td align="right">0.7563714</td>
+<td align="right">-0.7325040</td>
+<td align="right">0.5760518</td>
+<td align="right">0.6666667</td>
+<td align="right">0.9186893</td>
+<td align="right">0.7473706</td>
+<td align="right">0.5132484</td>
+<td align="right">0.5117314</td>
+<td align="right">-0.7355380</td>
+<td align="right">0.9492314</td>
+<td align="right">0.8867314</td>
+<td align="right">-0.3579086</td>
+<td align="right">0.9508495</td>
+<td align="right">0.9913026</td>
+<td align="right">0.5176982</td>
+<td align="right">0.5774676</td>
+<td align="right">-0.0948625</td>
+<td align="right">0.6444175</td>
+<td align="right">0.6436084</td>
+<td align="right">0.8061286</td>
+<td align="right">-0.2902508</td>
+<td align="right">-0.4731998</td>
+<td align="right">-0.4710761</td>
+<td align="right">-0.7086367</td>
+<td align="right">-0.6211570</td>
+<td align="right">-0.7385720</td>
+<td align="right">-0.7729571</td>
+<td align="right">-0.7375607</td>
+<td align="right">-0.6744539</td>
+<td align="right">-0.6547330</td>
+<td align="right">-0.6015372</td>
+<td align="right">-0.3387945</td>
+<td align="right">-0.4594458</td>
+<td align="right">-0.7472694</td>
+<td align="right">-0.7824636</td>
+<td align="right">0.5069782</td>
+<td align="right">-0.6221683</td>
+<td align="right">-0.6593851</td>
+</tr>
+<tr class="even">
+<td align="left">GNAS</td>
+<td align="right">0.7006472</td>
+<td align="right">0.2992516</td>
+<td align="right">-0.9201052</td>
+<td align="right">0.1205502</td>
+<td align="right">0.9617718</td>
+<td align="right">-0.7514159</td>
+<td align="right">-0.5064725</td>
+<td align="right">0.0026294</td>
+<td align="right">-0.4866505</td>
+<td align="right">-0.3576052</td>
+<td align="right">0.9666262</td>
+<td align="right">-0.4566141</td>
+<td align="right">0.5860639</td>
+<td align="right">-0.7251214</td>
+<td align="right">0.3312095</td>
+<td align="right">0.3988673</td>
+<td align="right">-0.5838390</td>
+<td align="right">0.3057241</td>
+<td align="right">-0.7379652</td>
+<td align="right">-0.1771845</td>
+<td align="right">-0.6789037</td>
+<td align="right">0.5789846</td>
+<td align="right">-0.0644215</td>
+<td align="right">0.3849110</td>
+<td align="right">-0.2518204</td>
+<td align="right">0.7432241</td>
+<td align="right">0.1994337</td>
+<td align="right">-0.7504045</td>
+<td align="right">0.7108617</td>
+<td align="right">-0.8690332</td>
+<td align="right">0.3867314</td>
+<td align="right">-0.7735639</td>
+<td align="right">0.5579490</td>
+<td align="right">0.3154328</td>
+<td align="right">0.6065939</td>
+<td align="right">0.8241303</td>
+<td align="right">-0.1879045</td>
+<td align="right">-0.7301780</td>
+<td align="right">0.6178196</td>
+<td align="right">-0.7737662</td>
+<td align="right">-0.8206917</td>
+<td align="right">-0.0325647</td>
+<td align="right">-0.5313511</td>
+<td align="right">-0.5694782</td>
+<td align="right">-0.7927791</td>
+<td align="right">0.3799555</td>
+<td align="right">0.3040049</td>
+<td align="right">-0.3867314</td>
+<td align="right">0.4507484</td>
+<td align="right">0.5963794</td>
+<td align="right">0.6836570</td>
+<td align="right">0.8881472</td>
+<td align="right">-0.6559466</td>
+<td align="right">1.0000000</td>
+<td align="right">0.7808455</td>
+<td align="right">-0.0494539</td>
+<td align="right">-0.5160801</td>
+<td align="right">0.8352549</td>
+<td align="right">-0.1978155</td>
+<td align="right">0.4158576</td>
+<td align="right">-0.6318770</td>
+<td align="right">0.3835963</td>
+<td align="right">0.7389765</td>
+<td align="right">-0.6894215</td>
+<td align="right">0.7182443</td>
+<td align="right">0.7246157</td>
+<td align="right">-0.8772249</td>
+<td align="right">-0.4662217</td>
+<td align="right">0.8840008</td>
+<td align="right">-0.4432646</td>
+<td align="right">-0.4576254</td>
+<td align="right">-0.7127832</td>
+<td align="right">-0.8280744</td>
+<td align="right">-0.7997573</td>
+<td align="right">-0.4835154</td>
+<td align="right">0.9363875</td>
+<td align="right">-0.4552994</td>
+<td align="right">0.3902710</td>
+<td align="right">-0.5186084</td>
+</tr>
+<tr class="odd">
+<td align="left">CYP11B1</td>
+<td align="right">-0.5205299</td>
+<td align="right">-0.6237864</td>
+<td align="right">0.2543487</td>
+<td align="right">-0.6217638</td>
+<td align="right">0.8689320</td>
+<td align="right">0.4973706</td>
+<td align="right">-0.5522856</td>
+<td align="right">-0.6813309</td>
+<td align="right">-0.6277306</td>
+<td align="right">-0.4671319</td>
+<td align="right">-0.7740696</td>
+<td align="right">0.0820186</td>
+<td align="right">0.5138552</td>
+<td align="right">-0.5703883</td>
+<td align="right">0.1642395</td>
+<td align="right">-0.4666262</td>
+<td align="right">-0.7197613</td>
+<td align="right">-0.5893002</td>
+<td align="right">-0.5992112</td>
+<td align="right">-0.2876214</td>
+<td align="right">-0.5298341</td>
+<td align="right">-0.4471076</td>
+<td align="right">0.3426375</td>
+<td align="right">0.9892799</td>
+<td align="right">0.7404935</td>
+<td align="right">-0.5914239</td>
+<td align="right">-0.4991909</td>
+<td align="right">-0.6246966</td>
+<td align="right">-0.4548948</td>
+<td align="right">-0.5763552</td>
+<td align="right">0.8351537</td>
+<td align="right">0.6470469</td>
+<td align="right">0.9423544</td>
+<td align="right">-0.5484426</td>
+<td align="right">-0.6488673</td>
+<td align="right">0.1315736</td>
+<td align="right">0.1549353</td>
+<td align="right">0.5001011</td>
+<td align="right">-0.2592031</td>
+<td align="right">0.8537621</td>
+<td align="right">0.4827063</td>
+<td align="right">0.6650485</td>
+<td align="right">-0.6087176</td>
+<td align="right">0.5034385</td>
+<td align="right">0.4042273</td>
+<td align="right">-0.6081108</td>
+<td align="right">-0.7667880</td>
+<td align="right">-0.4982807</td>
+<td align="right">0.9267799</td>
+<td align="right">0.8286812</td>
+<td align="right">0.9736044</td>
+<td align="right">0.5149676</td>
+<td align="right">-0.4532767</td>
+<td align="right">0.3055218</td>
+<td align="right">0.4566141</td>
+<td align="right">-0.6905340</td>
+<td align="right">0.7756877</td>
+<td align="right">-0.4019013</td>
+<td align="right">0.5384304</td>
+<td align="right">0.7838794</td>
+<td align="right">-0.6642395</td>
+<td align="right">-0.6766788</td>
+<td align="right">-0.6418892</td>
+<td align="right">0.6402710</td>
+<td align="right">-0.7048948</td>
+<td align="right">0.9914037</td>
+<td align="right">-0.6525081</td>
+<td align="right">0.7271440</td>
+<td align="right">0.8383900</td>
+<td align="right">-0.6363269</td>
+<td align="right">-0.5449029</td>
+<td align="right">-0.6411812</td>
+<td align="right">-0.0801982</td>
+<td align="right">-0.5727144</td>
+<td align="right">-0.1860841</td>
+<td align="right">0.8790453</td>
+<td align="right">0.5594660</td>
+<td align="right">-0.5070793</td>
+<td align="right">-0.0300364</td>
+</tr>
+<tr class="even">
+<td align="left">H19</td>
+<td align="right">-0.2256270</td>
+<td align="right">-0.2907565</td>
+<td align="right">-0.2759911</td>
+<td align="right">-0.3691343</td>
+<td align="right">0.9669296</td>
+<td align="right">-0.2515170</td>
+<td align="right">-0.2109628</td>
+<td align="right">-0.2523261</td>
+<td align="right">-0.4289037</td>
+<td align="right">0.0275081</td>
+<td align="right">0.0913228</td>
+<td align="right">-0.3474919</td>
+<td align="right">-0.1927589</td>
+<td align="right">0.7929814</td>
+<td align="right">0.9033172</td>
+<td align="right">-0.2885316</td>
+<td align="right">-0.3695388</td>
+<td align="right">-0.2687095</td>
+<td align="right">0.1050769</td>
+<td align="right">0.8855178</td>
+<td align="right">0.1480583</td>
+<td align="right">-0.1005259</td>
+<td align="right">-0.1765777</td>
+<td align="right">-0.3217031</td>
+<td align="right">0.9077670</td>
+<td align="right">-0.2160194</td>
+<td align="right">-0.2751820</td>
+<td align="right">-0.2371561</td>
+<td align="right">0.3518406</td>
+<td align="right">-0.0452063</td>
+<td align="right">-0.1925566</td>
+<td align="right">-0.0988066</td>
+<td align="right">-0.2637540</td>
+<td align="right">-0.1106392</td>
+<td align="right">-0.2243123</td>
+<td align="right">0.3224110</td>
+<td align="right">0.3206917</td>
+<td align="right">-0.1927589</td>
+<td align="right">-0.1278317</td>
+<td align="right">-0.1314725</td>
+<td align="right">-0.3032969</td>
+<td align="right">0.5347896</td>
+<td align="right">-0.1183252</td>
+<td align="right">-0.1454288</td>
+<td align="right">-0.1464401</td>
+<td align="right">0.9163633</td>
+<td align="right">0.9928196</td>
+<td align="right">0.2333131</td>
+<td align="right">0.8437500</td>
+<td align="right">0.1503843</td>
+<td align="right">0.3064320</td>
+<td align="right">-0.2315939</td>
+<td align="right">-0.1791060</td>
+<td align="right">0.1256068</td>
+<td align="right">0.2444377</td>
+<td align="right">0.8856189</td>
+<td align="right">-0.0072816</td>
+<td align="right">-0.0566343</td>
+<td align="right">0.4490291</td>
+<td align="right">0.4865494</td>
+<td align="right">-0.3824838</td>
+<td align="right">-0.3554814</td>
+<td align="right">-0.2823625</td>
+<td align="right">0.2029733</td>
+<td align="right">-0.2049960</td>
+<td align="right">-0.1686893</td>
+<td align="right">-0.2555623</td>
+<td align="right">-0.3689320</td>
+<td align="right">-0.3315129</td>
+<td align="right">-0.2805421</td>
+<td align="right">-0.1616100</td>
+<td align="right">-0.2999595</td>
+<td align="right">-0.4043285</td>
+<td align="right">0.1849717</td>
+<td align="right">-0.3693366</td>
+<td align="right">-0.2621359</td>
+<td align="right">0.2428196</td>
+<td align="right">-0.2588997</td>
+<td align="right">-0.0967840</td>
+</tr>
+<tr class="odd">
+<td align="left">STAR</td>
+<td align="right">-0.6474515</td>
+<td align="right">-0.9513552</td>
+<td align="right">0.3937095</td>
+<td align="right">0.0956715</td>
+<td align="right">0.8720672</td>
+<td align="right">-0.2739684</td>
+<td align="right">-0.9701659</td>
+<td align="right">-0.4038228</td>
+<td align="right">-0.8336367</td>
+<td align="right">-0.9524676</td>
+<td align="right">0.5162824</td>
+<td align="right">0.7966222</td>
+<td align="right">0.2252225</td>
+<td align="right">-0.6632282</td>
+<td align="right">0.3213997</td>
+<td align="right">0.2508091</td>
+<td align="right">-0.9290049</td>
+<td align="right">0.4546926</td>
+<td align="right">0.6518002</td>
+<td align="right">-0.1562500</td>
+<td align="right">-0.3920914</td>
+<td align="right">0.6868932</td>
+<td align="right">0.1998382</td>
+<td align="right">0.9944377</td>
+<td align="right">-0.4323422</td>
+<td align="right">0.8508293</td>
+<td align="right">0.5694782</td>
+<td align="right">-0.7348301</td>
+<td align="right">0.5271036</td>
+<td align="right">-0.3455704</td>
+<td align="right">0.9345672</td>
+<td align="right">-0.5298341</td>
+<td align="right">0.9928196</td>
+<td align="right">0.0295307</td>
+<td align="right">0.7524272</td>
+<td align="right">0.4251618</td>
+<td align="right">-0.8474919</td>
+<td align="right">-0.5884911</td>
+<td align="right">-0.4834142</td>
+<td align="right">0.6266181</td>
+<td align="right">-0.8148261</td>
+<td align="right">0.7772047</td>
+<td align="right">0.5059668</td>
+<td align="right">-0.4052387</td>
+<td align="right">0.2443366</td>
+<td align="right">-0.8682241</td>
+<td align="right">0.1602953</td>
+<td align="right">-0.2815534</td>
+<td align="right">0.6305623</td>
+<td align="right">0.1745550</td>
+<td align="right">0.6275283</td>
+<td align="right">0.5332727</td>
+<td align="right">-0.6748584</td>
+<td align="right">0.8404126</td>
+<td align="right">0.6945793</td>
+<td align="right">-0.6120550</td>
+<td align="right">0.2407969</td>
+<td align="right">-0.3561893</td>
+<td align="right">-0.0953681</td>
+<td align="right">-0.8234223</td>
+<td align="right">0.7863066</td>
+<td align="right">-0.9549960</td>
+<td align="right">-0.9358819</td>
+<td align="right">-0.6134709</td>
+<td align="right">0.8530542</td>
+<td align="right">0.9472087</td>
+<td align="right">-0.7586974</td>
+<td align="right">0.2128843</td>
+<td align="right">0.8073422</td>
+<td align="right">0.4067557</td>
+<td align="right">-0.3071400</td>
+<td align="right">-0.3892597</td>
+<td align="right">-0.5813107</td>
+<td align="right">-0.9701659</td>
+<td align="right">-0.5517799</td>
+<td align="right">0.6811286</td>
+<td align="right">-0.0937500</td>
+<td align="right">-0.3424353</td>
+<td align="right">0.1866909</td>
+</tr>
+<tr class="even">
+<td align="left">SPARC</td>
+<td align="right">-0.6340008</td>
+<td align="right">0.2386731</td>
+<td align="right">-0.6689927</td>
+<td align="right">-0.6576659</td>
+<td align="right">-0.6491707</td>
+<td align="right">0.8573018</td>
+<td align="right">0.2562702</td>
+<td align="right">0.8573018</td>
+<td align="right">0.1078074</td>
+<td align="right">-0.9711772</td>
+<td align="right">0.0815129</td>
+<td align="right">-0.9327468</td>
+<td align="right">0.9521642</td>
+<td align="right">0.2475728</td>
+<td align="right">0.4807848</td>
+<td align="right">0.6421926</td>
+<td align="right">-0.1665655</td>
+<td align="right">-0.9555016</td>
+<td align="right">-0.6918487</td>
+<td align="right">0.8752023</td>
+<td align="right">0.1758697</td>
+<td align="right">0.9073625</td>
+<td align="right">0.9031149</td>
+<td align="right">0.3836974</td>
+<td align="right">-0.9439725</td>
+<td align="right">0.6522047</td>
+<td align="right">-0.7620348</td>
+<td align="right">0.6541262</td>
+<td align="right">-0.6246966</td>
+<td align="right">0.5751416</td>
+<td align="right">0.6870955</td>
+<td align="right">0.6495752</td>
+<td align="right">0.6647451</td>
+<td align="right">0.4130259</td>
+<td align="right">-0.5255866</td>
+<td align="right">-0.1411812</td>
+<td align="right">0.7419094</td>
+<td align="right">-0.6234830</td>
+<td align="right">0.5525890</td>
+<td align="right">0.6797128</td>
+<td align="right">0.5986044</td>
+<td align="right">-0.0569377</td>
+<td align="right">0.2871157</td>
+<td align="right">0.2604167</td>
+<td align="right">0.4634911</td>
+<td align="right">-0.2283576</td>
+<td align="right">0.7947006</td>
+<td align="right">0.7189523</td>
+<td align="right">-0.8567961</td>
+<td align="right">0.4986853</td>
+<td align="right">-0.6102346</td>
+<td align="right">-0.1852751</td>
+<td align="right">-0.3676173</td>
+<td align="right">-0.6854773</td>
+<td align="right">-0.4724919</td>
+<td align="right">-0.5320591</td>
+<td align="right">0.4966626</td>
+<td align="right">-0.2114684</td>
+<td align="right">0.9911003</td>
+<td align="right">-0.6451254</td>
+<td align="right">-0.9223301</td>
+<td align="right">-0.9137338</td>
+<td align="right">-0.8039037</td>
+<td align="right">-0.9263754</td>
+<td align="right">-0.4467031</td>
+<td align="right">-0.4385113</td>
+<td align="right">-0.7150081</td>
+<td align="right">-0.1727346</td>
+<td align="right">0.4948422</td>
+<td align="right">0.3865291</td>
+<td align="right">0.9385113</td>
+<td align="right">-0.0617921</td>
+<td align="right">0.2429207</td>
+<td align="right">0.3013754</td>
+<td align="right">-0.9388147</td>
+<td align="right">-0.4343649</td>
+<td align="right">-0.7628439</td>
+<td align="right">-0.8661003</td>
+<td align="right">0.7707322</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="section level4">
+<h4 id="iv-run-candidate-search-with-input-scores-obtained-in-iii">(iv) Run candidate search with input scores obtained in (iii)<a class="anchor" aria-label="anchor" href="#iv-run-candidate-search-with-input-scores-obtained-in-iii"></a>
+</h4>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Samples to keep based on the overlap between the two inputs</span></span>
+<span><span class="va">overlap</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sets.html" class="external-link">intersect</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">input_score_list</span><span class="op">[</span><span class="fl">1</span>,<span class="op">]</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="va">feature_set</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">input_score</span> <span class="op">&lt;-</span> <span class="va">input_score_list</span><span class="op">[</span><span class="fl">1</span>, <span class="va">overlap</span><span class="op">]</span></span>
+<span><span class="va">FS</span> <span class="op">&lt;-</span> <span class="va">datasets</span><span class="op">$</span><span class="va">feature_set</span><span class="op">[</span>, <span class="va">overlap</span>, drop<span class="op">=</span><span class="cn">FALSE</span><span class="op">]</span></span>
+<span></span>
+<span><span class="co">## Pre-filter FS based on occurrence frequency</span></span>
+<span><span class="va">FS_filtered</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/prefilter_data.html" class="external-link">prefilter_data</a></span><span class="op">(</span></span>
+<span>  FS <span class="op">=</span> <span class="va">FS</span>,</span>
+<span>  max_cutoff <span class="op">=</span> <span class="fl">0.6</span>,  <span class="co"># max event frequency (60%)</span></span>
+<span>  min_cutoff <span class="op">=</span> <span class="fl">0.03</span>  <span class="co"># min event frequency (3%)</span></span>
+<span><span class="op">)</span>  </span>
+<span></span>
+<span><span class="co"># Run candidate search</span></span>
+<span><span class="va">topn_result</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/candidate_search.html" class="external-link">candidate_search</a></span><span class="op">(</span></span>
+<span>  FS <span class="op">=</span> <span class="va">FS_filtered</span>,</span>
+<span>  input_score <span class="op">=</span> <span class="va">input_score</span>,</span>
+<span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,          <span class="co"># Use Kolmogorow-Smirnow scoring function </span></span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,              <span class="co"># If weights is provided, perform a weighted-KS test</span></span>
+<span>  alternative <span class="op">=</span> <span class="st">"less"</span>,        <span class="co"># Use one-sided hypothesis testing</span></span>
+<span>  search_method <span class="op">=</span> <span class="st">"both"</span>,      <span class="co"># Apply both forward and backward search</span></span>
+<span>  top_N <span class="op">=</span> <span class="fl">1</span>,                   <span class="co"># Evaluate top 1 starting points for each search</span></span>
+<span>  max_size <span class="op">=</span> <span class="fl">7</span>,                <span class="co"># Maximum size a meta-feature matrix can extend to</span></span>
+<span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,             <span class="co"># Plot after finding the best features</span></span>
+<span>  best_score_only <span class="op">=</span> <span class="cn">FALSE</span>      <span class="co"># Return meta-feature set, observed input scores and calculated best score</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+</div>
+</div>
+<div class="section level3">
+<h3 id="v-visualize-best-results">(v) Visualize Best Results<a class="anchor" aria-label="anchor" href="#v-visualize-best-results"></a>
+</h3>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co">## Fetch the meta-feature set corresponding to its best scores over top N features searches</span></span>
+<span><span class="va">topn_best_meta</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/topn_best.html" class="external-link">topn_best</a></span><span class="op">(</span><span class="va">topn_result</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Visualize the best results with the meta-feature plot</span></span>
+<span><span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/meta_plot.html" class="external-link">meta_plot</a></span><span class="op">(</span>topn_best_list <span class="op">=</span> <span class="va">topn_best_meta</span>, input_score_label <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
+<p><img src="./reference/figures/unnamed-chunk-8-1.png"><!-- --></p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Set seed for permutation</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Run CaDrA Search</span></span>
+<span><span class="va">perm_res</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/CaDrA.html" class="external-link">CaDrA</a></span><span class="op">(</span></span>
+<span>  FS <span class="op">=</span> <span class="va">FS_filtered</span>, </span>
+<span>  input_score <span class="op">=</span> <span class="va">input_score</span>, </span>
+<span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,</span>
+<span>  top_N <span class="op">=</span> <span class="fl">1</span>,</span>
+<span>  max_size <span class="op">=</span> <span class="fl">7</span>,</span>
+<span>  search_method <span class="op">=</span> <span class="st">"both"</span>,     </span>
+<span>  n_perm <span class="op">=</span> <span class="fl">1000</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Visualize permutation results</span></span>
+<span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/permutation_plot.html" class="external-link">permutation_plot</a></span><span class="op">(</span>perm_res <span class="op">=</span> <span class="va">perm_res</span><span class="op">)</span></span></code></pre></div>
+<p><img src="./reference/figures/unnamed-chunk-9-1.png"><!-- --></p>
+</div>
+<div class="section level3">
+<h3 id="id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset">(4) Launch CaDrA’s Shiny App with your pre-proccessed dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset"></a>
+</h3>
+<div class="section level4">
+<h4 id="i-pull-pre-processed-feature-sets-using-our-rest-api">(i) Pull pre-processed feature sets using our REST API<a class="anchor" aria-label="anchor" href="#i-pull-pre-processed-feature-sets-using-our-rest-api"></a>
+</h4>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Download feature sets and return a datalist with appropriate paths to dataset</span></span>
+<span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/download_feature_sets.html">download_feature_sets</a></span><span class="op">(</span></span>
+<span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
+<span>  include_input_score <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  out_dir <span class="op">=</span> <span class="st">"~/Github"</span></span>
+<span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at the top 6 rows</span></span>
 <span><span class="fu">knitr</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/knitr/man/kable.html" class="external-link">kable</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mydatafile</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -275,51 +1323,51 @@ CaDrA.shiny
 <tbody>
 <tr class="odd">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">NA</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 <tr class="even">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">HALLMARK_TNFA_SIGNALING_VIA_NFKB</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 <tr class="odd">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">HALLMARK_HYPOXIA</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 <tr class="even">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">HALLMARK_CHOLESTEROL_HOMEOSTASIS</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 <tr class="odd">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">HALLMARK_MITOTIC_SPINDLE</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 <tr class="even">
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">HALLMARK_WNT_BETA_CATENIN_SIGNALING</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">~/Github/download-fs-2023-06-26/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
+<td align="left">~/Github/download-fs-2023-10-10/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
 </tr>
 </tbody>
 </table>
@@ -327,12 +1375,12 @@ CaDrA.shiny
 <div class="section level4">
 <h4 id="iii-launch-cadras-app-with-the-downloaded-dataset">(iii) Launch CaDrA’s app with the downloaded dataset<a class="anchor" aria-label="anchor" href="#iii-launch-cadras-app-with-the-downloaded-dataset"></a>
 </h4>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Launch CaDrA's Shiny app with your downloaded datalist</span></span>
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)</span></span>
 <span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/CaDrA_App.html">CaDrA_App</a></span><span class="op">(</span>id<span class="op">=</span><span class="st">"myapp"</span>, datalist<span class="op">=</span><span class="va">mydatafile</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># NOT RUN: Launch app on localhost with port 3838</span></span>
-<span><span class="co"># shiny::runApp(app, host='0.0.0.0', port=3838)</span></span></code></pre></div>
+<span><span class="co"># Launch app on localhost with port 3838</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span>, host<span class="op">=</span><span class="st">'0.0.0.0'</span>, port<span class="op">=</span><span class="fl">3838</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 </div>
@@ -344,7 +1392,7 @@ CaDrA.shiny
 <ul>
 <li><a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a></li>
 <li><a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a></li>
-<li><a href="articles/api.html" target="_blank">Dataset</a></li>
+<li><a href="articles/api.html" target="_blank">Download</a></li>
 <li>Help</li>
 <li>Publication</li>
 <li>Contract Us</li>
@@ -360,24 +1408,11 @@ CaDrA.shiny
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="browse-cadra-source-code">
-<h2 data-toc-skip>Browse CaDrA source code</h2>
+    <div class="links">
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><p><a href="https://github.com/montilab/CaDrA" class="external-link uri">https://github.com/montilab/CaDrA</a></p></li>
-</ul>
-</div>
-
-<div class="browse-cadra-shiny-source-code">
-<h2 data-toc-skip>Browse CaDrA.shiny source code</h2>
-<ul class="list-unstyled">
-<li><p><a href="https://github.com/montilab/CaDrA.shiny" class="uri">https://github.com/montilab/CaDrA.shiny</a></p></li>
-</ul>
-</div>
-
-<div class="report-a-bug">
-<h2 data-toc-skip>Report a bug</h2>
-<ul class="list-unstyled">
-<li><p><a href="https://github.com/montilab/CaDrA.shiny/issues" class="uri">https://github.com/montilab/CaDrA.shiny/issues</a></p></li>
+<li><a href="https://github.com/montilab/CaDrA.shiny/">Browse source code</a></li>
+<li><a href="https://github.com/montilab/CaDrA.shiny/issues">Report a bug</a></li>
 </ul>
 </div>
 

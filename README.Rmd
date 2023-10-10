@@ -5,10 +5,14 @@ output: rmarkdown::github_document
 <!-- README.md is generated from README.Rmd. Please edit this file -->
 
 ```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse = TRUE, comment="")
-library(knitr)
+knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse=FALSE, comment="")
+
+# Load R packages
 library(devtools)
 load_all()
+library(knitr)
+library(GSVA)
+library(CaDrA)
 ```
 
 <p style="font-size: 40pt; front-weight: bold; padding-bottom: 0px; margin-bottom: 0;">CaDrA.shiny</p>
@@ -22,7 +26,7 @@ load_all()
 
 An R Shiny Dashboard for Interacting with **[CaDrA](https://montilab.github.io/CaDrA/)** Package 
 
-### **Documentation: [https://montilab.github.io/CaDrA/](https://montilab.github.io/CaDrA/)**
+### **CaDrA: [https://montilab.github.io/CaDrA/](https://montilab.github.io/CaDrA/)**
 
 ### **Web Portal: [https://cadra.bu.edu/](https://cadra.bu.edu/)**
 
@@ -62,55 +66,18 @@ devtools::install_github("montilab/CaDrA.shiny")
 
 ```r
 library(CaDrA.shiny)
+library(CaDrA)
+library(GSVA)
 library(knitr)
 ```
 
-### (3) Launch CaDrA's Shiny App with dataset included in the package
-
-```r
-app <- CaDrA.shiny::CaDrA_App(id="myapp")
-
-# Launch app on localhost with port 3838
-shiny::runApp(app, host='0.0.0.0', port=3838)
-```
-
-### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
-
-**Required:** 
-a data frame or data file (in **csv** or **rds** format) that includes paths to your pre-proccessed dataset with required columns:
-
-- feature_set_name
-- feature_set_path
-- input_score_name
-- input_score_path
-- gene_expression_name
-- gene_expression_path
-
-Here is an example of **mydatafile.csv**
-<a href="man/figures/datalist.png" target="_blank"><img src="man/figures/datalist.png"></a>
-
-To launch the app:
-```r
-# Read in the data file that includes paths to your pre-proccessed dataset
-mydatafile <- read.csv('/path/to/mydatafile.csv', header=TRUE)
-
-# Launch CaDrA's Shiny app with your loaded data file
-app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist_file=mydatafile)
-
-# Launch app on localhost with port 3838
-shiny::runApp(app, host='0.0.0.0', port=3838)
-```
-
-### (6) Launch CaDrA's Shiny App with dataset downloaded from our web portal using our REST API
+### (4) Run CaDrA with dataset downloaded from CaDrA Portal
 
 #### (i) Retrieve a list of pre-processed feature sets available on the portal
 
 ```{r}
-# API server to get a list of feature sets in the CaDrA Portal
-API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
-
 # Get a list of feature sets available on CaDrA Portal
-fs_list <- CaDrA.shiny::get_feature_set(API_Server, order_by="asc")
+fs_list <- CaDrA.shiny::get_feature_set(order_by="asc")
 ```
 
 ```{r}
@@ -118,27 +85,118 @@ fs_list <- CaDrA.shiny::get_feature_set(API_Server, order_by="asc")
 knitr::kable(head(fs_list))
 ```
 
-#### (ii) Download pre-processed feature sets using our REST API
+#### (ii) Pull down datasets from the portal
 
 ```{r}
-# Download the feature sets along with its input score and gene expression
-API_Server <- paste0("https://montilab.bu.edu/CaDrA_API/download_feature_set") 
+datasets <- CaDrA.shiny::pull_datasets(
+  feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
+  include_gene_expression = TRUE
+)
+```
 
-# Retrieve first two feature sets received from (i)
-# e.g., TCGA_ACC_2016_01_28_GISTIC_MUT_SIG, TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG
-feature_sets <- fs_list$feature_set_name
-include_input_score <- TRUE
-include_gene_expression <- TRUE
-out_dir <- "~/Github"
+#### (iii) Run GSVA with downloaded datasets
+
+```{r}
+
+# Get the first 10 features of the feature set
+feature_list <- rownames(datasets$gene_expression)[1:10]
+names(feature_list) <- feature_list
+
+# Compute the gsva scores of the first 10 features
+input_score_list <- GSVA::gsva(
+  expr = SummarizedExperiment::assay(datasets$gene_expression), 
+  gset.idx.list = as.list(feature_list),
+  method = "gsva",
+  mx.diff = TRUE
+)
+
+```
+
+```{r}
+# Look at the gsva scores of the first 10 features
+knitr::kable(input_score_list)
+```
+
+#### (iv) Run candidate search with input scores obtained in (iii)
+
+```{r}
+
+## Samples to keep based on the overlap between the two inputs
+overlap <- intersect(names(input_score_list[1,]), colnames(datasets$feature_set))
+input_score <- input_score_list[1, overlap]
+FS <- datasets$feature_set[, overlap, drop=FALSE]
+
+## Pre-filter FS based on occurrence frequency
+FS_filtered <- CaDrA::prefilter_data(
+  FS = FS,
+  max_cutoff = 0.6,  # max event frequency (60%)
+  min_cutoff = 0.03  # min event frequency (3%)
+)  
+
+# Run candidate search
+topn_result <- CaDrA::candidate_search(
+  FS = FS_filtered,
+  input_score = input_score,
+  method = "ks_pval",          # Use Kolmogorow-Smirnow scoring function 
+  weights = NULL,              # If weights is provided, perform a weighted-KS test
+  alternative = "less",        # Use one-sided hypothesis testing
+  search_method = "both",      # Apply both forward and backward search
+  top_N = 1,                   # Evaluate top 1 starting points for each search
+  max_size = 7,                # Maximum size a meta-feature matrix can extend to
+  do_plot = FALSE,             # Plot after finding the best features
+  best_score_only = FALSE      # Return meta-feature set, observed input scores and calculated best score
+)
+
+```
+
+### (v) Visualize Best Results
+
+```{r}
+
+## Fetch the meta-feature set corresponding to its best scores over top N features searches
+topn_best_meta <- CaDrA::topn_best(topn_result)
+
+# Visualize the best results with the meta-feature plot
+CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
+
+```
+
+```{r}
+
+# Set seed for permutation
+set.seed(123)
+
+# Run CaDrA Search
+perm_res <- CaDrA::CaDrA(
+  FS = FS_filtered, 
+  input_score = input_score, 
+  method = "ks_pval",
+  top_N = 1,
+  max_size = 7,
+  search_method = "both",     
+  n_perm = 1000,
+  ncores = 1
+)
+
+# Visualize permutation results
+permutation_plot(perm_res = perm_res)
+
+```
+
+### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
+
+#### (i) Pull pre-processed feature sets using our REST API
+
+```{r}
 
 # Download feature sets and return a datalist with appropriate paths to dataset
 mydatafile <- CaDrA.shiny::download_feature_sets(
-  API_Server = API_Server,
-  feature_sets = feature_sets,
-  include_input_score = include_input_score,
-  include_gene_expression = include_gene_expression,
-  out_dir = out_dir
+  feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
+  include_input_score = TRUE,
+  include_gene_expression = TRUE,
+  out_dir = "~/Github"
 )
+
 ```
 
 ```{r}
@@ -164,7 +222,7 @@ There are five tabs on CaDrA's Dashboard. Explore each tab and see what they do:
 
 - <a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a>
 - <a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a>
-- <a href="articles/api.html" target="_blank">Dataset</a>
+- <a href="articles/api.html" target="_blank">Download</a>
 - Help
 - Publication
 - Contract Us

@@ -1,6 +1,10 @@
 ---
 title: "&#32;"
-output: html_document
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Create GSVA Instructions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}

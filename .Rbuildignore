@@ -21,4 +21,7 @@
 ^eset$
 ^input_score$
 ^datalist.csv$
-^inst
+^inst$
+^\.yml$
+^vignettes$
+^docker-compose-*\.yml

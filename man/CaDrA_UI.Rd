@@ -18,7 +18,7 @@ The datalist must contains the following variables:
 'gene_expression_name' (optional), 'gene_expression_path' (optional)
 
 Default is NULL. If NULL, the app will start with DEFAULT dataset included 
-in CaDrA package.}
+in the package.}
 }
 \value{
 shiny ui elements

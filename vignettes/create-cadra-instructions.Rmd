@@ -1,13 +1,15 @@
 ---
 title: "&#32;"
-output: html_document
+output: BiocStyle::html_document
+vignette: >
+  %\VignetteIndexEntry{Create CaDrA Instructions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 ```
-
-<h1 style="text-align: center; color: #8B008B; font-weight: bold;">Instructions</h1>
 
 ![](figures/run-cadra-tab.png)
 

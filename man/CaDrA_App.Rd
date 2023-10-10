@@ -4,7 +4,7 @@
 \alias{CaDrA_App}
 \title{Run both Shiny UI and Server Modules}
 \usage{
-CaDrA_App(id, datalist)
+CaDrA_App(id, datalist = NULL)
 }
 \arguments{
 \item{id}{A unique namespace identifier}

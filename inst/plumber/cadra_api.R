@@ -351,10 +351,10 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
       dplyr::transmute(
         feature_set_name = feature_set_name,
         feature_set_path = basename(feature_set_path), 
-        input_score_name = sapply(seq_along(input_score_name), function(s){ ifelse(include_input_score==TRUE, input_score_name[s], NULL) }),
-        input_score_path = sapply(seq_along(input_score_path), function(s){ ifelse(include_input_score==TRUE, basename(input_score_path[s]), NULL) }),
-        gene_expression_name = sapply(seq_along(gene_expression_name), function(s){ ifelse(include_gene_expression==TRUE, gene_expression_name[s], NULL) }),
-        gene_expression_path = sapply(seq_along(gene_expression_path), function(s){ ifelse(include_gene_expression==TRUE, basename(gene_expression_path[s]), NULL) }),
+        input_score_name = sapply(seq_along(input_score_name), function(s){ ifelse(include_input_score==TRUE, input_score_name[s], "") }),
+        input_score_path = sapply(seq_along(input_score_path), function(s){ ifelse(include_input_score==TRUE, basename(input_score_path[s]), "") }),
+        gene_expression_name = sapply(seq_along(gene_expression_name), function(s){ ifelse(include_gene_expression==TRUE, gene_expression_name[s], "") }),
+        gene_expression_path = sapply(seq_along(gene_expression_path), function(s){ ifelse(include_gene_expression==TRUE, basename(gene_expression_path[s]), "") }),
       )
     
     saveRDS(fs_df, file.path(zip_file_dir, feature_set_name, "datalist.RDS"))

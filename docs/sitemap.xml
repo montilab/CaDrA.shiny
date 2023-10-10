@@ -13,6 +13,12 @@
     <loc>https://github.com/montilab/CaDrA.shiny/articles/api.html</loc>
   </url>
   <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/articles/create-cadra-instructions.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/articles/create-gsva-instructions.html</loc>
+  </url>
+  <url>
     <loc>https://github.com/montilab/CaDrA.shiny/articles/docker-compose.html</loc>
   </url>
   <url>
@@ -58,24 +64,12 @@
     <loc>https://github.com/montilab/CaDrA.shiny/reference/get_feature_set.html</loc>
   </url>
   <url>
-    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_feature_sets.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_gene_expression.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_gene_expressions.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_input_score.html</loc>
-  </url>
-  <url>
-    <loc>https://github.com/montilab/CaDrA.shiny/reference/get_input_scores.html</loc>
-  </url>
-  <url>
     <loc>https://github.com/montilab/CaDrA.shiny/reference/index.html</loc>
   </url>
   <url>
     <loc>https://github.com/montilab/CaDrA.shiny/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://github.com/montilab/CaDrA.shiny/reference/pull_datasets.html</loc>
   </url>
 </urlset>

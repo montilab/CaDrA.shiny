@@ -8,7 +8,7 @@ create_hover_txt <- function(table, n_char=100){
     title <- column_names[l]
     name <- ifelse(nchar(title) > n_char, paste0(substr(title, 1, n_char), "..."), title)
     th <- sprintf('<th title = "%s">%s</th>\n', title, name) 
-  }) %>% purrr::flatten_chr() %>% paste0(., collapse = "")
+  }) %>% purrr::flatten_chr() %>% paste0(collapse = "")
   
   th_tr <- paste0('<th title=""></th>\n', th_tr) %>% HTML()
   sketch <- htmltools::withTags(
@@ -145,8 +145,9 @@ get_extdata <- function(datalist=NULL){
 #' # Launch Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
-#' @import DT htmltools shinyjs
+#' @import DT htmltools
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
+#' @rawNamespace import(shinyjs, except = c(runExample))
 #' 
 #' @export 
  CaDrA_UI <- function(id, datalist=NULL){
@@ -474,9 +475,11 @@ get_extdata <- function(datalist=NULL){
             
             # alternative ####
             conditionalPanel(
-              condition = sprintf("input['%s'] == 'ks' || 
-                                   input['%s'] == 'wilcox'",
-                                  ns("method"), ns("method")),
+              condition = sprintf("input['%s'] == 'ks_pval' || 
+                                   input['%s'] == 'ks_score' ||
+                                   input['%s'] == 'wilcox_pval'
+                                   input['%s'] == 'wilcox_score'",
+                                  ns("method"), ns("method"), ns("method"), ns("method")),
               selectInput(
                 inputId = ns("alternative"),
                 label = strong(span(style="color:red;", "*"), "Alternative:"),
@@ -539,7 +542,7 @@ get_extdata <- function(datalist=NULL){
                 min = 1,
                 max = 100,
                 step = 1,
-                value = 5,
+                value = 3,
                 width = "100%"
               )
             ),
@@ -555,7 +558,7 @@ get_extdata <- function(datalist=NULL){
                                paste0('Enter a list of character strings ',
                                       '(separated by commas) corresponding ',
                                       'to feature names of ', 
-                                      '\'Feature Set\' object')),
+                                      'Feature Set object')),
                 value="",
                 width="100%"
               )
@@ -1048,8 +1051,11 @@ get_extdata <- function(datalist=NULL){
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #'  
-#' @import CaDrA DT GSVA GSEABase htmltools methods parallel SummarizedExperiment tibble tools utils
-#' @rawNamespace import(dplyr, except = c(union, intersect, setdiff))
+#' @import CaDrA DT htmltools parallel tibble tools utils
+#' @importFrom GSVA gsva
+#' @importFrom GSEABase getGmt
+#' @rawNamespace import(methods, except = c(removeClass, show))
+#' @rawNamespace import(SummarizedExperiment, except = c(show))
 #' 
 #' @export 
 CaDrA_Server <- function(id, datalist=NULL){
@@ -2867,7 +2873,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
 #' @export
-CaDrA_App <- function(id, datalist) {
+CaDrA_App <- function(id, datalist=NULL) {
   
   ui <- shiny::fluidPage(
     titlePanel("CaDrA: Candidate Drivers Analysis"),

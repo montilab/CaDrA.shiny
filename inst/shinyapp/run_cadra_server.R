@@ -2,9 +2,13 @@
 # R packages
 library(shiny)
 library(devtools)
-load_all(".")
+load_all()
 
 datalist <- "/CaDrA.shiny/inst/extdata/datalist.csv"
+
+if(!file.exists(datalist)){
+  datalist <- NULL
+}
 
 app <-  CaDrA.shiny::CaDrA_App(id="myapp", datalist=datalist)
 

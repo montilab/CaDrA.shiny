@@ -11,7 +11,7 @@ Authors@R:
       person(given="Stefano", family="Monti", role=c("aut"), 
               email="smonti@bu.edu", comment=c(ORCID="0000-0002-9376-0660"))
      )
-Description: This is a web interface tool for interacting with the R package CaDrA.
+Description: An R Shiny Dashboard for Interacting with CaDrA Package.
 Depends: R (>= 4.1.0)
 LazyData: false
 License: GPL-3 + file LICENSE
