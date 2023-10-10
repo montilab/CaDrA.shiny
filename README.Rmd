@@ -13,6 +13,7 @@ load_all()
 library(knitr)
 library(GSVA)
 library(CaDrA)
+library(hypeR)
 ```
 
 <p style="font-size: 40pt; front-weight: bold; padding-bottom: 0px; margin-bottom: 0;">CaDrA.shiny</p>
@@ -69,9 +70,10 @@ library(CaDrA.shiny)
 library(CaDrA)
 library(GSVA)
 library(knitr)
+library(hypeR)
 ```
 
-### (4) Run CaDrA with dataset downloaded from CaDrA Portal
+### (3) Run CaDrA with dataset downloaded from CaDrA Portal
 
 #### (i) Retrieve a list of pre-processed feature sets available on the portal
 
@@ -88,37 +90,32 @@ knitr::kable(head(fs_list))
 #### (ii) Pull down datasets from the portal
 
 ```{r}
-
 datasets <- CaDrA.shiny::pull_datasets(
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
   include_gene_expression = TRUE
 )
-
 datasets
-
 ```
 
 #### (iii) Run GSVA with downloaded datasets
 
 ```{r}
-
-# Get the first 10 features of the feature set
-feature_list <- rownames(datasets$gene_expression)[1:10]
-names(feature_list) <- feature_list
+## download MSigDB’s Hallmark genesets
+hallmarks <- msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
 
 # Compute the gsva scores of the first 10 features
-input_score_list <- GSVA::gsva(
+input_score_matrix <- GSVA::gsva(
   expr = SummarizedExperiment::assay(datasets$gene_expression), 
-  gset.idx.list = as.list(feature_list),
+  gset.idx.list = hallmarks,
   method = "gsva",
-  mx.diff = TRUE
+  mx.diff = TRUE,
+  verbose = FALSE
 )
-
 ```
 
 ```{r}
-# Look at the gsva scores of the first 10 features
-knitr::kable(input_score_list)
+## Look at the gsva scores of the first 10 features
+knitr::kable(input_score_matrix[1:5,1:5])
 ```
 
 #### (iv) Run candidate search with input scores obtained in (iii)
@@ -126,8 +123,8 @@ knitr::kable(input_score_list)
 ```{r}
 
 ## Samples to keep based on the overlap between the two inputs
-overlap <- intersect(names(input_score_list[1,]), colnames(datasets$feature_set))
-input_score <- input_score_list[1, overlap]
+overlap <- intersect(colnames(input_score_matrix), colnames(datasets$feature_set))
+input_score <- input_score_matrix["Epithelial Mesenchymal Transition", overlap]
 FS <- datasets$feature_set[, overlap, drop=FALSE]
 
 ## Pre-filter FS based on occurrence frequency
@@ -136,41 +133,36 @@ FS_filtered <- CaDrA::prefilter_data(
   max_cutoff = 0.6,  # max event frequency (60%)
   min_cutoff = 0.03  # min event frequency (3%)
 )  
-
-# Run candidate search
+## Run candidate search
 topn_result <- CaDrA::candidate_search(
   FS = FS_filtered,
   input_score = input_score,
-  method = "ks_pval",          # Use Kolmogorow-Smirnow scoring function 
-  weights = NULL,              # If weights is provided, perform a weighted-KS test
-  alternative = "less",        # Use one-sided hypothesis testing
-  search_method = "both",      # Apply both forward and backward search
-  top_N = 1,                   # Evaluate top 1 starting points for each search
-  max_size = 7,                # Maximum size a meta-feature matrix can extend to
-  do_plot = FALSE,             # Plot after finding the best features
-  best_score_only = FALSE      # Return meta-feature set, observed input scores and calculated best score
+  method = "ks_pval",      # Use Kolmogorow-Smirnow scoring function 
+  weights = NULL,          # If weights is provided, perform a weighted-KS test
+  alternative = "less",    # Use one-sided hypothesis testing
+  search_method = "both",  # Apply both forward and backward search
+  top_N = 1,               # Evaluate top 1 starting points for each search
+  max_size = 7,            # Maximum size a meta-feature matrix can extend to
+  do_plot = FALSE,         # Plot after finding the best features
+  best_score_only = FALSE  # Return meta-feature set, observed input scores and calculated best score
 )
-
 ```
 
 ### (v) Visualize Best Results
 
 ```{r}
-
 ## Fetch the meta-feature set corresponding to its best scores over top N features searches
 topn_best_meta <- CaDrA::topn_best(topn_result)
 
-# Visualize the best results with the meta-feature plot
+## Visualize the best results with the meta-feature plot
 CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
-
 ```
 
 ```{r}
-
-# Set seed for permutation
+## Set seed for permutation
 set.seed(123)
 
-# Run CaDrA Search
+## Run CaDrA Search
 perm_res <- CaDrA::CaDrA(
   FS = FS_filtered, 
   input_score = input_score, 
@@ -181,10 +173,8 @@ perm_res <- CaDrA::CaDrA(
   n_perm = 1000,
   ncores = 1
 )
-
-# Visualize permutation results
+## Visualize permutation results
 permutation_plot(perm_res = perm_res)
-
 ```
 
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
@@ -192,15 +182,14 @@ permutation_plot(perm_res = perm_res)
 #### (i) Pull pre-processed feature sets using our REST API
 
 ```{r}
-
 # Download feature sets and return a datalist with appropriate paths to dataset
 mydatafile <- CaDrA.shiny::download_feature_sets(
+  #feature_set = fs_list$feature_set_name,  # this would download all TCGA datasets
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
   include_input_score = TRUE,
   include_gene_expression = TRUE,
-  out_dir = "~/Github"
+  out_dir = file.path(Sys.getenv("HOME"),"Github") # specify your folder of choice here
 )
-
 ```
 
 ```{r}
