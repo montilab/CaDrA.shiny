@@ -33,19 +33,19 @@ An R Shiny Dashboard for Interacting with **[CaDrA](https://montilab.github.io/C
 
 ## Overview
 
-**CaDrA-shiny** is an interactive R Shiny dashboard that is developed to allow users to directly interacting with **CaDrA** package. **CaDrA** is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit [our Github repo](https://github.com/montilab/CaDrA) for more details). 
+**CaDrA-shiny** is an interactive R Shiny dashboard developed to allow users to directly interact with the **CaDrA** package. **CaDrA** is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit [our Github repo](https://github.com/montilab/CaDrA) for more details). 
 
 The CaDrA's shiny dashboard has two distinctive features:
 
-1. Run **CaDrA** search to identify candidate drivers of a molecular phenotype of interest
-2. Run **GSVA** to obtain relative enrichment scores for a given gene sets, then subsequently, these scores are used to run **CaDrA** search to look for complementary features that likely driving the input of molecular phenotype. 
+1. Run **CaDrA** search to identify candidate drivers of a molecular phenotype of interest.
+2. Run **GSVA** to estimate aggregate enrichment scores by projecting a (gene) expression dataset onto a given gene set or signature, usually representing a molecular phenotype. 
 
-Data visualization includes:
+Data visualizations include:
 
-- Meta-feature plot 
-- Kolmogorov Smirnov (KS) enrichment plot
-- Top N candidates overlapping heatmap
-- Permutation plot 
+- Meta-feature plot. 
+- Kolmogorov Smirnov (KS) enrichment plot.
+- Top N candidates overlapping heatmap.
+- Permutation plot.
 
 The **CaDrA.shiny** package is already containerized using **Docker** and can be deployed on any Cloud-based services.
 
@@ -75,21 +75,24 @@ library(hypeR)
 
 ### (3) Run CaDrA with dataset downloaded from CaDrA Portal
 
-#### (i) Retrieve a list of pre-processed feature sets available on the portal
+Here, we show how to run CaDrA on a dataset downloaded from the CaDrA Portal, using input_score's derived by applying GSVA to the downloaded gene expression dataset and the [Hallmarks](https://www.gsea-msigdb.org/gsea/msigdb/human/genesets.jsp?collection=H) genesets. We will run a CaDrA search to look for genetic drivers of the _"Epithelial Mesenchymal Transition"_ (EMT)-derived score.
+
+#### (i) Retrieve a list of descriptors of pre-processed feature sets available on the portal
 
 ```{r}
-# Get a list of feature sets available on CaDrA Portal
+## Get a list of descriptors of feature sets available on CaDrA Portal
 fs_list <- CaDrA.shiny::get_feature_set(order_by="asc")
 ```
 
 ```{r}
-# Look at the first 6 feature sets
+## Show the description of the first few feature sets
 knitr::kable(head(fs_list))
 ```
 
-#### (ii) Pull down datasets from the portal
+#### (ii) Retrieve datasets from the portal
 
 ```{r}
+## Retrieve the ACC dataset (both genetic feature set and gene expression)
 datasets <- CaDrA.shiny::pull_datasets(
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
   include_gene_expression = TRUE
@@ -97,13 +100,13 @@ datasets <- CaDrA.shiny::pull_datasets(
 datasets
 ```
 
-#### (iii) Run GSVA with downloaded datasets
+#### (iii) Run GSVA on the downloaded expression dataset
 
 ```{r}
 ## download MSigDB’s Hallmark genesets
 hallmarks <- msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
 
-# Compute the gsva scores of the first 10 features
+# Compute the gsva scores of the 50 hallmark genesets
 input_score_matrix <- GSVA::gsva(
   expr = SummarizedExperiment::assay(datasets$gene_expression), 
   gset.idx.list = hallmarks,
@@ -114,18 +117,17 @@ input_score_matrix <- GSVA::gsva(
 ```
 
 ```{r}
-## Look at the gsva scores of the first 10 features
+## Show few entries of the returned hallmark-by-sample matrix
 knitr::kable(input_score_matrix[1:5,1:5])
 ```
 
 #### (iv) Run candidate search with input scores obtained in (iii)
 
 ```{r}
-
 ## Samples to keep based on the overlap between the two inputs
-overlap <- intersect(colnames(input_score_matrix), colnames(datasets$feature_set))
-input_score <- input_score_matrix["Epithelial Mesenchymal Transition", overlap]
-FS <- datasets$feature_set[, overlap, drop=FALSE]
+sample_overlap <- intersect(colnames(input_score_matrix), colnames(datasets$feature_set))
+input_score <- input_score_matrix["Epithelial Mesenchymal Transition", sample_overlap]
+FS <- datasets$feature_set[, sample_overlap, drop = FALSE]
 
 ## Pre-filter FS based on occurrence frequency
 FS_filtered <- CaDrA::prefilter_data(
@@ -137,32 +139,35 @@ FS_filtered <- CaDrA::prefilter_data(
 topn_result <- CaDrA::candidate_search(
   FS = FS_filtered,
   input_score = input_score,
-  method = "ks_pval",      # Use Kolmogorow-Smirnow scoring function 
-  weights = NULL,          # If weights is provided, perform a weighted-KS test
+  method = "ks_pval",      # Use Kolmogorov-Smirnov scoring function 
+  weights = NULL,          # If weights are provided, perform a weighted-KS (gsea-like) test
   alternative = "less",    # Use one-sided hypothesis testing
   search_method = "both",  # Apply both forward and backward search
-  top_N = 1,               # Evaluate top 1 starting points for each search
-  max_size = 7,            # Maximum size a meta-feature matrix can extend to
+  top_N = 1,               # Perform only one search (starting from top scoring feature)
+  max_size = 7,            # Maximum number of features to include in the returned meta-feature
   do_plot = FALSE,         # Plot after finding the best features
-  best_score_only = FALSE  # Return meta-feature set, observed input scores and calculated best score
+  best_score_only = FALSE  # Return meta-feature set, observed input scores, and calculated best score
 )
 ```
 
 ### (v) Visualize Best Results
 
 ```{r}
-## Fetch the meta-feature set corresponding to its best scores over top N features searches
+## Fetch the meta-feature yielding the best score over N searches
+## .. (in this example, only N=1 search was performed)
 topn_best_meta <- CaDrA::topn_best(topn_result)
 
 ## Visualize the best results with the meta-feature plot
 CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
 ```
 
+
+### (vi) Compute permutation-based p-value
 ```{r}
-## Set seed for permutation
+## Permutation seed (for reproducible results)
 set.seed(123)
 
-## Run CaDrA Search
+## Run CaDrA Search 1000 times on permuted input scores to estimate the null
 perm_res <- CaDrA::CaDrA(
   FS = FS_filtered, 
   input_score = input_score, 
@@ -178,6 +183,8 @@ permutation_plot(perm_res = perm_res)
 ```
 
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
+
+Here, we show how to launch a local instance of the CaDrA Portal, which will be populated with a user-selected set of datasets. In the example, a single dataset (ACC) will be uploaded to the portal.
 
 #### (i) Pull pre-processed feature sets using our REST API
 
@@ -197,13 +204,13 @@ mydatafile <- CaDrA.shiny::download_feature_sets(
 knitr::kable(head(mydatafile))
 ```
 
-#### (iii) Launch CaDrA's app with the downloaded dataset
+#### (iii) Launch CaDrA's Shiny app with the downloaded dataset
 
 ```r
-# Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)
+## Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)
 app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
 
-# Launch app on localhost with port 3838
+## Launch app on localhost with port 3838
 shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
