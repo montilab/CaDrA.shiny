@@ -5,11 +5,32 @@ output: rmarkdown::github_document
 <!-- README.md is generated from README.Rmd. Please edit this file -->
 
 ```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse=FALSE, comment="")
+knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse=FALSE, comment="", warning=FALSE)
+
+# Install BiocManager
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
+# Install CaDrA 
+BiocManager::install("CaDrA")
+
+# Install GSVA 
+BiocManager::install("GSVA")
+
+# Install hypeR
+library(devtools)
+devtools::install_github("montilab/hypeR")
+
+# Install knitr
+install.packages("knitr", repos="http://cran.us.r-project.org")
+
+# Load CaDrA.shiny 
+load_all()
 
 # Load R packages
-library(devtools)
-load_all()
 library(knitr)
 library(GSVA)
 library(CaDrA)
@@ -27,7 +48,7 @@ library(hypeR)
 
 An R Shiny Dashboard for Interacting with **[CaDrA](https://montilab.github.io/CaDrA/)** Package 
 
-### **CaDrA: [https://montilab.github.io/CaDrA/](https://montilab.github.io/CaDrA/)**
+### **CaDrA Package: [https://montilab.github.io/CaDrA/](https://montilab.github.io/CaDrA/)**
 
 ### **Web Portal: [https://cadra.bu.edu/](https://cadra.bu.edu/)**
 
@@ -59,8 +80,28 @@ The **CaDrA.shiny** package is already containerized using **Docker** and can be
 ### (1) Installation
 
 ```r
+# Install BiocManager
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
+# Install CaDrA 
+BiocManager::install("CaDrA")
+
+# Install GSVA 
+BiocManager::install("GSVA")
+
+# Install hypeR
 library(devtools)
+devtools::install_github("montilab/hypeR")
+
+# Install CaDrA.shiny
 devtools::install_github("montilab/CaDrA.shiny")
+
+# Install knitr
+install.packages("knitr", repos="http://cran.us.r-project.org")
 ```
 
 ### (2) Load packages
@@ -104,7 +145,7 @@ datasets
 
 ```{r}
 ## download MSigDB’s Hallmark genesets
-hallmarks <- msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
+hallmarks <- hypeR::msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
 
 # Compute the gsva scores of the 50 hallmark genesets
 input_score_matrix <- GSVA::gsva(
@@ -118,7 +159,7 @@ input_score_matrix <- GSVA::gsva(
 
 ```{r}
 ## Show few entries of the returned hallmark-by-sample matrix
-knitr::kable(input_score_matrix[1:5,1:5])
+knitr::kable(input_score_matrix[1:5, 1:5])
 ```
 
 #### (iv) Run candidate search with input scores obtained in (iii)
@@ -135,6 +176,7 @@ FS_filtered <- CaDrA::prefilter_data(
   max_cutoff = 0.6,  # max event frequency (60%)
   min_cutoff = 0.03  # min event frequency (3%)
 )  
+
 ## Run candidate search
 topn_result <- CaDrA::candidate_search(
   FS = FS_filtered,
@@ -167,7 +209,7 @@ CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
 ## Permutation seed (for reproducible results)
 set.seed(123)
 
-## Run CaDrA Search 1000 times on permuted input scores to estimate the null
+## Run CaDrA Search 1000 times on permuted input scores to estimate the null distribution
 perm_res <- CaDrA::CaDrA(
   FS = FS_filtered, 
   input_score = input_score, 
@@ -178,6 +220,7 @@ perm_res <- CaDrA::CaDrA(
   n_perm = 1000,
   ncores = 1
 )
+
 ## Visualize permutation results
 permutation_plot(perm_res = perm_res)
 ```

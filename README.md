@@ -15,7 +15,7 @@ commit](https://img.shields.io/github/last-commit/montilab/cadra.shiny)
 An R Shiny Dashboard for Interacting with
 **[CaDrA](https://montilab.github.io/CaDrA/)** Package
 
-### **CaDrA: <https://montilab.github.io/CaDrA/>**
+### **CaDrA Package: <https://montilab.github.io/CaDrA/>**
 
 ### **Web Portal: <https://cadra.bu.edu/>**
 
@@ -57,8 +57,28 @@ and can be deployed on any Cloud-based services.
 ### (1) Installation
 
 ``` r
+# Install BiocManager
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
+# Install CaDrA 
+BiocManager::install("CaDrA")
+
+# Install GSVA 
+BiocManager::install("GSVA")
+
+# Install hypeR
 library(devtools)
+devtools::install_github("montilab/hypeR")
+
+# Install CaDrA.shiny
 devtools::install_github("montilab/CaDrA.shiny")
+
+# Install knitr
+install.packages("knitr", repos="http://cran.us.r-project.org")
 ```
 
 ### (2) Load packages
@@ -192,7 +212,7 @@ datasets
 
 ``` r
 ## download MSigDB’s Hallmark genesets
-hallmarks <- msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
+hallmarks <- hypeR::msigdb_gsets("Homo sapiens", "H", clean=TRUE)$genesets # returns 50 genesets 
 
 # Compute the gsva scores of the 50 hallmark genesets
 input_score_matrix <- GSVA::gsva(
@@ -206,7 +226,7 @@ input_score_matrix <- GSVA::gsva(
 
 ``` r
 ## Show few entries of the returned hallmark-by-sample matrix
-knitr::kable(input_score_matrix[1:5,1:5])
+knitr::kable(input_score_matrix[1:5, 1:5])
 ```
 
 <table>
@@ -349,6 +369,7 @@ FS_filtered <- CaDrA::prefilter_data(
   max_cutoff = 0.6,  # max event frequency (60%)
   min_cutoff = 0.03  # min event frequency (3%)
 )  
+
 ## Run candidate search
 topn_result <- CaDrA::candidate_search(
   FS = FS_filtered,
@@ -383,7 +404,7 @@ CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
 ## Permutation seed (for reproducible results)
 set.seed(123)
 
-## Run CaDrA Search 1000 times on permuted input scores to estimate the null
+## Run CaDrA Search 1000 times on permuted input scores to estimate the null distribution
 perm_res <- CaDrA::CaDrA(
   FS = FS_filtered, 
   input_score = input_score, 
@@ -394,6 +415,7 @@ perm_res <- CaDrA::CaDrA(
   n_perm = 1000,
   ncores = 1
 )
+
 ## Visualize permutation results
 permutation_plot(perm_res = perm_res)
 ```
@@ -453,19 +475,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -473,19 +495,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_TNFA_SIGNALING_VIA_NFKB
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -493,19 +515,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_HYPOXIA
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -513,19 +535,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_CHOLESTEROL_HOMEOSTASIS
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -533,19 +555,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_MITOTIC_SPINDLE
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -553,19 +575,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_WNT_BETA_CATENIN_SIGNALING
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/smonti/Github/download-fs-2023-10-11/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-18/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>
