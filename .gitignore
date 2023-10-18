@@ -1,22 +1,19 @@
-*.DS_Store
+.DS_Store
 .git
-/*.project
+.project
 
 # History files
-/*.Rhistory
-/*.Rapp.history
+.Rhistory
+.Rapp.history
 
 # Session Data files
-/*.RData
+.RData
 
 # User-specific files
-/*.Ruserdata
+.Ruserdata
 
-# R Environment Variables
-/*.Renviron
-/*.Rproj.user
-/*.Rproj
-
+# Example code in package build process
+*-Ex.R
 
 # Output files from R CMD build
 /*.tar.gz
@@ -24,8 +21,11 @@
 # Output files from R CMD check
 /*.Rcheck/
 
+# RStudio files
+.Rproj.user/
+
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
-/*.httr-oauth
+.httr-oauth
 
 # knitr and R markdown default cache directories
 *_cache/
@@ -35,12 +35,19 @@
 *.utf8.md
 *.knit.md
 
+# R Environment Variables
+.Renviron
 .Rproj.user
+*.Rproj
 
-# Ignore docker-compose files
-docker-compose-montilab.yml
-docker-compose-local.yml
-docker-compose-nerc.yml
+# Unknown files
+.nfs*
+
+# c++
+*.o
+*.so
+
+# docker-compose files
 docker-compose-*.yml
 
 
