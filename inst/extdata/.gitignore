@@ -1,9 +1,0 @@
-
-# Exclude files in extdata directory
-/*
-!.gitignore
-!datalist.csv
-!/feature_set
-!/gene_expression
-!/input_score
-

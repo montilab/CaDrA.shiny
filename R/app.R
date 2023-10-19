@@ -159,10 +159,11 @@ get_extdata <- function(datalist=NULL){
   cadra_feature_set_path <- cadra_fs_choices$feature_set_path
   names(cadra_feature_set_path) <- cadra_fs_choices$feature_set_name
 
-  gsva_fs_choices <- extdata %>% dplyr::distinct(feature_set_name, .keep_all=TRUE) %>% dplyr::filter(gene_expression_path != "" & !is.na(gene_expression_path))
-  gsva_feature_set_path <- gsva_fs_choices$feature_set_path
-  names(gsva_feature_set_path) <- gsva_fs_choices$feature_set_name
-
+  gsva_gs_choices <- extdata %>% dplyr::distinct(gene_expression_name, .keep_all=TRUE) %>% 
+    dplyr::filter(gene_expression_path != "" & !is.na(gene_expression_path))
+  gsva_gene_expression_path <- gsva_gs_choices$gene_expression_path
+  names(gsva_gene_expression_path) <- gsva_gs_choices$gene_expression_name
+  
   ns <- shiny::NS(id)
 
   fluidRow(
@@ -391,7 +392,7 @@ get_extdata <- function(datalist=NULL){
                 '\'Feature Set\`. Features with fewer events than the ',
                 'specified number will be removed.\n\nNOTE: \'Min event ',
                 'frequency\' must be >= 5.\">?</a>')),
-              value = 30,
+              value = 5,
               min = 5,
               max = Inf,
               step = 1,
@@ -719,25 +720,24 @@ get_extdata <- function(datalist=NULL){
 
             br(),
 
-            h4("Gene Expression:"),
-
-            selectInput(
+            selectizeInput(
               inputId = ns("gsva_gene_expression"),
-              label = NULL,
-              choices = c("Please select an option below" = ""),
+              label = "Gene Expression",
+              choices = c(gsva_gene_expression_path, "Import Data"),
               width = "600px"
             ),
 
             conditionalPanel(
-              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_gene_expression")),
-
+              condition = sprintf("input['%s'] == 'Import Data'", 
+                                  ns("gsva_gene_expression")),
+              
               fileInput(
                 inputId = ns("gsva_gene_expression_file"),
                 label = strong(span(style = "color: red;", "*"),
                                "Gene expression file:"),
                 width = "600px"
               ),
-
+              
               radioButtons(
                 inputId = ns("gsva_gene_expression_file_type"),
                 label = HTML(paste0(
@@ -760,17 +760,16 @@ get_extdata <- function(datalist=NULL){
             
             br(),
             
-            h4("Feature Set:"),
-            
             selectizeInput(
               inputId = ns("gsva_feature_set"),
-              label = NULL,
-              choices = c(gsva_feature_set_path, "Import Data"),
+              label = "Associated Feature Set",
+              choices = "Import Data",
               width = "600px"
             ),
-            
+          
             conditionalPanel(
-              condition = sprintf("input['%s'] == 'Import Data'", ns("gsva_feature_set")),
+              condition = sprintf("input['%s'] == 'Import Data'", 
+                                  ns("gsva_feature_set")),
               
               fileInput(
                 inputId = ns("gsva_feature_set_file"),
@@ -800,8 +799,6 @@ get_extdata <- function(datalist=NULL){
             ),
             
             br(),
-
-            h4("Geneset:"),
 
             fileInput(
               inputId = ns("gsva_geneset_file"),
@@ -1110,6 +1107,7 @@ CaDrA_Server <- function(id, datalist=NULL){
       # Prevent Shiny from grayed out
       autoInvalidate <- reactiveTimer(10000)
       
+      # Observe the auto invalidate timer
       observe({
         autoInvalidate()
         cat(".")
@@ -1141,21 +1139,15 @@ CaDrA_Server <- function(id, datalist=NULL){
           names(input_score_selection) <- input_score_data$input_score_name
 
           if(all(is.na(input_score_selection)) || all(input_score_selection == "")){
-            updateSelectInput(session, inputId = "input_score", choices = "Import Data")
+            updateSelectizeInput(session, inputId = "input_score", choices = "Import Data")
           }else{
             input_score_selection <- input_score_selection[which(!is.na(input_score_selection) & input_score_selection != "")]
             updateSelectizeInput(session, inputId = "input_score", choices = c(input_score_selection, "Import Data"), selected = input_score_selection[1])
           }
 
-          if(selected_fs == "TCGA BrCa SCNAs + Mutations"){
-            updateNumericInput(session, inputId = "min_cutoff", value = 30)
-          }else {
-            updateNumericInput(session, inputId = "min_cutoff", value = 5)
-          }
-
         }else{
 
-          updateSelectInput(session, inputId = "input_score", choices = "Import Data")
+          updateSelectizeInput(session, inputId = "input_score", choices = "Import Data")
 
         }
 
@@ -1164,32 +1156,66 @@ CaDrA_Server <- function(id, datalist=NULL){
       ## Updates feature set and gene expression set choices for running GSVA analysis ####
       observeEvent({
         input$gsva_feature_set
-        extdata()
       }, {
-
+        
+        ns <- session$ns
+        
         selected_fs <- isolate({ input$gsva_feature_set })
-
+        
         if(selected_fs != "Import Data"){
-
-          gene_expression_data <- extdata() %>% dplyr::filter(feature_set_path == selected_fs) %>% dplyr::distinct(gene_expression_path, .keep_all=TRUE)
-          gene_expression_selection <- gene_expression_data$gene_expression_path
-          names(gene_expression_selection) <- gene_expression_data$gene_expression_name
-
-          if(all(is.na(gene_expression_selection)) || all(gene_expression_selection == "")){
-            updateSelectInput(session, inputId = "gsva_gene_expression", choices = "Import Data")
-          }else{
-            gene_expression_selection <- gene_expression_selection[which(!is.na(gene_expression_selection) & gene_expression_selection != "")]
-            updateSelectInput(session, inputId = "gsva_gene_expression", choices = c(gene_expression_selection, "Import Data"), selected = gene_expression_selection[1])
-          }
-
+          
+          shinyjs::hide(id = "gsva_feature_set_file")
+          shinyjs::hide(id = "gsva_feature_set_file_type")
+          
         }else{
-
-          updateSelectInput(session, inputId = "gsva_gene_expression", choices = "Import Data")
-
+          
+          shinyjs::show(id = "gsva_feature_set_file")
+          shinyjs::show(id = "gsva_feature_set_file_type")
+          
         }
-
+        
       })
+      
+      
+      ## Updates feature set and gene expression set choices for running GSVA analysis ####
+      observeEvent({
+        input$gsva_gene_expression
+      }, {
+        
+        ns <- session$ns
+        
+        selected_fs <- isolate({ input$gsva_gene_expression })
+        
+        if(selected_fs != "Import Data"){
+          
+          feature_set_data <- extdata() %>% 
+            dplyr::filter(gene_expression_path == selected_fs) %>% 
+            dplyr::distinct(feature_set_path, .keep_all=TRUE)
+          
+          feature_set_selection <- feature_set_data$feature_set_path
+          names(feature_set_selection) <- feature_set_data$feature_set_name
+          
+          if(all(is.na(feature_set_selection)) || all(feature_set_selection == "")){
+            updateSelectizeInput(session, inputId = "gsva_feature_set", choices = "Import Data")
+          }else{
+            feature_set_selection <- feature_set_selection[which(!is.na(feature_set_selection) & feature_set_selection != "")]
+            updateSelectizeInput(session, inputId = "gsva_feature_set", choices = c(feature_set_selection, "Import Data"), selected = feature_set_selection[1])
+          }
+          
+          shinyjs::hide(id = "gsva_gene_expression_file")
+          shinyjs::hide(id = "gsva_gene_expression_file_type")
+          
+        }else{
+          
+          updateSelectizeInput(session, inputId = "gsva_feature_set", choices = "Import Data")
 
+          shinyjs::show(id = "gsva_gene_expression_file")
+          shinyjs::show(id = "gsva_gene_expression_file_type")
+          
+        }
+        
+      })
+      
       ## Updates feature set, input score, and gene expression set choices for downloading dataset ####
       observeEvent({
         input$download_fs_options
@@ -1237,7 +1263,7 @@ CaDrA_Server <- function(id, datalist=NULL){
           selected_fs <- isolate({ input$download_fs_options })
           type <- isolate({ input$download_fs_type })
           filename <- extdata()$feature_set_name[which(extdata()$feature_set_path == selected_fs)] %>% unique()
-          paste0(filename, "rds")
+          paste0(filename, ".rds")
         },
 
         content = function(file) {
@@ -1474,23 +1500,33 @@ CaDrA_Server <- function(id, datalist=NULL){
           cadra_error_message("Please specify a Max Event Frequency between 1 and 90 \n")
           return(NULL)
         }else{
-          max_cutoff <- max_event_cutoff/100
+          max_cutoff <- round(max_event_cutoff/100, 2)
         }
 
         ## Keep a record of the number of features in original FS
         n_orig_features <- nrow(FS)
+        
+        print(min_cutoff)
+        print(max_cutoff)
 
         ## Pre-filter FS based on occurrence frequency ####
         FS <- tryCatch({
           CaDrA::prefilter_data(
             FS = FS,
-            max_cutoff = max_cutoff,
-            min_cutoff = min_cutoff
+            min_cutoff = min_cutoff,
+            max_cutoff = max_cutoff
           )
         }, error = function(e){
           cadra_error_message(e)
           return(NULL)
         })
+        
+        ## Samples to keep based on the overlap between the two inputs
+        sample_overlap <- intersect(names(input_score), colnames(FS))
+        input_score <- input_score[sample_overlap]
+        FS <- FS[, sample_overlap, drop = FALSE]
+        
+        print(FS)
         
         # Retrieve the binary feature matrix
         if(is(FS, "SummarizedExperiment")){
@@ -1808,7 +1844,7 @@ CaDrA_Server <- function(id, datalist=NULL){
             ns <- session$ns
             result <- parallel::mccollect(rVal$candidate_search_process, wait = FALSE)
             
-            #print(result)
+            print(result)
 
             if(!is.null(result)) {
               rVal$candidate_search_result <- result[[1]]
@@ -2778,7 +2814,7 @@ CaDrA_Server <- function(id, datalist=NULL){
               dir.create(fs_dir)
             }
             
-            selected_score_path <- file.path(fs_dir, paste0(selected_geneset, "rds"))
+            selected_score_path <- file.path(fs_dir, paste0(selected_geneset, ".rds"))
             
             new_scores <- selected_geneset_scores[1,] %>% unlist() %>%  as.vector()
             names(new_scores) <- colnames(selected_geneset_scores)

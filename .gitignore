@@ -36,9 +36,8 @@
 *.knit.md
 
 # R Environment Variables
-.Renviron
-.Rproj.user
 *.Rproj
+.Renviron
 
 # Unknown files
 .nfs*
