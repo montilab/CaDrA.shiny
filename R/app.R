@@ -2781,7 +2781,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         
         if(length(row) > 0){
           
-          score_dir <- file.path(system.file(package = "CaDrA.shiny"), "extdata", "input_score")
+          score_dir <- file.path(dirname(datalist), "GSVA")
           
           if(!dir.exists(score_dir)){
             dir.create(score_dir)
