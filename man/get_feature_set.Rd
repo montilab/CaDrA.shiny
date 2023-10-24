@@ -4,12 +4,10 @@
 \alias{get_feature_set}
 \title{Get a list of pre-processed feature sets available on CaDrA API Portal}
 \usage{
-get_feature_set(collection = "TCGA", order_by = "asc")
+get_feature_set(order_by = "asc")
 }
 \arguments{
-\item{collection}{a specific collection of feature sets on CaDrA portal. Default is TCGA.}
-
-\item{order_by}{sort results by ascending or descending order}
+\item{order_by}{sort results by ascending (asc) or descending order (desc)}
 }
 \value{
 a data frame with two columns: description, feature_set_name
@@ -21,7 +19,6 @@ Get a list of pre-processed feature sets available on CaDrA API Portal
 
 # Retrieve a list of feature sets available from CaDrA Portal
 fs_list <- CaDrA.shiny::get_feature_set(
-  collection = "TCGA",
   order_by = "asc"
 )
 

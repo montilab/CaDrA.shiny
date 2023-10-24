@@ -1,12 +1,33 @@
 
-# R packages ####
-library(dplyr)
+# Load R packages ####
 library(plumber)
+library(tidyverse)
 library(jsonlite)
 
 # Must load CaDrA.shiny to access dataset
 library(devtools)
-load_all(".")
+load_all()
+
+# Get location of datalist file
+# Required column names in datalist:
+# - feature_set_name
+# - feature_set_path
+# - input_score_name, 
+# - input_score_path
+# - gene_expression_name
+# - gene_expression_path
+datalist <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
+
+# If file exists, use the file. Otherwise, use datasets provided with the package.
+if(!file.exists(datalist)){
+  datalist <- NULL
+}
+
+# Convert datalist file into a data frame
+datalist_df <- CaDrA.shiny:::get_extdata(datalist=datalist)
+
+# Required column names for datalist
+required_colnames <- CaDrA.shiny:::datalist_colnames
 
 # Increase the memory limit for reading and downloading data from API
 library(unix)
@@ -15,7 +36,7 @@ unix::rlimit_as(1e12, 1e12)
 # API title and description ####
 
 #* @apiTitle Plumber Example API
-#* @apiDescription This is a server for generating NGS special report.
+#* @apiDescription This is a server for retrieving pre-proccessed datasets to run CaDrA
 
 # Set-up header access ####
 
@@ -80,18 +101,10 @@ page_not_found <- function(status, message){
 #' @get /get_feature_set
 get_feature_set <- function(res, req){
   
-  # Get the path of datalist file which it contains all of the feature sets, input scores,
-  # and gene expression sets that are available on the server
-  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
-  
-  # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
-  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
-    dplyr::select(description, feature_set_name)
-  
   # Validate results
-  if(nrow(fs_df) == 0){
+  if(nrow(datalist_df) == 0){
     
-    error_message <- sprintf("There are currently no feature sets avaliable on our portal.")
+    error_message <- sprintf("Currently, there are no feature sets avaliable on our portal.")
     
     ## Initialize the serializers
     res$serializer <- serializers[["html"]]
@@ -100,8 +113,9 @@ get_feature_set <- function(res, req){
     
   }else{
     
-    fs_df <- fs_df %>% 
-      distinct(feature_set_name, .keep_all = TRUE)
+    fs_df <- datalist_df %>% 
+      dplyr::select(tidyselect::starts_with("description"), tidyselect::starts_with("collection"), feature_set_name) %>% 
+      dplyr::distinct(feature_set_name, .keep_all = TRUE)
     
     return(jsonlite::toJSON(fs_df, pretty=TRUE))
     
@@ -119,6 +133,7 @@ get_input_score <- function(res, req, feature_set){
   
   # check parameters
   if(base::missing(feature_set)){
+    
     missing_params <- c(base::missing(feature_set))
     error_message <- sprintf("Missing required parameter: %s", paste(params[which(missing_params==TRUE)], collapse=", "))
     
@@ -126,19 +141,15 @@ get_input_score <- function(res, req, feature_set){
     res$serializer <- serializers[["html"]]
     res$status <- 400
     res$body <- page_not_found(status="400", message=error_message)
+    
   }
   
   # Validate parameters
   feature_set <- trimws(feature_set)
   
-  # Get the path of datalist file which it contains all of the feature sets, input scores,
-  # and gene expression sets that are available on the server
-  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
-  
   # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
-  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
-    dplyr::filter(feature_set_name %in% feature_set) %>% 
-    dplyr::select(feature_set_name, input_score_name)
+  fs_df <- datalist_df %>% 
+    dplyr::filter(feature_set_name %in% feature_set)
   
   # Validate results
   if(nrow(fs_df) == 0){
@@ -152,10 +163,23 @@ get_input_score <- function(res, req, feature_set){
     
   }else{
     
-    fs_df <- fs_df %>% 
+    input_score_df <- fs_df %>%
       dplyr::distinct(feature_set_name, input_score_name, .keep_all = TRUE)
     
-    return(jsonlite::toJSON(fs_df, pretty=TRUE))
+    if(nrow(input_score_df) == 0){
+      
+      error_message <- sprintf("Feature set, %s, does not have any associated input scores to download from our portal.", feature_set)
+      
+      ## Initialize the serializers
+      res$serializer <- serializers[["html"]]
+      res$status <- 400
+      res$body <- page_not_found(status="400", message=error_message)
+      
+    }else{
+      
+      return(jsonlite::toJSON(input_score_df, pretty=TRUE))
+      
+    }
     
   }
   
@@ -171,6 +195,7 @@ get_gene_expression <- function(res, req, feature_set){
   
   # check parameters
   if(base::missing(feature_set)){
+    
     missing_params <- c(base::missing(feature_set))
     error_message <- sprintf("Missing required parameter: %s", paste(params[which(missing_params==TRUE)], collapse=", "))
     
@@ -178,20 +203,16 @@ get_gene_expression <- function(res, req, feature_set){
     res$serializer <- serializers[["html"]]
     res$status <- 400
     res$body <- page_not_found(status="400", message=error_message)
+    
   }
   
   # Validate parameters
   feature_set <- trimws(feature_set)
   
-  # Get the path of datalist file which it contains all of the feature sets, input scores,
-  # and gene expression sets that are available on the server
-  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
-  
   # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
-  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
-    dplyr::filter(feature_set_name %in% feature_set)%>% 
-    dplyr::select(feature_set_name, gene_expression_name)
-  
+  fs_df <- datalist_df %>% 
+    dplyr::filter(feature_set_name %in% feature_set)
+
   # Validate results
   if(nrow(fs_df) == 0){
     
@@ -204,11 +225,24 @@ get_gene_expression <- function(res, req, feature_set){
     
   }else{
     
-    fs_df <- fs_df %>% 
-      dplyr::distinct(feature_set_name, gene_expression_name, .keep_all = TRUE)
+    gene_expression_df <- fs_df %>%
+      dplyr::distinct(feature_set_name, gene_expression_name)
     
-    return(jsonlite::toJSON(fs_df, pretty=TRUE))
-    
+    if(nrow(gene_expression_df) == 0){
+      
+      error_message <- sprintf("Feature set, %s, does not have any associated gene expression sets to download from our portal.", feature_set)
+      
+      ## Initialize the serializers
+      res$serializer <- serializers[["html"]]
+      res$status <- 400
+      res$body <- page_not_found(status="400", message=error_message)
+      
+    }else{
+      
+      return(jsonlite::toJSON(gene_expression_df, pretty=TRUE))
+      
+    }  
+  
   }
   
 }
@@ -225,6 +259,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
   
   # check parameters
   if(base::missing(feature_set) | base::missing(include_input_score) | base::missing(include_gene_expression)){
+    
     missing_params <- c(base::missing(feature_set), base::missing(include_input_score), base::missing(include_gene_expression))
     error_message <- sprintf("Missing required parameter(s): %s", paste(params[which(missing_params==TRUE)], collapse=", "))
     
@@ -232,6 +267,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     res$serializer <- serializers[["html"]]
     res$status <- 500
     res$body <- page_not_found(status="500", message=error_message)
+    
   }
   
   # Validate parameters
@@ -239,15 +275,10 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
   include_input_score <- ifelse(include_input_score==TRUE, 1, 0)
   include_gene_expression <- ifelse(include_gene_expression==TRUE, 1, 0)
   
-  # Get the path of datalist file which it contains all of the feature sets, input scores,
-  # and gene expression sets that are available on the server
-  fs_datalist_path <- system.file("extdata/datalist.csv", package="CaDrA.shiny")
-  
   # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
-  fs_df <- read.csv(fs_datalist_path, header=TRUE) %>% 
-    dplyr::filter(feature_set_name %in% feature_set) %>% 
-    dplyr::distinct(feature_set_name, input_score_name, gene_expression_name, .keep_all = TRUE)
-  
+  fs_df <- datalist_df %>% 
+    dplyr::filter(feature_set_name %in% feature_set)
+
   # Validate results
   if(nrow(fs_df) == 0){
     
@@ -285,89 +316,116 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     # Create a directory
     zip_file_dir <- file.path(tmpdir, file_name)
     dir.create(zip_file_dir, showWarnings=FALSE, recursive=TRUE)
-  
+    
     # Retrieve feature set name and path
-    feature_set_name = unique(fs_df$feature_set_name)
-    feature_set_path = unique(fs_df$feature_set_path)
+    feature_set_name <- unique(fs_df$feature_set_name)
+    feature_set_path <- unique(fs_df$feature_set_path)
     
-    # Create a directory
-    fs_file_dir <- file.path(zip_file_dir, feature_set_name, "feature_set")
-    dir.create(fs_file_dir, showWarnings=FALSE, recursive=TRUE)
+    # Create a download data frame
+    download_df <- NULL
     
-    # Create a file path
-    file_path <- file.path(fs_file_dir, paste0(feature_set_name, ".RDS"))
-    
-    # Copy FS to zip directory
-    file.copy(from=feature_set_path, to=file_path, overwrite=TRUE, recursive=FALSE)
-    
-    # Read in feature sets 
-    for(f in 1:nrow(fs_df)){
+    for(f in seq_along(feature_set_name)){
       #f=1;
+      fs_name <- feature_set_name[f]
+      
+      # Create feature set directory path
+      fs_file_dir <- file.path(zip_file_dir, feature_set_name[f], "feature_set")
+      
+      # Create feature set directory
+      dir.create(path=fs_file_dir, showWarnings=FALSE, recursive=TRUE)
+      
+      # Create feature set file name
+      file_path <- file.path(fs_file_dir, paste0(feature_set_name[f], ".RDS"))
+      
+      # Copy feature set to zip directory
+      file.copy(from=feature_set_path[f], to=file_path, overwrite=TRUE, recursive=FALSE)
+      
       # Whether to include input scores
       if(include_input_score == TRUE){
-  
-        # Create a directory
-        scores_file_dir <- file.path(zip_file_dir, feature_set_name, "input_score")
-        dir.create(scores_file_dir, showWarnings=FALSE, recursive=TRUE)        
         
-        input_score_name = fs_df$input_score_name[f]
-        input_score_path = fs_df$input_score_path[f]
+        input_score_df <- fs_df %>% 
+          dplyr::filter(feature_set_name == fs_name) %>% 
+          dplyr::distinct(feature_set_name, input_score_name, .keep_all = TRUE) %>% 
+          dplyr::select(required_colnames)
         
-        if(input_score_name != "" && !is.na(input_score_name) && !is.null(input_score_name)){
+        if(nrow(input_score_df) > 0){
           
-          # Create a file path
-          file_path <- file.path(scores_file_dir, paste0(input_score_name, ".RDS"))
+          for(g in 1:nrow(input_score_df)){
+            #g=1; 
+            # Create a directory
+            scores_file_dir <- file.path(zip_file_dir, fs_name, "input_score")
+            dir.create(scores_file_dir, showWarnings=FALSE, recursive=TRUE)        
+            
+            score_name = input_score_df$input_score_name[g]
+            score_path = input_score_df$input_score_path[g]
+            
+            # Create a file path
+            file_path <- file.path(scores_file_dir, paste0(score_name, ".RDS"))
+            
+            # Copy input score to zip directory
+            file.copy(from=score_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+          }
           
-          # Copy FS to zip directory
-          file.copy(from=input_score_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+          download_df <- download_df %>% rbind(input_score_df)
           
         }
       }
       
       # Whether to include gene expression
       if(include_gene_expression == TRUE){
+        
+        gene_expression_df <- fs_df %>% 
+          dplyr::filter(feature_set_name == fs_name) %>% 
+          dplyr::distinct(feature_set_name, gene_expression_name, .keep_all = TRUE) %>% 
+          dplyr::select(required_colnames)
+        
+        if(nrow(gene_expression_df) > 0){
+          
+          for(h in 1:nrow(gene_expression_df)){
+            #h=1;
+            # Create a directory
+            ge_file_dir <- file.path(zip_file_dir, fs_name, "gene_expression")
+            dir.create(ge_file_dir, showWarnings=FALSE, recursive=TRUE)        
+            
+            ge_name = gene_expression_df$gene_expression_name[h]
+            ge_path = gene_expression_df$gene_expression_path[h]
+            
+            # Create a file path
+            file_path <- file.path(ge_file_dir, paste0(ge_name, ".RDS"))
+            
+            # Copy gene expression to zip directory
+            file.copy(from=ge_path, to=file_path, overwrite=TRUE, recursive=FALSE)
 
-        # Create a directory
-        ge_file_dir <- file.path(zip_file_dir, feature_set_name, "gene_expression")
-        dir.create(ge_file_dir, showWarnings=FALSE, recursive=TRUE)        
-        
-        gene_expression_name = fs_df$gene_expression_name[f]
-        gene_expression_path = fs_df$gene_expression_path[f]
-        
-        if(gene_expression_name != "" && !is.na(gene_expression_name) && !is.null(gene_expression_name)){
+          }
           
-          # Create a file path
-          file_path <- file.path(ge_file_dir, paste0(gene_expression_name, ".RDS"))
-          
-          # Copy FS to zip directory
-          file.copy(from=gene_expression_path, to=file_path, overwrite=TRUE, recursive=FALSE)
+          download_df <- download_df %>% rbind(gene_expression_df)
           
         }
       }
-    }
-    
-    # Save data information
-    fs_df <- fs_df %>% 
-      dplyr::transmute(
-        feature_set_name = feature_set_name,
-        feature_set_path = basename(feature_set_path), 
-        input_score_name = sapply(seq_along(input_score_name), function(s){ ifelse(include_input_score==TRUE, input_score_name[s], "") }),
-        input_score_path = sapply(seq_along(input_score_path), function(s){ ifelse(include_input_score==TRUE, basename(input_score_path[s]), "") }),
-        gene_expression_name = sapply(seq_along(gene_expression_name), function(s){ ifelse(include_gene_expression==TRUE, gene_expression_name[s], "") }),
-        gene_expression_path = sapply(seq_along(gene_expression_path), function(s){ ifelse(include_gene_expression==TRUE, basename(gene_expression_path[s]), "") }),
-      )
-    
-    saveRDS(fs_df, file.path(zip_file_dir, feature_set_name, "datalist.RDS"))
+      
+      # Save data information
+      download_df <- download_df %>% 
+        dplyr::transmute(
+          feature_set_name = feature_set_name,
+          feature_set_path = basename(feature_set_path), 
+          input_score_name = sapply(seq_along(input_score_name), function(s){ ifelse(include_input_score==TRUE, input_score_name[s], "") }),
+          input_score_path = sapply(seq_along(input_score_path), function(s){ ifelse(include_input_score==TRUE, basename(input_score_path[s]), "") }),
+          gene_expression_name = sapply(seq_along(gene_expression_name), function(s){ ifelse(include_gene_expression==TRUE, gene_expression_name[s], "") }),
+          gene_expression_path = sapply(seq_along(gene_expression_path), function(s){ ifelse(include_gene_expression==TRUE, basename(gene_expression_path[s]), "") }),
+        )
+      
+      saveRDS(download_df, file.path(zip_file_dir, fs_name, "datalist.RDS"))
+      
+    }  
     
     zip_file <- file.path(tmpdir, zip_file_name)
     
     system(sprintf('bash -c "cd %s && zip -r %s %s"', tmpdir, zip_file_name, file_name))    
-           
+    
     return(readBin(zip_file, what="raw", n=file.info(zip_file)$size))
-
-  }  
-}
-
+    
+  }
+}  
 
 
 

@@ -88,7 +88,7 @@ associated with that feature set</p>
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pull_datasets</span><span class="op">(</span><span class="va">feature_set</span>, include_gene_expression <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">pull_datasets</span><span class="op">(</span><span class="va">feature_set</span>, include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -108,24 +108,24 @@ Default is TRUE.</p></dd>
     <h2>Value</h2>
     
 
-<p>a list of feature set and gene expression set if 
+<p>a list of feature set and gene expression set by setting 
 include_gene_expression = TRUE</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Load R library</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Retrieve a list of feature sets available from CaDrA Portal</span></span></span>
 <span class="r-in"><span><span class="va">fs_list</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="get_feature_set.html">get_feature_set</a></span><span class="op">(</span>order_by <span class="op">=</span> <span class="st">"asc"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># Download feature sets and return a datalist with appropriate paths to its dataset</span></span></span>
+<span class="r-in"><span><span class="co"># Retrieve the first feature set from fs_list and include its </span></span></span>
+<span class="r-in"><span><span class="co"># associated gene expression set</span></span></span>
 <span class="r-in"><span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">pull_datasets</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  feature_set <span class="op">=</span> <span class="va">fs_list</span><span class="op">$</span><span class="va">feature_set_name</span><span class="op">[</span><span class="fl">1</span><span class="op">]</span>,</span></span>
 <span class="r-in"><span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>URL 'https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=CCLE SCNAs + Mutations&amp;include_input_score=FALSE&amp;include_gene_expression=TRUE': status was 'URL using bad/illegal format or missing URL'</span>
+<span class="r-err co"><span class="r-pr">#&gt;</span> <span class="error">Error in download.file(url, zip_file):</span> cannot open URL 'https://montilab.bu.edu/CaDrA_API/download_feature_set?feature_set=CCLE SCNAs + Mutations&amp;include_input_score=FALSE&amp;include_gene_expression=TRUE'</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

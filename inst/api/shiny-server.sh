@@ -12,5 +12,5 @@ then
     exec xtail /var/log/shiny-server/ &
 fi
 
-# Start shiny server
-exec Rscript $RESOURCE_ROOT/inst/shinyapp/run_cadra_server.R 2>&1
+# Start plumber api server
+exec Rscript $RESOURCE_ROOT/inst/api/run_cadra_api.R 2>&1

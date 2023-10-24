@@ -109,67 +109,67 @@ fs_list <- CaDrA.shiny::get_feature_set(order_by="asc")
 
 ``` r
 ## Show the description of the first few feature sets
-knitr::kable(head(fs_list))
+knitr::kable(head(fs_list), row.names = FALSE)
 ```
 
 <table>
 <thead>
 <tr>
 <th style="text-align:left;">
-description
+feature_set_name
 </th>
 <th style="text-align:left;">
-feature_set_name
+description
 </th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td style="text-align:left;">
-ACC
+CCLE SCNAs + Mutations
 </td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Simulated Feature Set
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCGA BrCa SCNAs + Mutations
+</td>
+<td style="text-align:left;">
+NA
+</td>
+</tr>
+<tr>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
+<td style="text-align:left;">
+ACC
+</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-BLCA
-</td>
 <td style="text-align:left;">
 TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG
 </td>
+<td style="text-align:left;">
+BLCA
+</td>
 </tr>
 <tr>
-<td style="text-align:left;">
-BRCA
-</td>
 <td style="text-align:left;">
 TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG
 </td>
-</tr>
-<tr>
 <td style="text-align:left;">
-CESC
-</td>
-<td style="text-align:left;">
-TCGA_CESC_2016_01_28_GISTIC_MUT_SIG
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-CHOL
-</td>
-<td style="text-align:left;">
-TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-COADREAD
-</td>
-<td style="text-align:left;">
-TCGA_COADREAD_2016_01_28_GISTIC_MUT_SIG
+BRCA
 </td>
 </tr>
 </tbody>
@@ -443,7 +443,7 @@ mydatafile <- CaDrA.shiny::download_feature_sets(
 
 ``` r
 # Look at the top 6 rows
-knitr::kable(head(mydatafile))
+knitr::kable(head(mydatafile), row.names = FALSE)
 ```
 
 <table>
@@ -475,19 +475,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -495,19 +495,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_TNFA_SIGNALING_VIA_NFKB
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -515,19 +515,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_HYPOXIA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -535,19 +535,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_CHOLESTEROL_HOMEOSTASIS
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -555,19 +555,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_MITOTIC_SPINDLE
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -575,19 +575,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_WNT_BETA_CATENIN_SIGNALING
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-19/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>

@@ -6,7 +6,7 @@
 and determine whether to include gene expression set that is 
 associated with that feature set}
 \usage{
-pull_datasets(feature_set, include_gene_expression = FALSE)
+pull_datasets(feature_set, include_gene_expression = TRUE)
 }
 \arguments{
 \item{feature_set}{a list of feature sets to look up and download the 
@@ -17,7 +17,7 @@ include gene expression sets that associated with the given feature sets.
 Default is TRUE.}
 }
 \value{
-a list of feature set and gene expression set if 
+a list of feature set and gene expression set by setting 
 include_gene_expression = TRUE
 }
 \description{
@@ -27,13 +27,11 @@ associated with that feature set
 }
 \examples{
 
-# Load R library
-library(shiny)
-
 # Retrieve a list of feature sets available from CaDrA Portal
 fs_list <- CaDrA.shiny::get_feature_set(order_by = "asc")
 
-# Download feature sets and return a datalist with appropriate paths to its dataset
+# Retrieve the first feature set from fs_list and include its 
+# associated gene expression set
 datasets <- pull_datasets(
   feature_set = fs_list$feature_set_name[1],
   include_gene_expression = TRUE

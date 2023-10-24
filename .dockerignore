@@ -6,8 +6,8 @@
 # logs/ log folder to ignore
 
 **/.git
-**/.aws
 **/.github
+**/.aws
 **/.Rproj.user
 **docs
 *.gitignore

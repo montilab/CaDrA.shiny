@@ -1,8 +1,7 @@
 
 #' Get a list of pre-processed feature sets available on CaDrA API Portal
 #' 
-#' @param collection a specific collection of feature sets on CaDrA portal. Default is TCGA.
-#' @param order_by sort results by ascending or descending order
+#' @param order_by sort results by ascending (asc) or descending order (desc)
 #' 
 #' @return a data frame with two columns: description, feature_set_name
 #'
@@ -10,7 +9,6 @@
 #' 
 #' # Retrieve a list of feature sets available from CaDrA Portal
 #' fs_list <- CaDrA.shiny::get_feature_set(
-#'   collection = "TCGA",
 #'   order_by = "asc"
 #' )
 #' 
@@ -21,7 +19,7 @@
 #' @importFrom jsonlite fromJSON
 #' 
 #' @export 
-get_feature_set <- function(collection="TCGA", order_by="asc"){
+get_feature_set <- function(order_by="asc"){
 
   # API server to retrieve a list of feature sets from CaDrA Portal
   API_Server <- "https://montilab.bu.edu/CaDrA_API/get_feature_set"
@@ -36,9 +34,11 @@ get_feature_set <- function(collection="TCGA", order_by="asc"){
     
     # Sort projects by ascending or descending order
     if(order_by == "asc"){
-      fs_df <- fs_df %>% dplyr::arrange(feature_set_name)
+      fs_df <- fs_df %>% dplyr::arrange(feature_set_name) 
     }else if(order_by == "desc"){
       fs_df <- fs_df %>% dplyr::arrange(desc(feature_set_name))
+    }else{
+      stop("Invalid value for order_by. Options are ascending (asc) or descending (desc).")
     }
     
     return(fs_df)
@@ -61,18 +61,16 @@ get_feature_set <- function(collection="TCGA", order_by="asc"){
 #' include gene expression sets that associated with the given feature sets. 
 #' Default is TRUE.
 #' 
-#' @return a list of feature set and gene expression set if 
+#' @return a list of feature set and gene expression set by setting 
 #' include_gene_expression = TRUE
 #'
 #' @examples
 #' 
-#' # Load R library
-#' library(shiny)
-#' 
 #' # Retrieve a list of feature sets available from CaDrA Portal
 #' fs_list <- CaDrA.shiny::get_feature_set(order_by = "asc")
 #' 
-#' # Download feature sets and return a datalist with appropriate paths to its dataset
+#' # Retrieve the first feature set from fs_list and include its 
+#' # associated gene expression set
 #' datasets <- pull_datasets(
 #'   feature_set = fs_list$feature_set_name[1],
 #'   include_gene_expression = TRUE
@@ -82,7 +80,7 @@ get_feature_set <- function(collection="TCGA", order_by="asc"){
 #' @importFrom jsonlite fromJSON
 #' 
 #' @export 
-pull_datasets <- function(feature_set, include_gene_expression=FALSE){
+pull_datasets <- function(feature_set, include_gene_expression=TRUE){
   
   # API server to download a list of feature sets from CaDrA Portal
   API_Server <- "https://montilab.bu.edu/CaDrA_API/download_feature_set"
@@ -100,7 +98,7 @@ pull_datasets <- function(feature_set, include_gene_expression=FALSE){
     stop("include_gene_expression must be Boolean value, TRUE or FALSE.")
   
   # API Server
-  url <- paste0(API_Server, "?feature_set=", feature_set, "&include_input_score=FALSE&include_gene_expression=", include_gene_expression)
+  url <- paste0(API_Server, "?feature_set=", feature_set[1], "&include_input_score=FALSE&include_gene_expression=", include_gene_expression)
   
   # Check the status of the api
   tryCatch({
@@ -158,7 +156,6 @@ pull_datasets <- function(feature_set, include_gene_expression=FALSE){
 #'
 #' @examples
 #' 
-#' # Load R library
 #' library(shiny)
 #' 
 #' # Retrieve a list of feature sets available from CaDrA Portal
@@ -175,7 +172,7 @@ pull_datasets <- function(feature_set, include_gene_expression=FALSE){
 #' # Launch CaDrA Shiny app with your downloaded datalist
 #' app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
 #' 
-#' # Launch Shiny app (NOT RUN)
+#' # Launch Shiny app at localhost with port 3838 (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
 #' @import httr dplyr
@@ -205,7 +202,7 @@ download_feature_sets <- function(feature_set, include_input_score=TRUE, include
   
   # Check if output directory exists
   if(!dir.exists(out_dir))
-    stop(sprintf("Directory: %s does not exists"), out_dir)
+    stop(sprintf("Output Directory: %s does not exists"), out_dir)
   
   # Create empty list to store datalist
   datalist <- NULL; 

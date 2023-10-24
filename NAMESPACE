@@ -18,7 +18,7 @@ import(methods, except = c(removeClass, show))
 import(parallel)
 import(shiny, except = c(dataTableOutput, renderDataTable))
 import(shinyjs, except = c(runExample))
-
+ 
 import(tibble)
 import(tools)
 import(utils)

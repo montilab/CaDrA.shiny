@@ -74,18 +74,18 @@ get_extdata <- function(datalist=NULL){
     
   }else{
     
-    datalist <- as.character(datalist)
+    file_path <- as.character(datalist)
     
-    if(file.exists(datalist)){
+    if(file.exists(file_path)){
       if(tools::file_ext(datalist) == "csv"){
-        datalist <- utils::read.csv(datalist, header=TRUE) %>% dplyr::mutate_all(., as.character)
-      }else if(tools::file_ext(datalist) == "rds"){
-        datalist <- base::readRDS(datalist) %>% dplyr::mutate_all(., as.character)
+        datalist <- utils::read.csv(file_path, header=TRUE) %>% dplyr::mutate_all(., as.character)
+      }else if(tools::file_ext(file_path) == "rds"){
+        datalist <- base::readRDS(file_path) %>% dplyr::mutate_all(., as.character)
       }else{
         stop("datalist file file must have a csv or rds format")
       }
     }else{
-      stop("File does not exist at ", datalist)
+      stop("File does not exist at ", file_path)
     } 
     
   }
@@ -93,10 +93,48 @@ get_extdata <- function(datalist=NULL){
   # Check if datalist has appropriate column names
   if(all(datalist_colnames %in% colnames(datalist))){
     
-    datalist <- datalist[which(datalist$feature_set_path != "" & !is.na(datalist$feature_set_path) & datalist$feature_set_name != "" & !is.na(datalist$feature_set_name)),]
+    # Only retain feature set with data path exists
+    fs_df <- datalist %>% 
+      dplyr::filter(!is.null(feature_set_name) & !is.na(feature_set_name) & feature_set_name != "") %>% 
+      dplyr::filter(!is.null(feature_set_path) & !is.na(feature_set_path) & feature_set_path != "") %>% 
+      distinct(feature_set_name, feature_set_path) 
+    
+    if(nrow(fs_df) > 0){
+      removed_fs_names <- fs_df$feature_set_name[which(file.exists(fs_df$feature_set_path) == FALSE)]
+      if(length(removed_fs_names) > 0){
+        stop("There ", ifelse(length(removed_fs_names) > 1, "are", "is"), " no feature sets exists at ", removed_fs_names, ".\n",
+             "Please check your files again.")      }
+    }
+    
+    input_score_df <- datalist %>% 
+      dplyr::filter(!is.null(input_score_name) & !is.na(input_score_name) & input_score_name != "") %>% 
+      dplyr::filter(!is.null(input_score_path) & !is.na(input_score_path) & input_score_path != "") %>% 
+      dplyr::distinct(input_score_name, input_score_path)
+
+    if(nrow(input_score_df) > 0){
+      removed_score_names <- fs_df$input_score_name[which(file.exists(datalist$input_score_path) == FALSE)]
+      if(length(removed_score_names) > 0){
+        stop("There ", ifelse(length(removed_score_names) > 1, "are", "is"), " no input scores exists at ", removed_score_names, ".\n",
+             "Please check your files again.")
+      }
+    }
+    
+    gene_expression_df <- datalist %>% 
+      dplyr::filter(!is.null(gene_expression_name) & !is.na(gene_expression_name) & gene_expression_name != "") %>% 
+      dplyr::filter(!is.null(gene_expression_path) & !is.na(gene_expression_path) & gene_expression_path != "") %>% 
+      dplyr::distinct(gene_expression_name, gene_expression_path)
+    
+    if(nrow(gene_expression_df) > 0){
+      removed_gs_names <- which(file.exists(datalist$gene_expression_path) == FALSE)
+      if(length(removed_gs_names) > 0){
+        stop("There ", ifelse(length(removed_gs_names) > 1, "are", "is"), " no input scores exists at ", removed_gs_names, ".\n",
+             "Please check your files again.")
+      }
+    }
     
     app_options <- global_datalist_options %>% 
-      dplyr::bind_rows(datalist)
+      dplyr::bind_rows(datalist) %>% 
+      dplyr::distinct_all(.keep_all = TRUE)
     
     return(app_options)
     
@@ -148,7 +186,7 @@ get_extdata <- function(datalist=NULL){
 #' @import DT htmltools
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @rawNamespace import(shinyjs, except = c(runExample))
-#' 
+#'  
 #' @export 
  CaDrA_UI <- function(id, datalist=NULL){
   
@@ -478,7 +516,7 @@ get_extdata <- function(datalist=NULL){
             conditionalPanel(
               condition = sprintf("input['%s'] == 'ks_pval' || 
                                    input['%s'] == 'ks_score' ||
-                                   input['%s'] == 'wilcox_pval'
+                                   input['%s'] == 'wilcox_pval' ||
                                    input['%s'] == 'wilcox_score'",
                                   ns("method"), ns("method"), ns("method"), ns("method")),
               selectInput(
@@ -763,10 +801,10 @@ get_extdata <- function(datalist=NULL){
             selectizeInput(
               inputId = ns("gsva_feature_set"),
               label = "Associated Feature Set",
-              choices = "Import Data",
+              choices = "",
               width = "600px"
             ),
-          
+            
             conditionalPanel(
               condition = sprintf("input['%s'] == 'Import Data'", 
                                   ns("gsva_feature_set")),
@@ -1105,10 +1143,10 @@ CaDrA_Server <- function(id, datalist=NULL){
       enrichment_table_message <- shiny::reactiveVal()
 
       # Prevent Shiny from grayed out
-      autoInvalidate <- reactiveTimer(10000)
+      autoInvalidate <- shiny::reactiveTimer(10000)
       
       # Observe the auto invalidate timer
-      observe({
+      shiny::observe({
         autoInvalidate()
         cat(".")
       })
@@ -1152,29 +1190,6 @@ CaDrA_Server <- function(id, datalist=NULL){
         }
 
       })
-
-      ## Updates feature set and gene expression set choices for running GSVA analysis ####
-      observeEvent({
-        input$gsva_feature_set
-      }, {
-        
-        ns <- session$ns
-        
-        selected_fs <- isolate({ input$gsva_feature_set })
-        
-        if(selected_fs != "Import Data"){
-          
-          shinyjs::hide(id = "gsva_feature_set_file")
-          shinyjs::hide(id = "gsva_feature_set_file_type")
-          
-        }else{
-          
-          shinyjs::show(id = "gsva_feature_set_file")
-          shinyjs::show(id = "gsva_feature_set_file_type")
-          
-        }
-        
-      })
       
       
       ## Updates feature set and gene expression set choices for running GSVA analysis ####
@@ -1202,16 +1217,10 @@ CaDrA_Server <- function(id, datalist=NULL){
             updateSelectizeInput(session, inputId = "gsva_feature_set", choices = c(feature_set_selection, "Import Data"), selected = feature_set_selection[1])
           }
           
-          shinyjs::hide(id = "gsva_gene_expression_file")
-          shinyjs::hide(id = "gsva_gene_expression_file_type")
-          
         }else{
           
           updateSelectizeInput(session, inputId = "gsva_feature_set", choices = "Import Data")
 
-          shinyjs::show(id = "gsva_gene_expression_file")
-          shinyjs::show(id = "gsva_gene_expression_file_type")
-          
         }
         
       })
@@ -1525,8 +1534,6 @@ CaDrA_Server <- function(id, datalist=NULL){
         sample_overlap <- intersect(names(input_score), colnames(FS))
         input_score <- input_score[sample_overlap]
         FS <- FS[, sample_overlap, drop = FALSE]
-        
-        print(FS)
         
         # Retrieve the binary feature matrix
         if(is(FS, "SummarizedExperiment")){

@@ -36,7 +36,6 @@ associated with that feature set
 }
 \examples{
 
-# Load R library
 library(shiny)
 
 # Retrieve a list of feature sets available from CaDrA Portal
@@ -53,7 +52,7 @@ mydatafile <- download_feature_sets(
 # Launch CaDrA Shiny app with your downloaded datalist
 app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
 
-# Launch Shiny app (NOT RUN)
+# Launch Shiny app at localhost with port 3838 (NOT RUN)
 # shiny::runApp(app, host='0.0.0.0', port=3838)
 
 }

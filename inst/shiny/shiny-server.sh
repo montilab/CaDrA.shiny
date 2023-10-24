@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RESOURCE_ROOT=/CaDrA.shiny/inst
+RESOURCE_ROOT=/CaDrA.shiny
 
 # Make sure the directory for individual app logs exists
 mkdir -p /var/log/shiny-server
@@ -12,5 +12,5 @@ then
     exec xtail /var/log/shiny-server/ &
 fi
 
-# Start plumber server
-exec Rscript $RESOURCE_ROOT/plumber/run_cadra_api.R 2>&1
+# Start shiny server
+exec Rscript $RESOURCE_ROOT/inst/shiny/run_cadra_shiny.R 2>&1
