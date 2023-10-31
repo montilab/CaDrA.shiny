@@ -147,9 +147,6 @@ CaDrA.shiny
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># The following initializes usage of Bioc devel</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span>version<span class="op">=</span><span class="st">'devel'</span><span class="op">)</span></span>
-<span></span>
 <span><span class="co"># Install CaDrA </span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"CaDrA"</span><span class="op">)</span></span>
 <span></span>
@@ -201,30 +198,6 @@ description
 <tbody>
 <tr>
 <td style="text-align:left;">
-CCLE SCNAs + Mutations
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-Simulated Feature Set
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA BrCa SCNAs + Mutations
-</td>
-<td style="text-align:left;">
-NA
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
@@ -247,6 +220,30 @@ TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG
 BRCA
 </td>
 </tr>
+<tr>
+<td style="text-align:left;">
+TCGA_CESC_2016_01_28_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+CESC
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+CHOL
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCGA_COADREAD_2016_01_28_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+COADREAD
+</td>
+</tr>
 </tbody>
 </table>
 </div>
@@ -256,30 +253,30 @@ BRCA
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Retrieve the ACC dataset (both genetic feature set and gene expression)</span></span>
 <span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/pull_datasets.html">pull_datasets</a></span><span class="op">(</span></span>
-<span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
+<span>  feature_set <span class="op">=</span> <span class="st">"TCGA_HNSC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
 <span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">datasets</span></span></code></pre></div>
 <div class="sourceCode" id="cb6"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="sc">$</span>feature_set</span>
 <span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>class<span class="sc">:</span> RangedSummarizedExperiment </span>
-<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">7119</span> <span class="dv">88</span> </span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">12852</span> <span class="dv">279</span> </span>
 <span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">metadata</span>(<span class="dv">3</span>)<span class="sc">:</span> experimentData annotation protocolData</span>
 <span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">assays</span>(<span class="dv">1</span>)<span class="sc">:</span> exprs</span>
-<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">7119</span>)<span class="sc">:</span> Amp1q22 Amp4p16<span class="fl">.3</span> ... ZZEF1 ZZZ3</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">12852</span>)<span class="sc">:</span> Amp2q11<span class="fl">.2</span> Amp2q31<span class="fl">.2</span> ... ZZEF1 ZZZ3</span>
 <span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>rowData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Feature</span>
-<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">88</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J1<span class="dv">-01</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J2<span class="dv">-01</span> ... TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HB<span class="dv">-01</span></span>
-<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HC<span class="dv">-01</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">279</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>BA<span class="dv">-4074-01</span> TCGA<span class="sc">-</span>BA<span class="dv">-4076-01</span> ... TCGA<span class="sc">-</span>IQ<span class="dv">-7631-01</span></span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  TCGA<span class="sc">-</span>IQ<span class="dv">-7632-01</span></span>
 <span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>colData <span class="fu">names</span>(<span class="dv">0</span>)<span class="sc">:</span></span>
 <span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a></span>
 <span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a><span class="er">$</span>gene_expression</span>
 <span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>class<span class="sc">:</span> RangedSummarizedExperiment </span>
-<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">19777</span> <span class="dv">79</span> </span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>dim<span class="sc">:</span> <span class="dv">20234</span> <span class="dv">566</span> </span>
 <span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a><span class="fu">metadata</span>(<span class="dv">3</span>)<span class="sc">:</span> experimentData annotation protocolData</span>
 <span id="cb6-16"><a href="#cb6-16" tabindex="-1"></a><span class="fu">assays</span>(<span class="dv">1</span>)<span class="sc">:</span> exprs</span>
-<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">19777</span>)<span class="sc">:</span> IGF2 DLK1 ... TGM6 SPANXA2</span>
+<span id="cb6-17"><a href="#cb6-17" tabindex="-1"></a><span class="fu">rownames</span>(<span class="dv">20234</span>)<span class="sc">:</span> SMR3B STATH ... SCARNA27 MS4A5</span>
 <span id="cb6-18"><a href="#cb6-18" tabindex="-1"></a>rowData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Genes</span>
-<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">79</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J1<span class="dv">-01</span> TCGA<span class="sc">-</span>OR<span class="sc">-</span>A5J2<span class="dv">-01</span> ... TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HA<span class="dv">-01</span></span>
-<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  TCGA<span class="sc">-</span>PK<span class="sc">-</span>A5HB<span class="dv">-01</span></span>
+<span id="cb6-19"><a href="#cb6-19" tabindex="-1"></a><span class="fu">colnames</span>(<span class="dv">566</span>)<span class="sc">:</span> TCGA<span class="sc">-</span>4P<span class="sc">-</span>AA8J<span class="dv">-01</span> TCGA<span class="sc">-</span>BA<span class="dv">-4074-01</span> ... TCGA<span class="sc">-</span>WA<span class="sc">-</span>A7GZ<span class="dv">-01</span></span>
+<span id="cb6-20"><a href="#cb6-20" tabindex="-1"></a>  TCGA<span class="sc">-</span>WA<span class="sc">-</span>A7H4<span class="dv">-01</span></span>
 <span id="cb6-21"><a href="#cb6-21" tabindex="-1"></a>colData <span class="fu">names</span>(<span class="dv">1</span>)<span class="sc">:</span> Samples</span></code></pre></div>
 </div>
 <div class="section level4">
@@ -305,19 +302,19 @@ BRCA
 <th style="text-align:left;">
 </th>
 <th style="text-align:right;">
-TCGA-OR-A5J1-01
+TCGA-4P-AA8J-01
 </th>
 <th style="text-align:right;">
-TCGA-OR-A5J2-01
+TCGA-BA-4074-01
 </th>
 <th style="text-align:right;">
-TCGA-OR-A5J3-01
+TCGA-BA-4075-01
 </th>
 <th style="text-align:right;">
-TCGA-OR-A5J5-01
+TCGA-BA-4076-01
 </th>
 <th style="text-align:right;">
-TCGA-OR-A5J6-01
+TCGA-BA-4077-01
 </th>
 </tr></thead>
 <tbody>
@@ -326,19 +323,19 @@ TCGA-OR-A5J6-01
 Adipogenesis
 </td>
 <td style="text-align:right;">
--0.0534716
+-0.0160921
 </td>
 <td style="text-align:right;">
--0.2768861
+0.1648353
 </td>
 <td style="text-align:right;">
-0.0953223
+0.2211107
 </td>
 <td style="text-align:right;">
--0.4063615
+-0.0737085
 </td>
 <td style="text-align:right;">
-0.4394275
+-0.0115116
 </td>
 </tr>
 <tr>
@@ -346,19 +343,19 @@ Adipogenesis
 Allograft Rejection
 </td>
 <td style="text-align:right;">
--0.0744033
+-0.0049091
 </td>
 <td style="text-align:right;">
--0.0621729
+-0.0081298
 </td>
 <td style="text-align:right;">
--0.3521640
+-0.0447976
 </td>
 <td style="text-align:right;">
--0.3018557
+-0.3880485
 </td>
 <td style="text-align:right;">
-0.1431379
+0.4610353
 </td>
 </tr>
 <tr>
@@ -366,19 +363,19 @@ Allograft Rejection
 Androgen Response
 </td>
 <td style="text-align:right;">
--0.1832658
+-0.3956958
 </td>
 <td style="text-align:right;">
-0.0855770
+0.0941687
 </td>
 <td style="text-align:right;">
-0.1389136
+0.1397883
 </td>
 <td style="text-align:right;">
--0.5098008
+0.1266452
 </td>
 <td style="text-align:right;">
--0.0719647
+0.2823991
 </td>
 </tr>
 <tr>
@@ -386,19 +383,19 @@ Androgen Response
 Angiogenesis
 </td>
 <td style="text-align:right;">
--0.1895439
+0.3141972
 </td>
 <td style="text-align:right;">
-0.2684503
+0.2880628
 </td>
 <td style="text-align:right;">
-0.2747169
+0.3441984
 </td>
 <td style="text-align:right;">
--0.1479879
+-0.1819343
 </td>
 <td style="text-align:right;">
--0.4408048
+0.0226343
 </td>
 </tr>
 <tr>
@@ -406,19 +403,19 @@ Angiogenesis
 Apical Junction
 </td>
 <td style="text-align:right;">
--0.1188141
+0.1902571
 </td>
 <td style="text-align:right;">
-0.1778803
+-0.2399212
 </td>
 <td style="text-align:right;">
-0.0797656
+-0.1048696
 </td>
 <td style="text-align:right;">
-0.0144147
+-0.0193586
 </td>
 <td style="text-align:right;">
--0.1364014
+0.1687033
 </td>
 </tr>
 </tbody>
@@ -437,7 +434,7 @@ Apical Junction
 <span><span class="va">FS_filtered</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/prefilter_data.html" class="external-link">prefilter_data</a></span><span class="op">(</span></span>
 <span>  FS <span class="op">=</span> <span class="va">FS</span>,</span>
 <span>  max_cutoff <span class="op">=</span> <span class="fl">0.6</span>,  <span class="co"># max event frequency (60%)</span></span>
-<span>  min_cutoff <span class="op">=</span> <span class="fl">0.03</span>  <span class="co"># min event frequency (3%)</span></span>
+<span>  min_cutoff <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="fl">5</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">FS</span><span class="op">)</span>, <span class="fl">2</span><span class="op">)</span>  <span class="co"># make sure min event frequency has at least 5 samples </span></span>
 <span><span class="op">)</span>  </span>
 <span></span>
 <span><span class="co">## Run candidate search</span></span>
@@ -487,7 +484,7 @@ Apical Junction
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Visualize permutation results</span></span>
-<span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/permutation_plot.html" class="external-link">permutation_plot</a></span><span class="op">(</span>perm_res <span class="op">=</span> <span class="va">perm_res</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/permutation_plot.html" class="external-link">permutation_plot</a></span><span class="op">(</span>perm_res <span class="op">=</span> <span class="va">perm_res</span><span class="op">)</span></span></code></pre></div>
 <p><img src="./reference/figures/unnamed-chunk-9-1.png"><!-- --></p>
 </div>
 <div class="section level3">
@@ -504,7 +501,7 @@ Apical Junction
 <span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
 <span>  include_input_score <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  out_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"HOME"</span><span class="op">)</span>,<span class="st">"Github"</span><span class="op">)</span> <span class="co"># specify your folder of choice here</span></span>
+<span>  out_dir <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"HOME"</span><span class="op">)</span>, <span class="st">"Github"</span><span class="op">)</span> <span class="co"># specify your folder of choice here</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Look at the top 6 rows</span></span>
@@ -536,19 +533,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -556,19 +553,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_TNFA_SIGNALING_VIA_NFKB
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -576,19 +573,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_HYPOXIA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -596,19 +593,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_CHOLESTEROL_HOMEOSTASIS
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -616,19 +613,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_MITOTIC_SPINDLE
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -636,19 +633,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_WNT_BETA_CATENIN_SIGNALING
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-24/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>

@@ -11,7 +11,7 @@ articles:
   getting-started: getting-started.html
   run-cadra-tab: run-cadra-tab.html
   run-gsva-tab: run-gsva-tab.html
-last_built: 2023-10-24T17:53Z
+last_built: 2023-10-31T15:23Z
 urls:
   reference: https://github.com/montilab/CaDrA.shiny/reference
   article: https://github.com/montilab/CaDrA.shiny/articles
