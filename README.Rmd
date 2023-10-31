@@ -7,29 +7,6 @@ output: rmarkdown::github_document
 ```{r, include=FALSE, echo=FALSE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse=FALSE, comment="", warning=FALSE)
 
-# # Install BiocManager
-# if (!require("BiocManager", quietly = TRUE))
-#     install.packages("BiocManager")
-# 
-# # The following initializes usage of Bioc devel
-# BiocManager::install(version='3.16')
-# 
-# # Install CaDrA
-# BiocManager::install("CaDrA")
-# 
-# # Install GSVA 
-# BiocManager::install("GSVA")
-# 
-# # # Install hypeR
-# library(devtools)
-# devtools::install_github("montilab/hypeR")
-# 
-# # Load CaDrA.shiny
-# devtools::load_all()
-# 
-# # Install knitr
-# install.packages("knitr", repos="http://cran.us.r-project.org")
-
 # Load CaDrA.shiny
 library(devtools)
 devtools::load_all()
@@ -88,9 +65,6 @@ The **CaDrA.shiny** package is already containerized using **Docker** and can be
 if (!require("BiocManager", quietly = TRUE))
   install.packages("BiocManager")
 
-# The following initializes usage of Bioc devel
-BiocManager::install(version='devel')
-
 # Install CaDrA 
 BiocManager::install("CaDrA")
 
@@ -139,7 +113,7 @@ knitr::kable(head(fs_list), row.names = FALSE)
 ```{r}
 ## Retrieve the ACC dataset (both genetic feature set and gene expression)
 datasets <- CaDrA.shiny::pull_datasets(
-  feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
+  feature_set = "TCGA_HNSC_2016_01_28_GISTIC_MUT_SIG",
   include_gene_expression = TRUE
 )
 datasets
@@ -178,7 +152,7 @@ FS <- datasets$feature_set[, sample_overlap, drop = FALSE]
 FS_filtered <- CaDrA::prefilter_data(
   FS = FS,
   max_cutoff = 0.6,  # max event frequency (60%)
-  min_cutoff = 0.03  # min event frequency (3%)
+  min_cutoff = round(5/ncol(FS), 2)  # make sure min event frequency has at least 5 samples 
 )  
 
 ## Run candidate search
@@ -226,7 +200,7 @@ perm_res <- CaDrA::CaDrA(
 )
 
 ## Visualize permutation results
-permutation_plot(perm_res = perm_res)
+CaDrA::permutation_plot(perm_res = perm_res)
 ```
 
 ### (4) Launch CaDrA's Shiny App with your pre-proccessed dataset
@@ -242,7 +216,7 @@ mydatafile <- CaDrA.shiny::download_feature_sets(
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
   include_input_score = TRUE,
   include_gene_expression = TRUE,
-  out_dir = file.path(Sys.getenv("HOME"),"Github") # specify your folder of choice here
+  out_dir = file.path(Sys.getenv("HOME"), "Github") # specify your folder of choice here
 )
 ```
 

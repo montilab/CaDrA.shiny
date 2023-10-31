@@ -34,9 +34,9 @@ get_feature_set <- function(order_by="asc"){
     
     # Sort projects by ascending or descending order
     if(order_by == "asc"){
-      fs_df <- fs_df %>% dplyr::arrange(feature_set_name) 
+      fs_df <- fs_df %>% dplyr::arrange(feature_set_name) %>% dplyr::select(feature_set_name, everything())
     }else if(order_by == "desc"){
-      fs_df <- fs_df %>% dplyr::arrange(desc(feature_set_name))
+      fs_df <- fs_df %>% dplyr::arrange(desc(feature_set_name)) %>% dplyr::select(feature_set_name, everything())
     }else{
       stop("Invalid value for order_by. Options are ascending (asc) or descending (desc).")
     }
@@ -97,6 +97,9 @@ pull_datasets <- function(feature_set, include_gene_expression=TRUE){
   if(!include_gene_expression %in% c(TRUE, FALSE))
     stop("include_gene_expression must be Boolean value, TRUE or FALSE.")
   
+  # Replace spaces with %20 in feature set for api calling
+  feature_set <- gsub("[[:space:]]", "\\%20", feature_set) %>% trimws()
+  
   # API Server
   url <- paste0(API_Server, "?feature_set=", feature_set[1], "&include_input_score=FALSE&include_gene_expression=", include_gene_expression)
   
@@ -117,6 +120,9 @@ pull_datasets <- function(feature_set, include_gene_expression=TRUE){
   
   # If download is successful, unzip files and return datalist with its new appropriate path
   unzip(zip_file, exdir=out_dir, list=FALSE)
+  
+  # Convert feature set back to its original form
+  feature_set <- gsub("\\%20", " ", feature_set)
   
   # Read in datalist for each downloaded feature set
   datalist <- readRDS(file.path(file_dir, feature_set, "datalist.RDS")) %>% distinct_all(., keep.all=TRUE)
@@ -155,8 +161,6 @@ pull_datasets <- function(feature_set, include_gene_expression=TRUE){
 #' @return a zip file
 #'
 #' @examples
-#' 
-#' library(shiny)
 #' 
 #' # Retrieve a list of feature sets available from CaDrA Portal
 #' fs_list <- CaDrA.shiny::get_feature_set(order_by = "asc")
@@ -204,6 +208,9 @@ download_feature_sets <- function(feature_set, include_input_score=TRUE, include
   if(!dir.exists(out_dir))
     stop(sprintf("Output Directory: %s does not exists"), out_dir)
   
+  # Replace spaces with %20 in feature set for api calling
+  feature_set <- gsub("[[:space:]]", "\\%20", feature_set) %>% trimws()
+  
   # Create empty list to store datalist
   datalist <- NULL; 
   
@@ -231,8 +238,17 @@ download_feature_sets <- function(feature_set, include_input_score=TRUE, include
       
     })
     
+    # Convert feature set back to its original form
+    feature_set <- gsub("\\%20", " ", feature_set)    
+    
     # If download is successful, unzip files and return datalist with its new appropriate path
-    unzip(zip_file, exdir=out_dir, list=FALSE)
+    utils::unzip(zip_file, exdir=out_dir, list=FALSE, overwrite=TRUE)
+    zip_dirname <- base::normalizePath(file.path(out_dir, utils::unzip(zip_file, exdir=out_dir, list=TRUE)$Name[1]))
+  
+    # If zip directory and output directory if not identical then rename it to match output directory
+    if(zip_dirname != file_dir){
+      base::system(paste("mv", zip_dirname, out_dir))
+    }
     
     # Append datalist for each downloaded feature set
     datalist <- datalist %>% 

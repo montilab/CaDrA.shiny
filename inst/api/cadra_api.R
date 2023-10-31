@@ -145,7 +145,7 @@ get_input_score <- function(res, req, feature_set){
   }
   
   # Validate parameters
-  feature_set <- trimws(feature_set)
+  feature_set <- gsub("\\%20", " ", feature_set) %>% trimws()
   
   # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
   fs_df <- datalist_df %>% 
@@ -207,7 +207,7 @@ get_gene_expression <- function(res, req, feature_set){
   }
   
   # Validate parameters
-  feature_set <- trimws(feature_set)
+  feature_set <- gsub("\\%20", " ", feature_set) %>% trimws()
   
   # Read in the datalist file that includes paths to feature sets, input scores, and gene expression sets
   fs_df <- datalist_df %>% 
@@ -270,8 +270,13 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     
   }
   
-  # Validate parameters
-  feature_set <- trimws(feature_set)
+  print(feature_set)
+  
+  # Convert feature set back to its original form
+  feature_set <- gsub("\\%20", " ", feature_set) %>% trimws()
+  
+  print(feature_set)
+  
   include_input_score <- ifelse(include_input_score==TRUE, 1, 0)
   include_gene_expression <- ifelse(include_gene_expression==TRUE, 1, 0)
   
@@ -327,6 +332,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     for(f in seq_along(feature_set_name)){
       #f=1;
       fs_name <- feature_set_name[f]
+      fs_path <- feature_set_path[f]
       
       # Create feature set directory path
       fs_file_dir <- file.path(zip_file_dir, feature_set_name[f], "feature_set")
@@ -335,7 +341,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
       dir.create(path=fs_file_dir, showWarnings=FALSE, recursive=TRUE)
       
       # Create feature set file name
-      file_path <- file.path(fs_file_dir, paste0(feature_set_name[f], ".RDS"))
+      file_path <- file.path(fs_file_dir, paste0(feature_set_name[f], ".", tools::file_ext(fs_path)))
       
       # Copy feature set to zip directory
       file.copy(from=feature_set_path[f], to=file_path, overwrite=TRUE, recursive=FALSE)
@@ -346,7 +352,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
         input_score_df <- fs_df %>% 
           dplyr::filter(feature_set_name == fs_name) %>% 
           dplyr::distinct(feature_set_name, input_score_name, .keep_all = TRUE) %>% 
-          dplyr::select(required_colnames)
+          dplyr::select(all_of(required_colnames))
         
         if(nrow(input_score_df) > 0){
           
@@ -360,7 +366,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
             score_path = input_score_df$input_score_path[g]
             
             # Create a file path
-            file_path <- file.path(scores_file_dir, paste0(score_name, ".RDS"))
+            file_path <- file.path(scores_file_dir, paste0(score_name, ".", tools::file_ext(score_path)))
             
             # Copy input score to zip directory
             file.copy(from=score_path, to=file_path, overwrite=TRUE, recursive=FALSE)
@@ -377,7 +383,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
         gene_expression_df <- fs_df %>% 
           dplyr::filter(feature_set_name == fs_name) %>% 
           dplyr::distinct(feature_set_name, gene_expression_name, .keep_all = TRUE) %>% 
-          dplyr::select(required_colnames)
+          dplyr::select(all_of(required_colnames))
         
         if(nrow(gene_expression_df) > 0){
           
@@ -391,7 +397,7 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
             ge_path = gene_expression_df$gene_expression_path[h]
             
             # Create a file path
-            file_path <- file.path(ge_file_dir, paste0(ge_name, ".RDS"))
+            file_path <- file.path(ge_file_dir, paste0(ge_name, ".", tools::file_ext(ge_path)))
             
             # Copy gene expression to zip directory
             file.copy(from=ge_path, to=file_path, overwrite=TRUE, recursive=FALSE)

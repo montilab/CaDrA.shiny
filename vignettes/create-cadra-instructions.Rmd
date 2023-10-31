@@ -11,6 +11,8 @@ vignette: >
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
 ```
 
+<h1 style="text-align: center; color: #8B008B; font-weight: bold;">Instructions</h1>
+
 ![](figures/run-cadra-tab.png)
 
 There are two panels on this page:

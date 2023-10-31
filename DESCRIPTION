@@ -39,10 +39,12 @@ Imports:
     tools,
     utils
 Suggests: 
+    BiocManager,
     BiocStyle,
     devtools,
-    rmarkdown,
     knitr,
+    magick,
+    rmarkdown,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
 biocViews: Software

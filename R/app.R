@@ -26,8 +26,8 @@ create_hover_txt <- function(table, n_char=100){
 
 # Global expression sets ####
 global_feature_set_path <- c(
-  "CCLE SCNAs + Mutations" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA"),
-  "TCGA BrCa SCNAs + Mutations" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA"),
+  "CCLE SCNAs and Mutations" =  system.file("data/CCLE_MUT_SCNA.rda", package = "CaDrA"),
+  "TCGA BrCa SCNAs and Mutations" = system.file("data/BRCA_GISTIC_MUT_SIG.rda", package = "CaDrA"),
   "Simulated Feature Set" = system.file("data/sim_FS.rda", package = "CaDrA")
 )
 
@@ -45,8 +45,28 @@ global_gene_expression_path <- c(
   "Simulated Expression Set" = NA
 )
 
+# Description about the feature set
+global_fs_description <- c(
+  "CCLE SCNAs and Mutations" =  "Somatic copy number alterations and mutations from CCLE. See ?CaDrA::CCLE_MUT_SCNA",
+  "TCGA BrCa SCNAs and Mutations" = "Somatic copy number alterations and mutations from BRCA TCGA. See ?CaDrA::BRCA_GISTIC_MUT_SIG",
+  "Simulated Feature Set" = paste0(
+    "Simulated feature set comprises of 1000 genomic features and 100 ",
+    "sample profiles. This simulated data includes 10 left-skewed (i.e. True Positive or TP) and ", 
+    "990 uniformly-distributed (i.e. True Null or TN) features. See ?CaDrA::BRCA_GISTIC_MUT_SIG"
+  ) 
+)
+
+# Description about the feature set
+global_fs_collection <- c(
+  "CCLE SCNAs and Mutations" =  "CCLE",
+  "TCGA BrCa SCNAs and Mutations" = "TCGA",
+  "Simulated Feature Set" = "Simulated"
+)
+
 # Create global datalist options
 global_datalist_options <- data.frame(
+  collection = global_fs_collection,
+  description = global_fs_description,
   feature_set_name = names(global_feature_set_path), 
   feature_set_path = global_feature_set_path , 
   input_score_name = names(global_input_score_path), 
@@ -66,7 +86,7 @@ get_extdata <- function(datalist=NULL){
   
   if(is.null(datalist)){
     
-    return(global_datalist_options)
+    datalist <- global_datalist_options
     
   }else if(is.data.frame(datalist)){
     
@@ -102,8 +122,10 @@ get_extdata <- function(datalist=NULL){
     if(nrow(fs_df) > 0){
       removed_fs_names <- fs_df$feature_set_name[which(file.exists(fs_df$feature_set_path) == FALSE)]
       if(length(removed_fs_names) > 0){
-        stop("There ", ifelse(length(removed_fs_names) > 1, "are", "is"), " no feature sets exists at ", removed_fs_names, ".\n",
+        stop("There ", ifelse(length(removed_fs_names) > 1, "are", "is"), " no feature sets exists at ", paste0(removed_fs_names, collapse=", "), ".\n",
              "Please check your files again.")      }
+    }else{
+      stop("The required feature_set_name and feature_set_path fields in datalist file cannot be empty")
     }
     
     input_score_df <- datalist %>% 
@@ -114,9 +136,15 @@ get_extdata <- function(datalist=NULL){
     if(nrow(input_score_df) > 0){
       removed_score_names <- fs_df$input_score_name[which(file.exists(datalist$input_score_path) == FALSE)]
       if(length(removed_score_names) > 0){
-        stop("There ", ifelse(length(removed_score_names) > 1, "are", "is"), " no input scores exists at ", removed_score_names, ".\n",
+        stop("There ", ifelse(length(removed_score_names) > 1, "are", "is"), " no input score exists at ", paste0(removed_score_names, collapse=", "), ".\n",
              "Please check your files again.")
       }
+    }else{
+      datalist <- datalist %>% 
+        dplyr::mutate(
+          input_score_name=NA,
+          input_score_path=NA
+        )
     }
     
     gene_expression_df <- datalist %>% 
@@ -127,13 +155,18 @@ get_extdata <- function(datalist=NULL){
     if(nrow(gene_expression_df) > 0){
       removed_gs_names <- which(file.exists(datalist$gene_expression_path) == FALSE)
       if(length(removed_gs_names) > 0){
-        stop("There ", ifelse(length(removed_gs_names) > 1, "are", "is"), " no input scores exists at ", removed_gs_names, ".\n",
+        stop("There ", ifelse(length(removed_gs_names) > 1, "are", "is"), " no gene expression set exists at ", paste0(removed_gs_names, collapse=", "), ".\n",
              "Please check your files again.")
       }
+    }else{
+      datalist <- datalist %>% 
+        dplyr::mutate(
+          gene_expression_name=NA,
+          gene_expression_path=NA
+        )      
     }
     
-    app_options <- global_datalist_options %>% 
-      dplyr::bind_rows(datalist) %>% 
+    app_options <- datalist %>% 
       dplyr::distinct_all(.keep_all = TRUE)
     
     return(app_options)
@@ -183,7 +216,7 @@ get_extdata <- function(datalist=NULL){
 #' # Launch Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
-#' @import DT htmltools
+#' @import dplyr DT htmltools 
 #' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @rawNamespace import(shinyjs, except = c(runExample))
 #'  
@@ -344,7 +377,7 @@ get_extdata <- function(datalist=NULL){
             # FS ####
             selectizeInput(
               inputId = ns("feature_set"),
-              label = "Feature Set",
+              label = "Feature set",
               choices = c(cadra_feature_set_path, "Import Data"),
               width = "100%"
             ),
@@ -356,7 +389,7 @@ get_extdata <- function(datalist=NULL){
               fileInput(
                 inputId = ns("ES_file"),
                 label = strong(span(style = "color: red;", "*"),
-                               "Feature Set file:"),
+                               "Feature set file"),
                 width = "100%"
               ),
 
@@ -382,7 +415,7 @@ get_extdata <- function(datalist=NULL){
             # input_score ####
             selectizeInput(
               inputId = ns("input_score"),
-              label = "Input Score",
+              label = "Input score",
               choices = c("Please select an option below" = ""),
               width = "100%"
             ),
@@ -394,7 +427,7 @@ get_extdata <- function(datalist=NULL){
               fileInput(
                 inputId = ns("input_score_file"),
                 label = strong(span(style = "color: red;", "*"),
-                               "Input Score file:"),
+                               "Input score file"),
                 width = "100%"
               ),
 
@@ -422,7 +455,7 @@ get_extdata <- function(datalist=NULL){
             numericInput(
               inputId = ns("min_cutoff"),
               label = HTML(paste0(
-                '<strong>Min Event Frequency (n)</strong> ',
+                '<strong>Min event frequency (n)</strong> ',
                 '<a class="tooltip-txt" data-html="true" ',
                 'data-tooltip-toggle="tooltip" data-placement="top" ',
                 'title=\"Minimum number of \'occurrences\' a feature ',
@@ -441,7 +474,7 @@ get_extdata <- function(datalist=NULL){
             numericInput(
               inputId = ns("max_cutoff"),
               label = HTML(paste0(
-                '<strong>Max Event Frequency (%)</strong> ',
+                '<strong>Max event frequency (%)</strong> ',
                 '<a class="tooltip-txt" data-html="true" ',
                 'data-tooltip-toggle="tooltip" data-placement="top" ',
                 'title=\"Maximum number (expressed as % of total) of ',
@@ -460,7 +493,7 @@ get_extdata <- function(datalist=NULL){
             # method ####
             selectInput(
               inputId = ns("method"),
-              label = strong(span(style="color:red;", "*"), "Scoring method:"),
+              label = "Scoring method",
               choices = scoring_methods,
               selected = "ks", 
               width = "100%"
@@ -474,7 +507,7 @@ get_extdata <- function(datalist=NULL){
               checkboxInput(
                 inputId = ns("weighted_ks"),
                 label = HTML(paste0(
-                  'Compute weighted KS ',
+                  'Compute weighted-KS ',
                   '<a class="tooltip-txt" data-html="true" ',
                   'data-tooltip-toggle="tooltip" data-placement="top" ',
                   'title=\"Whether or not to compute a weighted KS test.\">?</a>')),
@@ -487,7 +520,7 @@ get_extdata <- function(datalist=NULL){
                 fileInput(
                   inputId = ns("weight_file"),
                   label = strong(span(style = "color: red;", "*"),
-                                 "Choose a weight file:"),
+                                 "Choose a weight file"),
                   width = "100%"
                 ),
                 
@@ -521,8 +554,8 @@ get_extdata <- function(datalist=NULL){
                                   ns("method"), ns("method"), ns("method"), ns("method")),
               selectInput(
                 inputId = ns("alternative"),
-                label = strong(span(style="color:red;", "*"), "Alternative:"),
-                choices = c("Less"="less", "Two Sided"="two.sided", "Greater"="greater"),
+                label = "Alternative",
+                choices = c("less"="less", "two-sided"="two.sided", "greater"="greater"),
                 selected = "less", width = "100%"
               )
             ),
@@ -530,10 +563,10 @@ get_extdata <- function(datalist=NULL){
             # search_method ####
             radioButtons(
               inputId = ns("search_method"),
-              label = strong(span(style="color:red;", "*"), "Search method"),
+              label = "Search method",
               choices=c("Forward and Backward"="both",
                         "Forward Only"="forward"),
-              selected = "both", inline = TRUE
+              selected = "both", inline = FALSE
             ),
             
             # max_size ####
@@ -557,7 +590,7 @@ get_extdata <- function(datalist=NULL){
             radioButtons(
               inputId = ns("initial_seed"),
               label = HTML(paste0(
-                '<span style=\"color:red;\">*</span> Search modality ',
+                'Search modality ',
                 '<a class="tooltip-txt" data-html="true" ',
                 'data-tooltip-toggle="tooltip" data-placement="top" ',
                 'title=\"\'Top N\' repeats the search starting from ',
@@ -576,8 +609,7 @@ get_extdata <- function(datalist=NULL){
                                   ns("initial_seed")),
               numericInput(
                 inputId = ns("top_N"),
-                label = strong(span(style = "color:red;", "*"),
-                               paste0("Top N value")),
+                label = NULL,
                 min = 1,
                 max = 100,
                 step = 1,
@@ -594,10 +626,10 @@ get_extdata <- function(datalist=NULL){
               textAreaInput(
                 inputId = ns("search_start"),
                 label = strong(span(style = "color:red;", "*"),
-                               paste0('Enter a list of character strings ',
-                                      '(separated by commas) corresponding ',
-                                      'to feature names of ', 
-                                      'Feature Set object')),
+                               paste0('Enter a list of features (separated by ',
+                                      'a commas) corresponding to row names ',
+                                      'of Feature Set object to start the ',
+                                      'search with.')),
                 value="",
                 width="100%"
               )
@@ -633,7 +665,7 @@ get_extdata <- function(datalist=NULL){
               numericInput(
                 inputId = ns("ncores"),
                 label = strong(span(style="color:red;", "*"),
-                               paste0("Number of cores to perform parallelization for permutation testing")),
+                               paste0("Number of cores to perform parallelized calculation for permutation tests")),
                 min = 1,
                 max = Inf,
                 step = 1,
@@ -760,7 +792,7 @@ get_extdata <- function(datalist=NULL){
 
             selectizeInput(
               inputId = ns("gsva_gene_expression"),
-              label = "Gene Expression",
+              label = "Gene expression",
               choices = c(gsva_gene_expression_path, "Import Data"),
               width = "600px"
             ),
@@ -772,7 +804,7 @@ get_extdata <- function(datalist=NULL){
               fileInput(
                 inputId = ns("gsva_gene_expression_file"),
                 label = strong(span(style = "color: red;", "*"),
-                               "Gene expression file:"),
+                               "Gene expression file"),
                 width = "600px"
               ),
               
@@ -800,7 +832,7 @@ get_extdata <- function(datalist=NULL){
             
             selectizeInput(
               inputId = ns("gsva_feature_set"),
-              label = "Associated Feature Set",
+              label = "Associated feature set",
               choices = "",
               width = "600px"
             ),
@@ -812,7 +844,7 @@ get_extdata <- function(datalist=NULL){
               fileInput(
                 inputId = ns("gsva_feature_set_file"),
                 label = strong(span(style = "color: red;", "*"),
-                               "Feature Set file:"),
+                               "Feature set file"),
                 width = "600px"
               ),
               
@@ -841,7 +873,7 @@ get_extdata <- function(datalist=NULL){
             fileInput(
               inputId = ns("gsva_geneset_file"),
               label = strong(span(style = "color: red;", "*"),
-                             "Choose a geneset file to import:"),
+                             "Choose a geneset file to import"),
               width = "600px"
             ),
 
@@ -945,7 +977,7 @@ get_extdata <- function(datalist=NULL){
 
             selectInput(
               inputId = ns("download_fs_type"),
-              label = "Type of Data to Download:",
+              label = "Type of Data to Download",
               choices = c("Feature Set", "Sample Names", "Feature Names"),
               width = "600px"
             ),
@@ -1086,11 +1118,12 @@ get_extdata <- function(datalist=NULL){
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #'  
-#' @import CaDrA DT htmltools parallel tibble tools utils
+#' @import CaDrA dplyr DT htmltools parallel tibble tools utils
 #' @importFrom GSVA gsva
 #' @importFrom GSEABase getGmt
 #' @rawNamespace import(methods, except = c(removeClass, show))
 #' @rawNamespace import(SummarizedExperiment, except = c(show))
+#' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' 
 #' @export 
 CaDrA_Server <- function(id, datalist=NULL){
@@ -1515,9 +1548,6 @@ CaDrA_Server <- function(id, datalist=NULL){
         ## Keep a record of the number of features in original FS
         n_orig_features <- nrow(FS)
         
-        print(min_cutoff)
-        print(max_cutoff)
-
         ## Pre-filter FS based on occurrence frequency ####
         FS <- tryCatch({
           CaDrA::prefilter_data(
@@ -1658,12 +1688,12 @@ CaDrA_Server <- function(id, datalist=NULL){
           top_N <- as.integer(input$top_N)
 
           if(is.na(top_N) || length(top_N) == 0 || top_N <= 0){
-            cadra_error_message("Please specify an integer value to evaluate over Top N features (top_N must be >= 1).\n")
+            cadra_error_message("Please specify an integer value to evaluate over Top N seeds (top_N must be >= 1).\n")
             return(NULL)
           }
 
           if(top_N > nrow(FS)){
-            cadra_error_message("Please specify a Top N value lesser than the number of features in the Feature Set.\n")
+            cadra_error_message("Please specify a Top N seeds lesser than the number of features in the Feature Set.\n")
             return(NULL)
           }
 
@@ -1673,12 +1703,19 @@ CaDrA_Server <- function(id, datalist=NULL){
           top_N <- NULL
 
           if(length(search_start) == 0 || any(!search_start %in% rownames(FS))){
-            cadra_error_message("The provided starting features: ",
-                          paste0(search_start[which(!search_start %in% rownames(FS))], collapse=", "),
-                          " does not exist among the row names of FS object.\n")
+            if(length(search_start) == 0){
+              msg <- "There are no custom seeds provided.\n"
+            }else{
+              msg <- paste0(
+                "The provided custom seeds: ",
+                paste0(search_start[which(!search_start %in% rownames(FS))], collapse=", "),
+                " do(es) not exist among the row names of FS object.\n"
+              )
+            }
+            cadra_error_message(msg)
             return(NULL)
           }
-
+          
         }
 
         ## Whether or not to perform permutation test ####
@@ -1851,8 +1888,6 @@ CaDrA_Server <- function(id, datalist=NULL){
             ns <- session$ns
             result <- parallel::mccollect(rVal$candidate_search_process, wait = FALSE)
             
-            print(result)
-
             if(!is.null(result)) {
               rVal$candidate_search_result <- result[[1]]
               rVal$candidate_search_obs$destroy()
@@ -1918,7 +1953,7 @@ CaDrA_Server <- function(id, datalist=NULL){
           instructions_message(TRUE)
           
           # Display error message
-          p(style="color: red; font-weight: bold; margin-bottom: 10px;", cadra_error_message())
+          p(style="color: red; font-weight: bold; margin-bottom: 10px;", paste0("ERROR: ", cadra_error_message()))
           
         }
         
@@ -1999,7 +2034,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         }
         
         FS_table <- data.frame(
-          Top_Index = meta_indices,
+          Score_Index = meta_indices,
           Marginal_Score = marginal_scores,
           Cumulative_Score = cumulative_best_scores
         ) %>% 
@@ -2264,7 +2299,7 @@ CaDrA_Server <- function(id, datalist=NULL){
             h3("Top N Overlapping Heatmap"),
             br(),
             h4(style="color: red; font-weight: bold;",
-               "NOTE: Cannot plot overlapping heatmap with provided top N seed = 1 or number of custom seed features = 1.")
+               "NOTE: Cannot plot overlapping heatmap with provided top N seeds = 1 or number of provided custom seeds = 1.")
           )
           
         }else{
@@ -2915,12 +2950,13 @@ CaDrA_Server <- function(id, datalist=NULL){
 #' # Launch and deploy Shiny app (NOT RUN)
 #' # shiny::runApp(app, host='0.0.0.0', port=3838)
 #' 
+#' @rawNamespace import(shiny, except = c(dataTableOutput, renderDataTable))
 #' @export
 CaDrA_App <- function(id, datalist=NULL) {
   
   ui <- shiny::fluidPage(
-    titlePanel("CaDrA: Candidate Drivers Analysis"),
-    helpText("Multi-Omic Search for Candidate Drivers of Functional Signatures"),
+    shiny::titlePanel("CaDrA: Candidate Drivers Analysis"),
+    shiny::helpText("Multi-Omic Search for Candidate Drivers of Functional Signatures"),
     CaDrA_UI(id = id, datalist = datalist)
   )
   
