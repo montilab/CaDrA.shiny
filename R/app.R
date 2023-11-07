@@ -545,7 +545,7 @@ get_extdata <- function(datalist=NULL){
               )
             ),
             
-            # alternative ####
+            # method alternative ####
             conditionalPanel(
               condition = sprintf("input['%s'] == 'ks_pval' || 
                                    input['%s'] == 'ks_score' ||
@@ -553,8 +553,8 @@ get_extdata <- function(datalist=NULL){
                                    input['%s'] == 'wilcox_score'",
                                   ns("method"), ns("method"), ns("method"), ns("method")),
               selectInput(
-                inputId = ns("alternative"),
-                label = "Alternative",
+                inputId = ns("method_alternative"),
+                label = "Method Alternative",
                 choices = c("less"="less", "two-sided"="two.sided", "greater"="greater"),
                 selected = "less", width = "100%"
               )
@@ -649,7 +649,20 @@ get_extdata <- function(datalist=NULL){
             # n_perm ####
             conditionalPanel(
               condition = sprintf("input['%s'] == true", ns("permutation_test")),
-
+              
+              # permutation-based alternative type
+              selectInput(
+                inputId = ns("perm_alternative"),
+                label = HTML(paste0(
+                  'Permutation-based Alternative ',
+                  '<a class="tooltip-txt" data-html="true" ',
+                  'data-tooltip-toggle="tooltip" data-placement="top" ',
+                  'title=\"An alternative hypothesis for calculating 
+                  permutation-based p-value\">?</a>')),
+                choices = c("one-sided"="one.sided", "two-sided"="two.sided"),
+                selected = "one.sided", width = "100%"
+              ),
+              
               numericInput(
                 inputId = ns("n_perm"),
                 label = strong(span(style="color:red;", "*"),
@@ -1661,7 +1674,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         }
 
         ## Get alternative hypothesis from a given scoring method ####
-        alternative <- input$alternative
+        method_alternative <- input$method_alternative
 
         ## Get search method ####
         search_method <- input$search_method;
@@ -1747,7 +1760,10 @@ CaDrA_Server <- function(id, datalist=NULL){
           }
           
           # Get caching option
-          cache = input$cache
+          cache <- input$cache
+          
+          ## Get the permutation-based alternative ####
+          perm_alternative <- as.character(input$perm_alternative)
 
           ## Perform permutation-based testings ####
           rVal$cadra_permutation_process <- parallel::mcparallel({
@@ -1756,15 +1772,16 @@ CaDrA_Server <- function(id, datalist=NULL){
               FS = FS,
               input_score = input_score,
               method = method,
+              method_alternative = method_alternative,
               custom_function = NULL,
               custom_parameters = NULL,
-              alternative = alternative,
               weights = weights,
               top_N = top_N,
               search_start = search_start,
               search_method = search_method,
               max_size = max_size,
               n_perm = n_perm,
+              perm_alternative = perm_alternative,
               smooth = TRUE,
               obs_best_score = NULL,
               plot = FALSE,
@@ -1808,9 +1825,9 @@ CaDrA_Server <- function(id, datalist=NULL){
             FS = FS,
             input_score = input_score,
             method = method,
+            method_alternative = method_alternative,
             custom_function = NULL,
             custom_parameters = NULL,
-            alternative = alternative,
             weights = weights,
             search_start = search_start,
             top_N = top_N,

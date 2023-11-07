@@ -9,12 +9,12 @@ knitr::opts_chunk$set(fig.path="./man/figures/", message=FALSE, collapse=FALSE, 
 
 # Load CaDrA.shiny
 library(devtools)
-devtools::load_all()
+devtools::load_all("~/Github/CaDrA")
+devtools::load_all("~/Github/CaDrA.shiny")
 
 # Load R packages
 library(knitr)
 library(GSVA)
-library(CaDrA)
 library(hypeR)
 ```
 
@@ -55,8 +55,8 @@ The **CaDrA.shiny** package is already containerized using **Docker** and can be
 
 ####  Useful Guides
 
-- <a href="articles/docker.html" target="_blank">Containerizing CaDrA.shiny with Docker</a>
-- <a href="articles/docker-compose.html" target="_blank">Launching CaDrA's Shiny Dashboard with Compose</a>
+- <a href="articles/docker.html" target="_blank">Containerize CaDrA.shiny with Docker</a>
+- <a href="articles/docker-compose.html" target="_blank">Launch CaDrA's Shiny Dashboard with Compose</a>
 
 ### (1) Installation
 
@@ -88,8 +88,8 @@ install.packages("knitr", repos="http://cran.us.r-project.org")
 library(CaDrA.shiny)
 library(CaDrA)
 library(GSVA)
-library(knitr)
 library(hypeR)
+library(knitr)
 ```
 
 ### (3) Run CaDrA with dataset downloaded from CaDrA Portal
@@ -159,14 +159,14 @@ FS_filtered <- CaDrA::prefilter_data(
 topn_result <- CaDrA::candidate_search(
   FS = FS_filtered,
   input_score = input_score,
-  method = "ks_pval",      # Use Kolmogorov-Smirnov scoring function 
-  weights = NULL,          # If weights are provided, perform a weighted-KS (gsea-like) test
-  alternative = "less",    # Use one-sided hypothesis testing
-  search_method = "both",  # Apply both forward and backward search
-  top_N = 1,               # Perform only one search (starting from top scoring feature)
-  max_size = 7,            # Maximum number of features to include in the returned meta-feature
-  do_plot = FALSE,         # Plot after finding the best features
-  best_score_only = FALSE  # Return meta-feature set, observed input scores, and calculated best score
+  method = "ks_pval",          # Use Kolmogorov-Smirnov scoring function 
+  method_alternative = "less", # Use one-sided hypothesis testing
+  weights = NULL,              # If weights are provided, perform a weighted-KS (gsea-like) test
+  search_method = "both",      # Apply both forward and backward search
+  top_N = 1,                   # Perform only one search (starting from top scoring feature)
+  max_size = 7,                # Maximum number of features to include in the returned meta-feature
+  do_plot = FALSE,             # Plot after finding the best features
+  best_score_only = FALSE      # Return all results from the search
 )
 ```
 
@@ -187,16 +187,19 @@ CaDrA::meta_plot(topn_best_list = topn_best_meta, input_score_label = NULL)
 ## Permutation seed (for reproducible results)
 set.seed(123)
 
-## Run CaDrA Search 1000 times on permuted input scores to estimate the null distribution
+## Run CaDrA Search 100 times on permuted input scores to estimate the null distribution
 perm_res <- CaDrA::CaDrA(
   FS = FS_filtered, 
   input_score = input_score, 
   method = "ks_pval",
+  method_alternative = "less",
   top_N = 1,
   max_size = 7,
   search_method = "both",     
-  n_perm = 1000,
-  ncores = 1
+  n_perm = 100,
+  perm_alternative = "one.sided",
+  ncores = 2,
+  cache = FALSE
 )
 
 ## Visualize permutation results

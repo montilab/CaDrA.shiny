@@ -53,7 +53,7 @@
       <a href="../articles/getting-started.html">How to run CaDrA</a>
     </li>
     <li>
-      <a href="../articles/docker.html">Containerizing CaDrA.shiny with Docker</a>
+      <a href="../articles/docker.html">Containerize CaDrA.shiny with Docker</a>
     </li>
     <li>
       <a href="../articles/docker-compose.html">Launch CaDrA.shiny with Compose</a>
@@ -107,22 +107,19 @@
 <h2 id="installation">(1) Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
 <ul>
-<li>Using <code>devtools</code>
-</li>
+<li>Using <code>devtools</code> package</li>
 </ul>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://devtools.r-lib.org/" class="external-link">devtools</a></span><span class="op">)</span></span>
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/CaDrA"</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Using <code>Bioconductor</code>
-</li>
+<li>Using <code>BiocManager</code> package</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">require</a></span><span class="op">(</span><span class="st"><a href="https://bioconductor.github.io/BiocManager/" class="external-link">"BiocManager"</a></span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># The following initializes usage of Bioc devel</span></span>
-<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span>version<span class="op">=</span><span class="st">'devel'</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"CaDrA"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -178,13 +175,13 @@ function</p>
 <span>  FS <span class="op">=</span> <span class="va">eset_mut_scna_flt</span>,</span>
 <span>  input_score <span class="op">=</span> <span class="va">input_score</span>,</span>
 <span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,          <span class="co"># Use Kolmogorow-Smirnow scoring function </span></span>
-<span>  weight <span class="op">=</span> <span class="cn">NULL</span>,               <span class="co"># If weights is provided, perform a weighted-KS test</span></span>
-<span>  alternative <span class="op">=</span> <span class="st">"less"</span>,        <span class="co"># Use one-sided hypothesis testing</span></span>
+<span>  method_alternative <span class="op">=</span> <span class="st">"less"</span>, <span class="co"># Use one-sided hypothesis testing</span></span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,              <span class="co"># If weights is provided, perform a weighted-KS test</span></span>
 <span>  search_method <span class="op">=</span> <span class="st">"both"</span>,      <span class="co"># Apply both forward and backward search</span></span>
 <span>  top_N <span class="op">=</span> <span class="fl">7</span>,                   <span class="co"># Evaluate top 7 starting points for each search</span></span>
 <span>  max_size <span class="op">=</span> <span class="fl">7</span>,                <span class="co"># Maximum size a meta-feature matrix can extend to</span></span>
 <span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,             <span class="co"># Plot after finding the best features</span></span>
-<span>  best_score_only <span class="op">=</span> <span class="cn">FALSE</span>      <span class="co"># Return meta-feature set, observed input scores and calculated best score</span></span>
+<span>  best_score_only <span class="op">=</span> <span class="cn">FALSE</span>      <span class="co"># Return all results from the search</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">

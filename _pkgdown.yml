@@ -45,7 +45,7 @@ navbar:
       menu:
       - text: "How to run CaDrA"
         href: articles/getting-started.html
-      - text: "Containerizing CaDrA.shiny with Docker"
+      - text: "Containerize CaDrA.shiny with Docker"
         href: articles/docker.html
       - text: "Launch CaDrA.shiny with Compose"
         href: articles/docker-compose.html        

@@ -15,23 +15,24 @@ library(SummarizedExperiment)
 
 ## (1) Installation
 
-- Using `devtools`
+- Using `devtools` package
 
 ```r
+
 library(devtools)
 devtools::install_github("montilab/CaDrA")
+
 ```
 
-- Using `Bioconductor`
+- Using `BiocManager` package
 
 ```r
+
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
-# The following initializes usage of Bioc devel
-BiocManager::install(version='devel')
-
 BiocManager::install("CaDrA")
+
 ```
 
 ## (2) Quickstart
@@ -84,13 +85,13 @@ topn_res <- CaDrA::candidate_search(
   FS = eset_mut_scna_flt,
   input_score = input_score,
   method = "ks_pval",          # Use Kolmogorow-Smirnow scoring function 
-  weight = NULL,               # If weights is provided, perform a weighted-KS test
-  alternative = "less",        # Use one-sided hypothesis testing
+  method_alternative = "less", # Use one-sided hypothesis testing
+  weights = NULL,              # If weights is provided, perform a weighted-KS test
   search_method = "both",      # Apply both forward and backward search
   top_N = 7,                   # Evaluate top 7 starting points for each search
   max_size = 7,                # Maximum size a meta-feature matrix can extend to
   do_plot = FALSE,             # Plot after finding the best features
-  best_score_only = FALSE      # Return meta-feature set, observed input scores and calculated best score
+  best_score_only = FALSE      # Return all results from the search
 )
 
 ```

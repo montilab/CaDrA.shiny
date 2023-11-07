@@ -36,8 +36,6 @@ associated with that feature set
 }
 \examples{
 
-library(shiny)
-
 # Retrieve a list of feature sets available from CaDrA Portal
 fs_list <- CaDrA.shiny::get_feature_set(order_by = "asc")
 

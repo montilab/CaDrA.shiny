@@ -53,7 +53,7 @@
       <a href="articles/getting-started.html">How to run CaDrA</a>
     </li>
     <li>
-      <a href="articles/docker.html">Containerizing CaDrA.shiny with Docker</a>
+      <a href="articles/docker.html">Containerize CaDrA.shiny with Docker</a>
     </li>
     <li>
       <a href="articles/docker-compose.html">Launch CaDrA.shiny with Compose</a>
@@ -135,8 +135,8 @@ CaDrA.shiny
 <h4 id="useful-guides">Useful Guides<a class="anchor" aria-label="anchor" href="#useful-guides"></a>
 </h4>
 <ul>
-<li><a href="articles/docker.html" target="_blank">Containerizing CaDrA.shiny with Docker</a></li>
-<li><a href="articles/docker-compose.html" target="_blank">Launching CaDrA’s Shiny Dashboard with Compose</a></li>
+<li><a href="articles/docker.html" target="_blank">Containerize CaDrA.shiny with Docker</a></li>
+<li><a href="articles/docker-compose.html" target="_blank">Launch CaDrA’s Shiny Dashboard with Compose</a></li>
 </ul>
 </div>
 <div class="section level3">
@@ -170,8 +170,8 @@ CaDrA.shiny
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA.shiny/">CaDrA.shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA/" class="external-link">CaDrA</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rcastelo/GSVA" class="external-link">GSVA</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/hypeR" class="external-link">hypeR</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/hypeR" class="external-link">hypeR</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_3-run-cadra-with-dataset-downloaded-from-cadra-portal">(3) Run CaDrA with dataset downloaded from CaDrA Portal<a class="anchor" aria-label="anchor" href="#id_3-run-cadra-with-dataset-downloaded-from-cadra-portal"></a>
@@ -441,14 +441,14 @@ Apical Junction
 <span><span class="va">topn_result</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/candidate_search.html" class="external-link">candidate_search</a></span><span class="op">(</span></span>
 <span>  FS <span class="op">=</span> <span class="va">FS_filtered</span>,</span>
 <span>  input_score <span class="op">=</span> <span class="va">input_score</span>,</span>
-<span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,      <span class="co"># Use Kolmogorov-Smirnov scoring function </span></span>
-<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,          <span class="co"># If weights are provided, perform a weighted-KS (gsea-like) test</span></span>
-<span>  alternative <span class="op">=</span> <span class="st">"less"</span>,    <span class="co"># Use one-sided hypothesis testing</span></span>
-<span>  search_method <span class="op">=</span> <span class="st">"both"</span>,  <span class="co"># Apply both forward and backward search</span></span>
-<span>  top_N <span class="op">=</span> <span class="fl">1</span>,               <span class="co"># Perform only one search (starting from top scoring feature)</span></span>
-<span>  max_size <span class="op">=</span> <span class="fl">7</span>,            <span class="co"># Maximum number of features to include in the returned meta-feature</span></span>
-<span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,         <span class="co"># Plot after finding the best features</span></span>
-<span>  best_score_only <span class="op">=</span> <span class="cn">FALSE</span>  <span class="co"># Return meta-feature set, observed input scores, and calculated best score</span></span>
+<span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,          <span class="co"># Use Kolmogorov-Smirnov scoring function </span></span>
+<span>  method_alternative <span class="op">=</span> <span class="st">"less"</span>, <span class="co"># Use one-sided hypothesis testing</span></span>
+<span>  weights <span class="op">=</span> <span class="cn">NULL</span>,              <span class="co"># If weights are provided, perform a weighted-KS (gsea-like) test</span></span>
+<span>  search_method <span class="op">=</span> <span class="st">"both"</span>,      <span class="co"># Apply both forward and backward search</span></span>
+<span>  top_N <span class="op">=</span> <span class="fl">1</span>,                   <span class="co"># Perform only one search (starting from top scoring feature)</span></span>
+<span>  max_size <span class="op">=</span> <span class="fl">7</span>,                <span class="co"># Maximum number of features to include in the returned meta-feature</span></span>
+<span>  do_plot <span class="op">=</span> <span class="cn">FALSE</span>,             <span class="co"># Plot after finding the best features</span></span>
+<span>  best_score_only <span class="op">=</span> <span class="cn">FALSE</span>      <span class="co"># Return all results from the search</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
@@ -471,16 +471,19 @@ Apical Junction
 <code class="sourceCode R"><span><span class="co">## Permutation seed (for reproducible results)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">123</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co">## Run CaDrA Search 1000 times on permuted input scores to estimate the null distribution</span></span>
+<span><span class="co">## Run CaDrA Search 100 times on permuted input scores to estimate the null distribution</span></span>
 <span><span class="va">perm_res</span> <span class="op">&lt;-</span> <span class="fu">CaDrA</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/CaDrA/man/CaDrA.html" class="external-link">CaDrA</a></span><span class="op">(</span></span>
 <span>  FS <span class="op">=</span> <span class="va">FS_filtered</span>, </span>
 <span>  input_score <span class="op">=</span> <span class="va">input_score</span>, </span>
 <span>  method <span class="op">=</span> <span class="st">"ks_pval"</span>,</span>
+<span>  method_alternative <span class="op">=</span> <span class="st">"less"</span>,</span>
 <span>  top_N <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  max_size <span class="op">=</span> <span class="fl">7</span>,</span>
 <span>  search_method <span class="op">=</span> <span class="st">"both"</span>,     </span>
-<span>  n_perm <span class="op">=</span> <span class="fl">1000</span>,</span>
-<span>  ncores <span class="op">=</span> <span class="fl">1</span></span>
+<span>  n_perm <span class="op">=</span> <span class="fl">100</span>,</span>
+<span>  perm_alternative <span class="op">=</span> <span class="st">"one.sided"</span>,</span>
+<span>  ncores <span class="op">=</span> <span class="fl">2</span>,</span>
+<span>  cache <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
 <span><span class="co">## Visualize permutation results</span></span>
@@ -533,19 +536,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -553,19 +556,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_TNFA_SIGNALING_VIA_NFKB
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -573,19 +576,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_HYPOXIA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -593,19 +596,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_CHOLESTEROL_HOMEOSTASIS
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -613,19 +616,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_MITOTIC_SPINDLE
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -633,19 +636,19 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 HALLMARK_WNT_BETA_CATENIN_SIGNALING
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-10-31/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>
