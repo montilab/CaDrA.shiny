@@ -40,9 +40,9 @@ global_input_score_path <- c(
 
 # Global gene expression ####
 global_gene_expression_path <- c(
-  "CCLE Expression Set" = NA,
-  "BRCA Expression Set" = NA,
-  "Simulated Expression Set" = NA
+  "CCLE Expression Set" = "",
+  "BRCA Expression Set" = "",
+  "Simulated Expression Set" = ""
 )
 
 # Description about the feature set
@@ -90,7 +90,15 @@ get_extdata <- function(datalist=NULL){
     
   }else if(is.data.frame(datalist)){
     
-    datalist <- datalist
+    if(all(datalist_colnames %in% colnames(datalist))){
+      
+      datalist <- global_datalist_options %>% rbind(datalist) 
+      
+    }else{
+      
+      stop("The provided datalist file must contain the following column names: ", paste0(datalist_colnames, collapse=", "))
+      
+    }
     
   }else{
     
@@ -107,6 +115,16 @@ get_extdata <- function(datalist=NULL){
     }else{
       stop("File does not exist at ", file_path)
     } 
+    
+    if(all(datalist_colnames %in% colnames(datalist))){
+      
+      datalist <- global_datalist_options %>% rbind(datalist) 
+      
+    }else{
+      
+      stop("The provided datalist file must contain the following column names: ", paste0(datalist_colnames, collapse=", "))
+      
+    }
     
   }
   
@@ -142,8 +160,8 @@ get_extdata <- function(datalist=NULL){
     }else{
       datalist <- datalist %>% 
         dplyr::mutate(
-          input_score_name=NA,
-          input_score_path=NA
+          input_score_name = "",
+          input_score_path = ""
         )
     }
     
@@ -153,7 +171,7 @@ get_extdata <- function(datalist=NULL){
       dplyr::distinct(gene_expression_name, gene_expression_path)
     
     if(nrow(gene_expression_df) > 0){
-      removed_gs_names <- which(file.exists(datalist$gene_expression_path) == FALSE)
+      removed_gs_names <- fs_df$gene_expression_name[which(file.exists(datalist$gene_expression_path) == FALSE)]
       if(length(removed_gs_names) > 0){
         stop("There ", ifelse(length(removed_gs_names) > 1, "are", "is"), " no gene expression set exists at ", paste0(removed_gs_names, collapse=", "), ".\n",
              "Please check your files again.")
@@ -161,8 +179,8 @@ get_extdata <- function(datalist=NULL){
     }else{
       datalist <- datalist %>% 
         dplyr::mutate(
-          gene_expression_name=NA,
-          gene_expression_path=NA
+          gene_expression_name = "",
+          gene_expression_path = ""
         )      
     }
     
@@ -554,7 +572,7 @@ get_extdata <- function(datalist=NULL){
                                   ns("method"), ns("method"), ns("method"), ns("method")),
               selectInput(
                 inputId = ns("method_alternative"),
-                label = "Method Alternative",
+                label = "Method alternative",
                 choices = c("less"="less", "two-sided"="two.sided", "greater"="greater"),
                 selected = "less", width = "100%"
               )
@@ -654,7 +672,7 @@ get_extdata <- function(datalist=NULL){
               selectInput(
                 inputId = ns("perm_alternative"),
                 label = HTML(paste0(
-                  'Permutation-based Alternative ',
+                  'Permutation-based alternative ',
                   '<a class="tooltip-txt" data-html="true" ',
                   'data-tooltip-toggle="tooltip" data-placement="top" ',
                   'title=\"An alternative hypothesis for calculating 
@@ -778,7 +796,7 @@ get_extdata <- function(datalist=NULL){
               span(
                 div(class = "loader"),
                 br(),
-                p(class = "loading_text", "Running Permutation Testing...")
+                p(class = "loading_text", "Running Permutation-based Testing...")
               )
             ),
 
@@ -2343,7 +2361,7 @@ CaDrA_Server <- function(id, datalist=NULL){
         
         req(rVal$cadra_permutation_result)
         
-        h3("Permutation-Based Testing")
+        h3("Permutation Plot")
         
       })
       
