@@ -118,7 +118,7 @@ get_extdata <- function(datalist=NULL){
     
     if(all(datalist_colnames %in% colnames(datalist))){
       
-      datalist <- global_datalist_options %>% rbind(datalist) 
+      datalist <- global_datalist_options %>% dplyr::bind_rows(datalist) 
       
     }else{
       
