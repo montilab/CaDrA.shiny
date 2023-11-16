@@ -41,7 +41,7 @@ RUN git clone https://github.com/montilab/CaDrA.git
 WORKDIR /CaDrA 
 
 # Checkout the desired branch for the build
-RUN git checkout ${CADRA_BRANCH}
+RUN git checkout ${CADRA_BRANCH} && git pull
 
 # Install CaDrA denpendencies
 RUN Rscript "/CaDrA/install_r_packages.R"
