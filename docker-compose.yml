@@ -6,7 +6,7 @@ x-r-version:
   
 x-cadra-branch:
   &cadra-branch
-  CADRA_BRANCH=RELEASE_3_18
+  CADRA_BRANCH=devel
 
 x-cadra-shiny-git-repo:
   &cadra-shiny-git-repo

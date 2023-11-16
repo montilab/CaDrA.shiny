@@ -44,7 +44,7 @@ WORKDIR /CaDrA
 RUN git checkout ${CADRA_BRANCH}
 
 # Install CaDrA denpendencies
-RUN Rscript "/CaDrA/inst/install_r_packages.R"
+RUN Rscript "/CaDrA/install_r_packages.R"
 
 ############# Build Stage: CaDrA.shiny ##################
 FROM base as final 
@@ -60,7 +60,7 @@ COPY . ${PACKAGE_DIR}
 
 # Load CaDrA package and install CaDrA.shiny dependencies
 RUN Rscript -e "library('devtools'); devtools::load_all('/CaDrA');" \
-  && Rscript "${PACKAGE_DIR}/inst/install_r_packages.R"
+  && Rscript "${PACKAGE_DIR}/install_r_packages.R"
 
 # Install packages for plumber API 
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
