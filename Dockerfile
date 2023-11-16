@@ -29,7 +29,7 @@ RUN apt-get update --allow-releaseinfo-change --fix-missing \
 
 # Build according to a specified release of CaDrA
 ARG CADRA_BRANCH
-ENV CADRA_BRANCH=${CADRA_BRANCH:-master}
+ENV CADRA_BRANCH=${CADRA_BRANCH:-devel}
 
 # Set working directory to install CaDrA
 WORKDIR / 
@@ -43,30 +43,24 @@ WORKDIR /CaDrA
 # Checkout the desired branch for the build
 RUN git checkout ${CADRA_BRANCH}
 
-# Install CaDrA dependencies
-RUN Rscript /CaDrA/inst/install_r_packages.R
-
-# Load CaDrA package
-RUN Rscript -e \
-    "library('devtools'); \
-     devtools::load_all('/CaDrA');"
+# Install CaDrA denpendencies
+RUN Rscript "/CaDrA/inst/install_r_packages.R"
 
 ############# Build Stage: CaDrA.shiny ##################
-
-# Build the final image 
-FROM base as final
+FROM base as final 
 
 # Create package directory 
 ENV PACKAGE_DIR=/CaDrA.shiny  
 
-# Set up a volume directory to store package code and data
-VOLUME ${PACKAGE_DIR}
-
 # Make package as working directory
 WORKDIR ${PACKAGE_DIR}
 
-# Install CaDrA.shiny dependencies
-RUN Rscript ${PACKAGE_DIR}/inst/install_r_packages.R
+# Copy package code to Docker image
+COPY . ${PACKAGE_DIR}
+
+# Load CaDrA package and install CaDrA.shiny dependencies
+RUN Rscript -e "library('devtools'); devtools::load_all('/CaDrA');" \
+  && Rscript "${PACKAGE_DIR}/inst/install_r_packages.R"
 
 # Install packages for plumber API 
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
@@ -74,9 +68,6 @@ RUN R -e "install.packages('plumber', dependencies=TRUE, repos='http://cran.rstu
 
 # Make Shiny App/Plumber API available at port 3838
 EXPOSE 3838
-
-# Copy package code to Docker image
-COPY . ${PACKAGE_DIR}
 
 # Copy bash script that starts shiny-server to Docker image
 COPY inst/shiny/shiny-server.sh /user/bin/shiny-server.sh
