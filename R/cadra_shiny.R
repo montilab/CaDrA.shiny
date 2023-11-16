@@ -239,7 +239,7 @@ get_extdata <- function(datalist=NULL){
 #' @rawNamespace import(shinyjs, except = c(runExample))
 #'  
 #' @export 
- CaDrA_UI <- function(id, datalist=NULL){
+ CaDrA_UI <- function(id, datalist=NULL, title="CaDrA: Candidate Drivers Analysis", subtitle="Multi-Omic Search for Candidate Drivers of Functional Signatures"){
   
   # Combine extdata with global expression set and scores dataset if it was provided
   extdata <- get_extdata(datalist=datalist)
@@ -261,14 +261,6 @@ get_extdata <- function(datalist=NULL){
     tags$style(
       HTML(
         "
-        .side-bar-options {
-          border: 1px solid gray;
-          border-radius: 3px;
-          background: lightgrey;
-          padding: 5px 10px 10px 10px;
-          min-height: 850px;
-        }
-
         .footer-info {
           text-align: center;
         }
@@ -305,6 +297,116 @@ get_extdata <- function(datalist=NULL){
         @keyframes spin {
           0% { transform: rotate(0deg); }
           100% { transform: rotate(360deg); }
+        }
+        
+        #tabs {
+          background: white;
+          z-index: 10; 
+          width: 100%;
+        }
+        
+        .tabbable > .nav > li {
+          padding: 10px 10px 10px 10px;
+        }
+        
+        .header-title {
+          padding: 5px;
+        }
+
+        #cadra-side-bar-options {
+          margin-top: 10px;
+          margin-bottom: 50px;
+          border: 1px solid gray;
+          border-radius: 3px;
+          background: lightgrey;
+          height: 750px;
+          z-index: 10; 
+          overflow-y: scroll;
+        }
+        
+        #gsva-side-bar-options {
+          margin-top: 10px;
+          margin-bottom: 50px;
+          border: 1px solid gray;
+          border-radius: 3px;
+          background: lightgrey;
+          height: 550px;
+          z-index: 10; 
+          overflow-y: scroll;
+        }        
+        
+        #download-side-bar-options {
+          margin-top: 10px;
+          margin-bottom: 50px;
+          border: 1px solid gray;
+          border-radius: 3px;
+          background: lightgrey;
+          height: 400px;
+          z-index: 10; 
+          overflow-y: scroll;
+        }
+
+        #cadra-main-bar-options {
+          position: relative;
+        }   
+        
+        #gsva-main-bar-options {
+          position: relative;
+        }   
+        "
+      )
+    ),
+    
+    tags$script(
+      HTML(
+        "
+        var startProductBarPos=-1;
+        
+        window.onscroll=function(){
+        
+          var bar = document.getElementById('tabs');
+          var cadra_sidebar = document.getElementById('cadra-side-bar-options');
+          var cadra_mainbar = document.getElementById('cadra-main-bar-options');
+          var gsva_sidebar = document.getElementById('gsva-side-bar-options');
+          var gsva_mainbar = document.getElementById('gsva-main-bar-options');
+                    
+          if(startProductBarPos<0)startProductBarPos=findPosY(bar);
+        
+          if(pageYOffset>startProductBarPos){
+            bar.style.position='fixed';
+            bar.style.top='0';
+            cadra_sidebar.style.position='fixed';
+            cadra_sidebar.style.top='70px';
+            cadra_mainbar.style.left=cadra_sidebar.offsetWidth + 'px';
+            gsva_sidebar.style.position='fixed';
+            gsva_sidebar.style.top='70px';
+            gsva_mainbar.style.left=gsva_sidebar.offsetWidth + 'px';
+          }else{
+            bar.style.position='relative';
+            cadra_sidebar.style.position='relative';
+            cadra_sidebar.style.top=0;
+            cadra_mainbar.style.position='relative';
+            cadra_mainbar.style.left=0;
+            gsva_sidebar.style.position='relative';
+            gsva_sidebar.style.top=0;
+            gsva_mainbar.style.position='relative';
+            gsva_mainbar.style.left=0;
+          }
+        
+        };
+        
+        function findPosY(obj) {
+          var curtop = 0;
+          if (typeof (obj.offsetParent) != 'undefined' && obj.offsetParent) {
+            while (obj.offsetParent) {
+              curtop += obj.offsetTop;
+              obj = obj.offsetParent;
+            }
+            curtop += obj.offsetTop;
+          }
+          else if (obj.y)
+            curtop += obj.y;
+          return curtop;
         }
         "
       )
@@ -373,8 +475,16 @@ get_extdata <- function(datalist=NULL){
     
     column(
       width = 12,
+      class = "header-title",
+      
+      shiny::titlePanel("CaDrA: Candidate Drivers Analysis"),
+      shiny::helpText("Multi-Omic Search for Candidate Drivers of Functional Signatures")
+    ),
+    
+    column(
+      width = 12,
       style = "padding: 5px 10px 10px 10px;",
-
+      
       tabsetPanel(
         id = "tabs",
 
@@ -386,7 +496,7 @@ get_extdata <- function(datalist=NULL){
 
           column(
             width = 3,
-            class = "side-bar-options",
+            id = "cadra-side-bar-options",
 
             h3("CaDrA Options", style="text-align: center;"),
 
@@ -736,26 +846,15 @@ get_extdata <- function(datalist=NULL){
               style="background: blue; color: white;"
             ),
 
-            br(), br(), br(), br(),
+            br(), br(), br(), br()
             
-            HTML(
-              paste0(
-                "<div style='position: absolute; width: 98%; bottom: 0px;'>",
-                "<p style='text-align: center;'>",
-                "<span class='footer-info'>&copy; Monti Lab &diams; ",
-                "<script>document.write(new Date().getFullYear());</script> ",
-                "&diams; All Rights Reserved.",
-                "</span>", 
-                "</p>",
-                "</div>"
-              )
-            )
           ),
           
           ##### RUN CADRA #######
           column(
             width = 9,
-
+            id = "cadra-main-bar-options",
+            
             uiOutput(outputId = ns("cadra_instructions")),
             
             div(
@@ -812,10 +911,10 @@ get_extdata <- function(datalist=NULL){
           title = "Run GSVA",
           style = "padding: 5px 10px 10px 10px;",
           icon = icon(name = "running", lib = "font-awesome"),
-
+          
           column(
             width = 3,
-            class = "side-bar-options",
+            id = "gsva-side-bar-options",
 
             h3("GSVA Options", style="text-align: center;"),
 
@@ -945,23 +1044,15 @@ get_extdata <- function(datalist=NULL){
               style="background: blue; color: white;"
             ),
 
-            br(), br(), br(), br(),
+            br(), br(), br(), br()
             
-            HTML(
-              paste0(
-                "<div style='position: absolute; width: 98%; bottom: 0px;'>",
-                "<p style='text-align: center;'>",
-                "<span class='footer-info'>&copy; Monti Lab &diams; ",
-                "<script>document.write(new Date().getFullYear());",
-                "</script> &diams; All Rights Reserved.</span></p></div>"
-              )
-            )
           ),
 
           ##### RUN GSVA #######
           column(
-            width=9,
-
+            width = 9,
+            id = "gsva-main-bar-options",
+            
             uiOutput(outputId = ns("gsva_instructions")),
             
             div(
@@ -994,8 +1085,8 @@ get_extdata <- function(datalist=NULL){
           icon = icon(name = "database", lib = "font-awesome"),
 
           column(
-            width = 4,
-            class = "side-bar-options",
+            width = 3,
+            id = "download-side-bar-options",
 
             h2("Download Feature Set"),
 
@@ -2990,8 +3081,6 @@ CaDrA_Server <- function(id, datalist=NULL){
 CaDrA_App <- function(id, datalist=NULL) {
   
   ui <- shiny::fluidPage(
-    shiny::titlePanel("CaDrA: Candidate Drivers Analysis"),
-    shiny::helpText("Multi-Omic Search for Candidate Drivers of Functional Signatures"),
     CaDrA_UI(id = id, datalist = datalist)
   )
   
