@@ -1,12 +1,13 @@
 
 # Load R packages ####
 library(plumber)
-library(tidyverse)
 library(jsonlite)
+library(tidyverse)
 
 # Must load CaDrA.shiny to access dataset
 library(devtools)
-load_all()
+load_all("/CaDrA", recompile=TRUE)
+load_all("/CaDrA.shiny", recompile=TRUE)
 
 # Get location of datalist file
 # Required column names in datalist:
@@ -270,13 +271,8 @@ download_feature_set <- function(res, req, feature_set, include_input_score=TRUE
     
   }
   
-  print(feature_set)
-  
   # Convert feature set back to its original form
   feature_set <- gsub("\\%20", " ", feature_set) %>% trimws()
-  
-  print(feature_set)
-  
   include_input_score <- ifelse(include_input_score==TRUE, 1, 0)
   include_gene_expression <- ifelse(include_gene_expression==TRUE, 1, 0)
   

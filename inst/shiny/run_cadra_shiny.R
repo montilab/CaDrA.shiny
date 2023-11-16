@@ -1,9 +1,9 @@
 
 # Load R packages
 library(shiny)
-library(CaDrA)
 library(devtools)
-load_all()
+load_all("/CaDrA", recompile=TRUE)
+load_all("/CaDrA.shiny", recompile=TRUE)
 
 # Get location of datalist file
 # Required column names in datalist:

@@ -206,9 +206,9 @@ get_extdata <- function(datalist=NULL){
 #' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_path' (repuired), 
 #' 'input_score_name' (required), input_score_path' (required), 
-#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
+#' 'gene_expression_name' (required), 'gene_expression_path' (required)
 #' 
-#' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
+#' Default is NULL. If NULL, the app will start with DEFAULT dataset that included 
 #' in the package.
 #' 
 #' @return shiny ui elements
@@ -1121,10 +1121,10 @@ get_extdata <- function(datalist=NULL){
 #' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_path' (repuired), 
 #' 'input_score_name' (required), input_score_path' (required), 
-#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
+#' 'gene_expression_name' (required), 'gene_expression_path' (required)
 #' 
-#' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
-#' in CaDrA package.
+#' Default is NULL. If NULL, the app will start with DEFAULT dataset that included 
+#' in the package.
 #' 
 #' @return Shiny server elements
 #'
@@ -2564,7 +2564,7 @@ CaDrA_Server <- function(id, datalist=NULL){
 
         }
 
-        #print(feature_set); print(gene_expression); print(genesetcollection)
+        # print(feature_set); print(gene_expression); print(genesetcollection)
 
         # Make sure the samples match between gene expression and feature set
         matching_samples <- colnames(feature_set)[which(colnames(feature_set) %in% colnames(gene_expression))]
@@ -2956,7 +2956,7 @@ CaDrA_Server <- function(id, datalist=NULL){
   
 }
 
-#' Run both Shiny UI and Server Modules 
+#' Run both Shiny UI and Server modules 
 #' 
 #' @param id A unique namespace identifier
 #' @param datalist A data frame or path to data file (in cvs or rds format) listing 
@@ -2965,12 +2965,12 @@ CaDrA_Server <- function(id, datalist=NULL){
 #' The datalist must contains the following variables:
 #' 'feature_set' (required), 'feature_set_path' (repuired), 
 #' 'input_score_name' (required), input_score_path' (required), 
-#' 'gene_expression_name' (optional), 'gene_expression_path' (optional)
+#' 'gene_expression_name' (required), 'gene_expression_path' (required)
 #' 
-#' Default is NULL. If NULL, the app will start with DEFAULT dataset included 
+#' Default is NULL. If NULL, the app will start with DEFAULT dataset that included 
 #' in CaDrA package.
 #' 
-#' @return Shiny application 
+#' @return A shiny application 
 #'
 #' @examples
 #' 

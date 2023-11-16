@@ -1,8 +1,6 @@
 Package: CaDrA.shiny
-Type: Package
 Title: Shiny Interface for CaDrA
 Version: 1.0.0
-Date: 2022-11-20
 Authors@R: 
     c(person(given="Reina", family="Chau", role=c("aut","cre"), 
               email="rchau88@bu.edu", comment=c(ORCID="0000-0003-3012-1404")), 
@@ -13,12 +11,11 @@ Authors@R:
      )
 Description: An R Shiny Dashboard for Interacting with CaDrA Package.
 Depends: R (>= 4.1.0)
-LazyData: false
 License: GPL-3 + file LICENSE
 URL: https://github.com/montilab/CaDrA.shiny/
-Packaged: 2017-07-10 18:44:45 UTC; 
 Encoding: UTF-8
 RoxygenNote: 7.2.3
+LazyData: false
 Imports: 
     CaDrA,
     dplyr,
@@ -43,10 +40,9 @@ Suggests:
     BiocStyle,
     devtools,
     knitr,
-    magick,
     rmarkdown,
-    testthat (>= 3.0.0)
-Config/testthat/edition: 3
+    testthat,
+    tidyverse
 biocViews: Software
 VignetteBuilder: knitr
 BugReports: https://github.com/montilab/CaDrA.shiny/issues

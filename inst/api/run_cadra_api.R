@@ -1,17 +1,17 @@
 
-
 # Load R packages
 library(plumber)
 library(devtools)
-load_all()
+load_all("/CaDrA", recompile=TRUE)
+load_all("/CaDrA.shiny", recompile=TRUE)
 
 # Get location of CaDrA API code
-cadra_api_path <- system.file("api/cadra_api.R", package="CaDrA.shiny")
+cadra_api_path <- system.file("api/api.R", package="CaDrA.shiny")
 
 # Check if CaDrA API code exists
 if(!file.exists(cadra_api_path)){
   
-  stop("CaDrA API does not exists at ", cadra_api_path)
+  stop(paste0("CaDrA API does not exists at ", cadra_api_path))
   
 }else{
   

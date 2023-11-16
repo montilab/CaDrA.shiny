@@ -1,70 +1,69 @@
-# Create a cadra_version argument
-# to allow the package to build according to its R version
+# Build according to a specified version of R
 ARG R_VERSION
-ARG R_VERSION=${R_VERSION:-4.3.1}
+ARG R_VERSION=${R_VERSION:-4.3.0}
 
-############# Build Stage: Base ##################
+# Build according to a specified release of CaDrA
+ARG CADRA_BRANCH
+ARG CADRA_BRANCH=${CADRA_BRANCH:-master}
+
+############# Build Stage: CaDrA ##################
 
 # Get shiny+tidyverse+devtools packages from rocker image
 FROM rocker/shiny-verse:${R_VERSION} as base
-
-# Set up the maintainer information
-MAINTAINER Reina Chau (lilychau999@gmail.com)
 
 # Define a system argument
 ARG DEBIAN_FRONTEND=noninteractive
 
 # Install system libraries of general use
-RUN apt-get update && apt-get -y --no-install-recommends install \
-    librsvg2-dev \
-    libudunits2-dev \
-    libv8-dev \
-    libsodium-dev \
-    libbz2-dev \
-    liblzma-dev \
-    tcl8.6-dev \
-    tk8.6-dev \
-    && apt-get clean \
-	&& rm -rf /var/lib/apt/lists/*
+RUN apt-get update --allow-releaseinfo-change --fix-missing \
+  && apt-get -y --no-install-recommends install \
+  librsvg2-dev \
+  libudunits2-dev \
+  libv8-dev \
+  libsodium-dev \
+  libbz2-dev \
+  liblzma-dev \
+  tcl8.6-dev \
+  tk8.6-dev \
+  ca-certificates \
+  git \
+  && apt clean autoclean \
+  && apt autoremove --yes \
+	&& rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-############# Build Stage: Final ##################
+# Set working directory to install CaDrA
+WORKDIR / 
+
+# Clone CaDrA repo
+RUN git clone https://github.com/montilab/CaDrA.git
+
+# Checkout the desired branch for the build
+RUN git checkout ${CADRA_BRANCH}
+
+# Install CaDrA dependencies
+RUN Rscript /CaDrA/inst/install_r_packages.R
+
+# Load CaDrA package
+RUN Rscript -e \
+    "library('devtools'); \
+     devtools::load_all('/CaDrA');"
+
+############# Build Stage: CaDrA.shiny ##################
 
 # Build the final image 
 FROM base as final
 
 # Create package directory 
-ENV PACKAGE=/CaDrA.shiny  
+ENV PACKAGE_DIR=/CaDrA.shiny  
 
 # Set up a volume directory to store package code and data
-VOLUME ${PACKAGE}
+VOLUME ${PACKAGE_DIR}
 
-# Make package location as working directory
-WORKDIR ${PACKAGE}
+# Make package as working directory
+WORKDIR ${PACKAGE_DIR}
 
-# Install the required bioconductor packages to run CaDrA
-RUN R -e "BiocManager::install('SummarizedExperiment')"
-RUN R -e "BiocManager::install('GSVA')"
-
-# Install required R packages to run CaDrA
-RUN R -e "install.packages('doParallel', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('gplots', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('misc3d', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('plyr', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('ppcor', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('R.cache', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('reshape2', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-
-# Install CaDrA package without dependencies as we are already done so in previous steps
-RUN R -e "devtools::install_github('montilab/CaDrA', dependencies=FALSE)"
-
-# Install additional packages for shiny applications
-RUN R -e "install.packages('shinyBS', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('shinyjs', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('shinycssloaders', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('DT', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('plotly', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('heatmaply', dependencies=TRUE, repos='http://cran.rstudio.com/')"
-RUN R -e "install.packages('future', dependencies=TRUE, repos='http://cran.rstudio.com/')"
+# Install CaDrA.shiny dependencies
+RUN Rscript ${PACKAGE_DIR}/inst/install_r_packages.R
 
 # Install packages for plumber API 
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
@@ -74,13 +73,13 @@ RUN R -e "install.packages('plumber', dependencies=TRUE, repos='http://cran.rstu
 EXPOSE 3838
 
 # Copy package code to Docker image
-COPY . ${PACKAGE}
+COPY . ${PACKAGE_DIR}
 
 # Copy bash script that starts shiny-server to Docker image
 COPY inst/shiny/shiny-server.sh /user/bin/shiny-server.sh
 
 # Allow permissions to read/write/execute the package
-RUN chmod a+rwx ${PACKAGE}
+RUN chmod a+rwx ${PACKAGE_DIR}
 
 # Allow permissions to execute the bash script
 RUN chmod a+x /user/bin/shiny-server.sh

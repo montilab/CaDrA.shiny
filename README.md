@@ -118,15 +118,59 @@ feature_set_name
 <th style="text-align:left;">
 description
 </th>
+<th style="text-align:left;">
+collection
+</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+CCLE SCNAs and Mutations
+</td>
+<td style="text-align:left;">
+Somatic copy number alterations and mutations from CCLE. See
+?CaDrA::CCLE_MUT_SCNA
+</td>
+<td style="text-align:left;">
+CCLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Simulated Feature Set
+</td>
+<td style="text-align:left;">
+Simulated feature set comprises of 1000 genomic features and 100 sample
+profiles. This simulated data includes 10 left-skewed (i.e. True
+Positive or TP) and 990 uniformly-distributed (i.e. True Null or TN)
+features. See ?CaDrA::BRCA_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+Simulated
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCGA BrCa SCNAs and Mutations
+</td>
+<td style="text-align:left;">
+Somatic copy number alterations and mutations from BRCA TCGA. See
+?CaDrA::BRCA_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+TCGA
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
 ACC
+</td>
+<td style="text-align:left;">
+TCGA
 </td>
 </tr>
 <tr>
@@ -136,6 +180,9 @@ TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG
 <td style="text-align:left;">
 BLCA
 </td>
+<td style="text-align:left;">
+TCGA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -144,29 +191,8 @@ TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG
 <td style="text-align:left;">
 BRCA
 </td>
-</tr>
-<tr>
 <td style="text-align:left;">
-TCGA_CESC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-CESC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-CHOL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_COADREAD_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-COADREAD
+TCGA
 </td>
 </tr>
 </tbody>
@@ -498,90 +524,10 @@ TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 /Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
-HALLMARK_TNFA_SIGNALING_VIA_NFKB
+NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_HYPOXIA
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_CHOLESTEROL_HOMEOSTASIS
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_MITOTIC_SPINDLE
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_WNT_BETA_CATENIN_SIGNALING
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
+/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
