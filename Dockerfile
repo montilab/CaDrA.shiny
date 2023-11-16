@@ -37,6 +37,9 @@ WORKDIR /
 # Clone CaDrA repo
 RUN git clone https://github.com/montilab/CaDrA.git
 
+# Set working directory to CaDrA
+WORKDIR /CaDrA 
+
 # Checkout the desired branch for the build
 RUN git checkout ${CADRA_BRANCH}
 
