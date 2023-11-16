@@ -2,10 +2,6 @@
 ARG R_VERSION
 ARG R_VERSION=${R_VERSION:-4.3.0}
 
-# Build according to a specified release of CaDrA
-ARG CADRA_BRANCH
-ARG CADRA_BRANCH=${CADRA_BRANCH:-master}
-
 ############# Build Stage: CaDrA ##################
 
 # Get shiny+tidyverse+devtools packages from rocker image
@@ -30,6 +26,10 @@ RUN apt-get update --allow-releaseinfo-change --fix-missing \
   && apt clean autoclean \
   && apt autoremove --yes \
 	&& rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+# Build according to a specified release of CaDrA
+ARG CADRA_BRANCH
+ENV CADRA_BRANCH=${CADRA_BRANCH:-master}
 
 # Set working directory to install CaDrA
 WORKDIR / 
