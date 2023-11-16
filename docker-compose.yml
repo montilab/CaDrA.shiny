@@ -21,7 +21,7 @@ x-cadra-shiny-extdata:
 services:
   cadra.shiny:
     container_name: cadra.shiny
-    image: montilab/cadra.shiny:latest
+    image: cadra.shiny:latest
     build: 
       context: *cadra-shiny-git-repo
       dockerfile: Dockerfile
@@ -34,10 +34,7 @@ services:
     ports:
       - 4567:3838
     volumes:
-      - *cadra-shiny-code
       - *cadra-shiny-extdata
-      - *cadra-shiny-server
-      - *cadra-code
 
 networks:
   frontend: 
