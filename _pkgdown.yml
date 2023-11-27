@@ -42,11 +42,11 @@ navbar:
       menu:
       - text: "How to run CaDrA"
         href: articles/getting-started.html
-      - text: "Containerize CaDrA.shiny with Docker"
+      - text: "Launch CaDrA's Shiny Dashboard with Docker"
         href: articles/docker.html
-      - text: "Launch CaDrA.shiny with Compose"
+      - text: "Launch CaDrA's Shiny Dashboard with Compose"
         href: articles/docker-compose.html        
-      - text: "Retrieve Dataset from our Rest API"
+      - text: "Retrieve Pre-processed Datasets from CaDrA Portal"
         href: articles/api.html
     - text: "Reference"
       href: reference/index.html
