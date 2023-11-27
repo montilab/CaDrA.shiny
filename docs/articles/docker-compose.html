@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Launch CaDrA Shiny with Compose • CaDrA.shiny</title>
+<title>Launch CaDrA's Shiny Dashboard with Compose • CaDrA.shiny</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Launch CaDrA Shiny with Compose">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Launch CaDrA's Shiny Dashboard with Compose">
 <meta property="og:description" content="CaDrA.shiny">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -33,14 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CaDrA.shiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,7 +96,7 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Launch CaDrA Shiny with Compose</h1>
+      <h1 data-toc-skip>Launch CaDrA’s Shiny Dashboard with Compose</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/CaDrA.shiny/blob/HEAD/vignettes/docker-compose.Rmd"><code>vignettes/docker-compose.Rmd</code></a></small>
@@ -107,86 +110,107 @@
 <h2 id="software-requirements">Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"></a>
 </h2>
 <ul>
-<li>Docker version &gt;= 20.10,</li>
 <li>Git version &gt;= 2.21</li>
-<li>Docker-compose version &gt;= 1.29</li>
+<li>Docker version &gt;= 20.10</li>
+<li>Docker-compose version &gt;= 2.23</li>
 </ul>
-<p>Don’t have Docker installed, see <a href="https://docs.docker.com/engine/install/" class="external-link">Docker Engine</a></p>
 <p>Don’t have Git installed, see <a href="https://github.com/git-guides/install-git" class="external-link">Git Guides</a></p>
+<p>Don’t have Docker installed, see <a href="https://docs.docker.com/engine/install/" class="external-link">Docker Engine</a></p>
+<p>Don’t have Compose installed, see <a href="https://docs.docker.com/compose/install/" class="external-link">Compose Plugin</a></p>
 <div class="section level3">
-<h3 id="clone-this-respitory">(1) Clone this respitory<a class="anchor" aria-label="anchor" href="#clone-this-respitory"></a>
+<h3 id="clone-cadra-and-cadra-shiny-repositories">(1) Clone <code>CaDrA</code> and <code>CaDrA.shiny</code>
+repositories<a class="anchor" aria-label="anchor" href="#clone-cadra-and-cadra-shiny-repositories"></a>
 </h3>
-<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.git</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="cd-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-the-yaml-file-to-link-the-data-inputs-and-code-base-to-appropriate-containers">(2) CD to <code>CaDrA.shiny</code> folder where
-<code>docker-compose.yml</code> is stored and edit the yaml file to link
-the data inputs and code base to appropriate containers<a class="anchor" aria-label="anchor" href="#cd-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-the-yaml-file-to-link-the-data-inputs-and-code-base-to-appropriate-containers"></a>
+<h3 id="navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-that-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container">(2) Navigate to <code>CaDrA.shiny</code> folder where
+<code>docker-compose.yml</code> is stored and edit that yaml file to
+configure variables needed to build its Docker image and mount
+appropriate data inputs and code base to run its container<a class="anchor" aria-label="anchor" href="#navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-that-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container"></a>
 </h3>
+<p>Here is a list of configurations:</p>
 <ul>
-<li>Mount code base of <strong>CaDrA-shiny</strong> to
-<strong>/CaDrA-shiny</strong> directory inside the container
-(e.g. change <strong>/path/to/CaDrA.shiny</strong> to your
-<strong>CaDrA-shiny</strong> directory)</li>
-<li>Mount shiny bash file to <strong>/usr/bin/shiny-server.sh</strong>
-directory inside the container to launch your shiny app (e.g. change
-<strong>/path/to/shiny-server.sh</strong> to your
-<strong>CaDrA-shiny/inst/shinyapp/shiny-server.sh</strong>
-directory)</li>
-<li>Mount plumber bash file to <strong>/usr/bin/shiny-server.sh</strong>
-directory inside the container to launch plumber api (e.g. change
-<strong>/path/to/shiny-server.sh</strong> to your
-<strong>CaDrA-shiny/inst/plumber/shiny-server.sh</strong>
-directory)</li>
+<li>Specify a version of R to use as a base image to launch
+<code>CaDrA.shiny</code> dashboard. Default
+<code>R_VERSION=4.3.0</code>
+</li>
+<li>Specify a release branch of <code>CaDrA</code> which one can pull
+and build its package directly from its Github repo. Default
+<code>CADRA_BRANCH=devel</code>
+</li>
+<li>Mount external data files (e.g. feature sets, gene expression sets,
+input scores, etc.) to populate <code>CaDrA.shiny</code> dashboard with.
+One can place external data files in a desired directory
+(e.g. <code>/path/to/extdata</code>) and change
+<strong>/path/to/extdata</strong> to your defined
+<strong>extdata</strong> directory in
+<code>docker-compose.yml</code>.</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">version:</span> <span class="st">'3.9'</span></span>
-<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ex">x-cadra-git-repo:</span></span>
-<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-git-repo</span></span>
-<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a>  <span class="ex">https://raw.githubusercontent.com/montilab/CaDrA/devel/inst/docker/Dockerfile</span></span>
-<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a><span class="ex">x-cadra-shiny-git-repo:</span></span>
-<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-shiny-git-repo</span></span>
-<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>  <span class="ex">https://github.com/montilab/CaDrA.shiny.git#main</span></span>
-<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a>  </span>
-<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="ex">x-cadra-shiny-code:</span></span>
-<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-shiny-code</span></span>
-<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
-<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/CaDrA.shiny</span>
-<span id="cb2-15"><a href="#cb2-15" tabindex="-1"></a>  <span class="ex">target:</span> /CaDrA-shiny</span>
-<span id="cb2-16"><a href="#cb2-16" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" tabindex="-1"></a><span class="ex">x-cadra-shiny-server:</span></span>
-<span id="cb2-18"><a href="#cb2-18" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-shiny-server</span></span>
-<span id="cb2-19"><a href="#cb2-19" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
-<span id="cb2-20"><a href="#cb2-20" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh</span>
-<span id="cb2-21"><a href="#cb2-21" tabindex="-1"></a>  <span class="ex">target:</span> /usr/bin/shiny-server.sh </span>
-<span id="cb2-22"><a href="#cb2-22" tabindex="-1"></a>  </span>
-<span id="cb2-23"><a href="#cb2-23" tabindex="-1"></a><span class="ex">x-cadra-api-server:</span></span>
-<span id="cb2-24"><a href="#cb2-24" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-api-server</span></span>
-<span id="cb2-25"><a href="#cb2-25" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
-<span id="cb2-26"><a href="#cb2-26" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/CaDrA.shiny/inst/plumber/shiny-server.sh</span>
-<span id="cb2-27"><a href="#cb2-27" tabindex="-1"></a>  <span class="ex">target:</span> /usr/bin/shiny-server.sh </span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">x-cadra-shiny-extdata:</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-shiny-extdata</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/extdata</span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="ex">target:</span> /CaDrA.shiny/inst/extdata</span></code></pre></div>
+<ul>
+<li>Mount code base of <strong>CaDrA</strong>, change
+<strong>/path/to/CaDrA</strong> to your <strong>CaDrA</strong>
+directory.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">x-cadra-code:</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-code</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/CaDrA</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="ex">target:</span> /CaDrA</span></code></pre></div>
+<ul>
+<li>Mount code base of <strong>CaDrA.shiny</strong>, change
+<strong>/path/to/CaDrA.shiny</strong> to your
+<strong>CaDrA.shiny</strong> directory</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">x-cadra-shiny-code:</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="kw">&amp;</span><span class="ex">cadra-shiny-code</span></span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/CaDrA.shiny</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="ex">target:</span> /CaDrA-shiny</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="start-all-services-listed-in-the-docker-compose-yml-file">(3) Start all services listed in the docker-compose.yml file<a class="anchor" aria-label="anchor" href="#start-all-services-listed-in-the-docker-compose-yml-file"></a>
+<h3 id="start-cadra-shiny-service-in-docker-compose-yml-to-trigger-the-build-run-its-container-and-finally-launch-cadra-shiny-dashboard">(3) Start <code>cadra.shiny</code> service in
+<code>docker-compose.yml</code> to trigger the build, run its container,
+and finally launch <code>CaDrA.shiny</code> dashboard<a class="anchor" aria-label="anchor" href="#start-cadra-shiny-service-in-docker-compose-yml-to-trigger-the-build-run-its-container-and-finally-launch-cadra-shiny-dashboard"></a>
 </h3>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> </span></code></pre></div>
-<p><strong>-d</strong>: run the containers in detached mode <br></p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">docker-compose</span> up <span class="at">-d</span> </span></code></pre></div>
+<p><strong><code>-d</code></strong>: run the container in detached
+mode</p>
 <p>For more information about the docker-compose syntax, see <a href="https://docs.docker.com/engine/reference/commandline/compose_up/" class="external-link">docker-compose
 up reference</a></p>
 </div>
 <div class="section level3">
-<h3 id="to-check-if-the-services-are-started-sucessfully">(4) To check if the services are started sucessfully<a class="anchor" aria-label="anchor" href="#to-check-if-the-services-are-started-sucessfully"></a>
+<h3 id="check-if-the-image-is-built-successfully">(4) Check if the image is built successfully<a class="anchor" aria-label="anchor" href="#check-if-the-image-is-built-successfully"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">docker-compose</span> ps</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="ex">docker</span> images</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a><span class="ex">REPOSITORY</span>        TAG        IMAGE ID        CREATED        SIZE</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a><span class="ex">cadra.shiny</span>       latest     2c22887402d3    2 hours ago    2.56GB</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="access-cadra-shiny-dashboard-on-the-host-network">(5) Access <code>CaDrA</code> shiny dashboard on the host
-network<a class="anchor" aria-label="anchor" href="#access-cadra-shiny-dashboard-on-the-host-network"></a>
+<h3 id="check-if-the-container-runs-successfully">(5) Check if the container runs successfully<a class="anchor" aria-label="anchor" href="#check-if-the-container-runs-successfully"></a>
 </h3>
-<p>You can visit the local host using your preferred web browser, type
-in <a href="http://localhost:4567" class="external-link uri">http://localhost:4567</a>, and check if the dashboard is
-indeed hosted there.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="ex">docker</span> ps</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE               COMMAND                    CREATED        STATUS        PORTS                    NAMES</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a><span class="ex">b37b6b19c4e8</span>   cadra.shiny:latest  <span class="st">"/bin/bash -c /user/..."</span>   5 hours ago    Up 5 hours    0.0.0.0:4567-<span class="op">&gt;</span>3838/tcp   cadra.shiny</span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="access-cadra-shiny-dashboard-on-your-localhost">(6) Access <code>CaDrA.shiny</code> dashboard on your localhost<a class="anchor" aria-label="anchor" href="#access-cadra-shiny-dashboard-on-your-localhost"></a>
+</h3>
+<p>Using your preferred web browser, type in <a href="http://localhost:4567" class="external-link uri">http://localhost:4567</a> and
+see if <code>CaDrA.shiny</code> dashboard is indeed hosted there.</p>
+<p><img src="figures/cadra-shiny-landing-page.png"></p>
+<p><br><br></p>
+<p>Any questions or issues? Please report them on our <a href="https://github.com/montilab/CaDrA.shiny/issues">github
+issues</a>.</p>
 </div>
 </div>
   </div>

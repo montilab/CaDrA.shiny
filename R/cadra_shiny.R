@@ -47,8 +47,8 @@ global_gene_expression_path <- c(
 
 # Description about the feature set
 global_fs_description <- c(
-  "CCLE SCNAs and Mutations" =  "Somatic copy number alterations and mutations from CCLE. See ?CaDrA::CCLE_MUT_SCNA",
-  "TCGA BrCa SCNAs and Mutations" = "Somatic copy number alterations and mutations from BRCA TCGA. See ?CaDrA::BRCA_GISTIC_MUT_SIG",
+  "CCLE SCNAs and Mutations" =  paste0("Somatic copy number alterations and mutations from CCLE. See ?CaDrA::CCLE_MUT_SCNA"),
+  "TCGA BrCa SCNAs and Mutations" = paste0("Somatic copy number alterations and mutations from BRCA TCGA. See ?CaDrA::BRCA_GISTIC_MUT_SIG"),
   "Simulated Feature Set" = paste0(
     "Simulated feature set comprises of 1000 genomic features and 100 ",
     "sample profiles. This simulated data includes 10 left-skewed (i.e. True Positive or TP) and ", 

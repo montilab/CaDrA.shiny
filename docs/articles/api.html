@@ -33,14 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CaDrA.shiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -299,34 +302,59 @@ Output
 <span>  </span>
 <span><span class="op">}</span></span></code></pre></div>
 <table class="table">
+<colgroup>
+<col width="9%">
+<col width="76%">
+<col width="3%">
+<col width="11%">
+</colgroup>
 <thead><tr class="header">
+<th align="left"></th>
 <th align="left">description</th>
+<th align="left">collection</th>
 <th align="left">feature_set_name</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
+<td align="left">CCLE SCNAs and Mutations</td>
+<td align="left">Somatic copy number alterations and mutations from
+CCLE. See ?CaDrA::CCLE_MUT_SCNA</td>
+<td align="left">CCLE</td>
+<td align="left">CCLE SCNAs and Mutations</td>
+</tr>
+<tr class="even">
+<td align="left">TCGA BrCa SCNAs and Mutations</td>
+<td align="left">Somatic copy number alterations and mutations from BRCA
+TCGA. See ?CaDrA::BRCA_GISTIC_MUT_SIG</td>
+<td align="left">TCGA</td>
+<td align="left">TCGA BrCa SCNAs and Mutations</td>
+</tr>
+<tr class="odd">
+<td align="left">Simulated Feature Set</td>
+<td align="left">Simulated feature set comprises of 1000 genomic
+features and 100 sample profiles. This simulated data includes 10
+left-skewed (i.e. True Positive or TP) and 990 uniformly-distributed
+(i.e. True Null or TN) features. See ?CaDrA::BRCA_GISTIC_MUT_SIG</td>
+<td align="left">Simulated</td>
+<td align="left">Simulated Feature Set</td>
+</tr>
+<tr class="even">
+<td align="left">…4</td>
 <td align="left">ACC</td>
+<td align="left">TCGA</td>
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
 </tr>
-<tr class="even">
+<tr class="odd">
+<td align="left">…5</td>
 <td align="left">BLCA</td>
+<td align="left">TCGA</td>
 <td align="left">TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG</td>
 </tr>
-<tr class="odd">
+<tr class="even">
+<td align="left">…6</td>
 <td align="left">BRCA</td>
+<td align="left">TCGA</td>
 <td align="left">TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG</td>
-</tr>
-<tr class="even">
-<td align="left">CESC</td>
-<td align="left">TCGA_CESC_2016_01_28_GISTIC_MUT_SIG</td>
-</tr>
-<tr class="odd">
-<td align="left">CHOL</td>
-<td align="left">TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG</td>
-</tr>
-<tr class="even">
-<td align="left">COAD</td>
-<td align="left">TCGA_COAD_2016_01_28_GISTIC_MUT_SIG</td>
 </tr>
 </tbody>
 </table>
@@ -428,79 +456,32 @@ Output
 <span><span class="op">}</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="3%">
-<col width="8%">
-<col width="19%">
-<col width="9%">
-<col width="20%">
-<col width="9%">
-<col width="28%">
+<col width="1%">
+<col width="4%">
+<col width="4%">
+<col width="13%">
+<col width="29%">
+<col width="13%">
+<col width="31%">
 </colgroup>
 <thead><tr class="header">
+<th align="left"></th>
+<th align="left">collection</th>
 <th align="left">description</th>
 <th align="left">feature_set_name</th>
 <th align="left">feature_set_path</th>
 <th align="left">gene_expression_name</th>
 <th align="left">gene_expression_path</th>
-<th align="left">input_score_name</th>
-<th align="left">input_score_path</th>
 </tr></thead>
-<tbody>
-<tr class="odd">
+<tbody><tr class="odd">
+<td align="left">…1</td>
+<td align="left">TCGA</td>
 <td align="left">ACC</td>
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
 <td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
 <td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">NA</td>
-<td align="left">NA</td>
-</tr>
-<tr class="even">
-<td align="left">NA</td>
-<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
-<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">HALLMARK_TNFA_SIGNALING_VIA_NFKB</td>
-<td align="left">/CaDrA.shiny/inst/extdata/input_score/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds</td>
-</tr>
-<tr class="odd">
-<td align="left">NA</td>
-<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
-<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">HALLMARK_HYPOXIA</td>
-<td align="left">/CaDrA.shiny/inst/extdata/input_score/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/HALLMARK_HYPOXIA.rds</td>
-</tr>
-<tr class="even">
-<td align="left">NA</td>
-<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
-<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">HALLMARK_CHOLESTEROL_HOMEOSTASIS</td>
-<td align="left">/CaDrA.shiny/inst/extdata/input_score/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds</td>
-</tr>
-<tr class="odd">
-<td align="left">NA</td>
-<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
-<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">HALLMARK_MITOTIC_SPINDLE</td>
-<td align="left">/CaDrA.shiny/inst/extdata/input_score/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/HALLMARK_MITOTIC_SPINDLE.rds</td>
-</tr>
-<tr class="even">
-<td align="left">NA</td>
-<td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
-<td align="left">/CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
-<td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
-<td align="left">/CaDrA.shiny/inst/extdata/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds</td>
-<td align="left">HALLMARK_WNT_BETA_CATENIN_SIGNALING</td>
-<td align="left">/CaDrA.shiny/inst/extdata/input_score/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds</td>
-</tr>
-</tbody>
+</tr></tbody>
 </table>
 <p><br></p>
 </div>
@@ -600,14 +581,17 @@ Output
 <span><span class="op">}</span></span></code></pre></div>
 <table class="table">
 <colgroup>
-<col width="49%">
-<col width="50%">
+<col width="6%">
+<col width="46%">
+<col width="47%">
 </colgroup>
 <thead><tr class="header">
+<th align="left"></th>
 <th align="left">feature_set_name</th>
 <th align="left">gene_expression_name</th>
 </tr></thead>
 <tbody><tr class="odd">
+<td align="left">…1</td>
 <td align="left">TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
 <td align="left">TCGA_ACC_2016_01_28_Gene_Expression</td>
 </tr></tbody>
@@ -732,34 +716,34 @@ Output
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">download-fs-2023-11-07/</td>
+<td align="left">download-fs-2023-11-27/</td>
 <td align="right">0</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 <tr class="even">
-<td align="left">download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/</td>
+<td align="left">download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/</td>
 <td align="right">0</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 <tr class="odd">
-<td align="left">download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/</td>
+<td align="left">download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/</td>
 <td align="right">0</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 <tr class="even">
-<td align="left">download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+<td align="left">download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
 <td align="right">109811</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 <tr class="odd">
-<td align="left">download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/</td>
+<td align="left">download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/</td>
 <td align="right">0</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 <tr class="even">
-<td align="left">download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds</td>
-<td align="right">956</td>
-<td align="left">2023-11-07 15:15:00</td>
+<td align="left">download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/</td>
+<td align="right">0</td>
+<td align="left">2023-11-27 11:29:00</td>
 </tr>
 </tbody>
 </table>

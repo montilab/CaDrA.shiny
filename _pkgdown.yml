@@ -1,8 +1,5 @@
 url: https://github.com/montilab/CaDrA.shiny/
 
-development:
-  mode: auto
-
 template:
   params:
     bootswatch: flatly
@@ -39,7 +36,7 @@ home:
         
 navbar:
   left:
-    - text: "Home"
+    - icon: fa-home
       href: index.html
     - text: "Getting Started"
       menu:

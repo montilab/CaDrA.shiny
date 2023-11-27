@@ -6,6 +6,10 @@ CaDrA.shiny
 <hr style="padding-top: 0; margin-top: 0;">
 
 ![build](https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg)
+![Docker
+pulls](https://img.shields.io/docker/pulls/montilab/cadra.shiny)
+![Docker image
+size](https://img.shields.io/docker/image-size/montilab/cadra.shiny)
 ![Gitter](https://img.shields.io/gitter/room/montilab/cadra.shiny)
 ![GitHub
 issues](https://img.shields.io/github/issues/montilab/cadra.shiny)
@@ -21,19 +25,22 @@ An R Shiny Dashboard for Interacting with
 
 ## Overview
 
-**CaDrA-shiny** is an interactive R Shiny dashboard developed to allow
-users to directly interact with the **CaDrA** package. **CaDrA** is an R
+**CaDrA.shiny** is an interactive R Shiny dashboard developed to allow
+users to directly interact with **CaDrA** package. **CaDrA** is an R
 package that supports a heuristic search framework aimed at identifying
 candidate drivers of a molecular phenotype of interest (visit [our
 Github repo](https://github.com/montilab/CaDrA) for more details).
 
-The CaDrA’s shiny dashboard has two distinctive features:
+The CaDrA’s Shiny dashboard has two distinctive features:
 
 1.  Run **CaDrA** search to identify candidate drivers of a molecular
     phenotype of interest.
 2.  Run **GSVA** to estimate aggregate enrichment scores by projecting a
     (gene) expression dataset onto a given gene set or signature,
-    usually representing a molecular phenotype.
+    usually representing a molecular phenotype. Afterward, one can apply
+    **CaDrA** search to look for genetic drivers based on a given binary
+    multi-omics dataset and its derived enrichment score of a signature
+    of interest.
 
 Data visualizations include:
 
@@ -42,15 +49,15 @@ Data visualizations include:
 - Top N candidates overlapping heatmap.
 - Permutation plot.
 
-The **CaDrA.shiny** package is already containerized using **Docker**
-and can be deployed on any Cloud-based services.
+**CaDrA.shiny** is currently containerized using **Docker** and can be
+deployed on any compatible cloud-based services.
 
-#### **Docker image: [montilab/cadra-shiny](https://hub.docker.com/r/montilab/cadra-shiny)**
+#### **Docker image: [montilab/cadra-shiny](https://hub.docker.com/r/montilab/cadra.shiny)**
 
 #### Useful Guides
 
-- <a href="articles/docker.html" target="_blank">Containerize
-  CaDrA.shiny with Docker</a>
+- <a href="articles/docker.html" target="_blank">Launch CaDrA’s Shiny
+  Dashboard with Docker CLI</a>
 - <a href="articles/docker-compose.html" target="_blank">Launch CaDrA’s
   Shiny Dashboard with Compose</a>
 
@@ -73,9 +80,6 @@ devtools::install_github("montilab/hypeR")
 
 # Install CaDrA.shiny
 devtools::install_github("montilab/CaDrA.shiny")
-
-# Install knitr
-install.packages("knitr", repos="http://cran.us.r-project.org")
 ```
 
 ### (2) Load packages
@@ -85,7 +89,6 @@ library(CaDrA.shiny)
 library(CaDrA)
 library(GSVA)
 library(hypeR)
-library(knitr)
 ```
 
 ### (3) Run CaDrA with dataset downloaded from CaDrA Portal
@@ -201,7 +204,7 @@ TCGA
 #### (ii) Retrieve datasets from the portal
 
 ``` r
-## Retrieve the ACC dataset (both genetic feature set and gene expression)
+## Retrieve the dataset (both genetic feature set and gene expression)
 datasets <- CaDrA.shiny::pull_datasets(
   feature_set = "TCGA_HNSC_2016_01_28_GISTIC_MUT_SIG",
   include_gene_expression = TRUE
@@ -448,7 +451,7 @@ CaDrA::permutation_plot(perm_res = perm_res)
 
 ![](./man/figures/unnamed-chunk-9-1.png)<!-- -->
 
-### (4) Launch CaDrA’s Shiny App with your pre-proccessed dataset
+### (4) Launch CaDrA’s Shiny dashboard with your pre-proccessed dataset
 
 Here, we show how to launch a local instance of the CaDrA Portal, which
 will be populated with a user-selected set of datasets. In the example,
@@ -457,7 +460,7 @@ a single dataset (ACC) will be uploaded to the portal.
 #### (i) Pull pre-processed feature sets using our REST API
 
 ``` r
-# Download feature sets and return a datalist with appropriate paths to dataset
+# Download feature sets from CaDrA portal and return a datalist with appropriate paths to dataset
 mydatafile <- CaDrA.shiny::download_feature_sets(
   #feature_set = fs_list$feature_set_name,  # this would download all TCGA datasets
   feature_set = "TCGA_ACC_2016_01_28_GISTIC_MUT_SIG",
@@ -501,19 +504,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -521,25 +524,25 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>
 </table>
 
-#### (iii) Launch CaDrA’s Shiny app with the downloaded dataset
+#### (iii) Launch Shiny dashboard with downloaded dataset
 
 ``` r
 ## Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)
@@ -549,26 +552,30 @@ app <- CaDrA.shiny::CaDrA_App(id="myapp", datalist=mydatafile)
 shiny::runApp(app, host='0.0.0.0', port=3838)
 ```
 
-# A Glimpse of CaDrA’s Dashboard
+# A Glimpse of CaDrA’s Shiny Dashboard
 
-There are five tabs on CaDrA’s Dashboard. Explore each tab and see what
-they do:
+![](man/figures/cadra-shiny-landing-page.png)
+
+There are five tabs on CaDrA’s Shiny dashboard. Explore each tab and see
+what they do.
 
 ![](man/figures/tabs.png)
 
-- <a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a>
-- <a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a>
-- <a href="articles/api.html" target="_blank">Download</a>
-- Help
+- <a href="https://montilab.github.io/CaDrA.shiny/articles/run-cadra-tab.html" target="_blank">Run
+  CaDrA</a>
+- <a href="https://montilab.github.io/CaDrA.shiny/articles/run-gsva-tab.html" target="_blank">Run
+  GSVA</a>
+- Download
 - Publication
 - Contract Us
 
 # Getting Help
 
-To get help with **CaDrA**, visit our [Github
+To get help with **CaDrA**, visit our [Github CaDrA
 dicussion](https://github.com/montilab/CaDrA/discussions) or [Github
-issues](https://github.com/montilab/CaDrA/issues).
+CaDrA issues](https://github.com/montilab/CaDrA/issues).
 
-To get help with **CaDrA.shiny**, visit our [Github
+To get help with **CaDrA.shiny**, visit our [Github CaDrA.shiny
 dicussion](https://github.com/montilab/CaDrA.shiny/discussions) or
-[Github issues](https://github.com/montilab/CaDrA.shiny/issues).
+[Github CaDrA.shiny
+issues](https://github.com/montilab/CaDrA.shiny/issues).

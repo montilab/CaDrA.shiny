@@ -33,14 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">CaDrA.shiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="index.html">Home</a>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -97,7 +100,7 @@
 CaDrA.shiny
 </p>
 <hr style="padding-top: 0; margin-top: 0;">
-<p><img src="https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg" alt="build"><img src="https://img.shields.io/gitter/room/montilab/cadra.shiny" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/cadra.shiny" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/cadra.shiny" alt="GitHub last commit"></p>
+<p><img src="https://github.com/montilab/cadra/workflows/rcmdcheck/badge.svg" alt="build"><img src="https://img.shields.io/docker/pulls/montilab/cadra.shiny" alt="Docker pulls"><img src="https://img.shields.io/docker/image-size/montilab/cadra.shiny" alt="Docker image size"><img src="https://img.shields.io/gitter/room/montilab/cadra.shiny" alt="Gitter"><img src="https://img.shields.io/github/issues/montilab/cadra.shiny" alt="GitHub issues"><img src="https://img.shields.io/github/last-commit/montilab/cadra.shiny" alt="GitHub last commit"></p>
 <p>An R Shiny Dashboard for Interacting with <strong><a href="https://montilab.github.io/CaDrA/" class="external-link">CaDrA</a></strong> Package</p>
 <div class="section level3">
 <h3 id="cadra-package-httpsmontilabgithubiocadra">
@@ -112,11 +115,11 @@ CaDrA.shiny
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
-<p><strong>CaDrA-shiny</strong> is an interactive R Shiny dashboard developed to allow users to directly interact with the <strong>CaDrA</strong> package. <strong>CaDrA</strong> is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit <a href="https://github.com/montilab/CaDrA" class="external-link">our Github repo</a> for more details).</p>
-<p>The CaDrA’s shiny dashboard has two distinctive features:</p>
+<p><strong>CaDrA.shiny</strong> is an interactive R Shiny dashboard developed to allow users to directly interact with <strong>CaDrA</strong> package. <strong>CaDrA</strong> is an R package that supports a heuristic search framework aimed at identifying candidate drivers of a molecular phenotype of interest (visit <a href="https://github.com/montilab/CaDrA" class="external-link">our Github repo</a> for more details).</p>
+<p>The CaDrA’s Shiny dashboard has two distinctive features:</p>
 <ol style="list-style-type: decimal">
 <li>Run <strong>CaDrA</strong> search to identify candidate drivers of a molecular phenotype of interest.</li>
-<li>Run <strong>GSVA</strong> to estimate aggregate enrichment scores by projecting a (gene) expression dataset onto a given gene set or signature, usually representing a molecular phenotype.</li>
+<li>Run <strong>GSVA</strong> to estimate aggregate enrichment scores by projecting a (gene) expression dataset onto a given gene set or signature, usually representing a molecular phenotype. Afterward, one can apply <strong>CaDrA</strong> search to look for genetic drivers based on a given binary multi-omics dataset and its derived enrichment score of a signature of interest.</li>
 </ol>
 <p>Data visualizations include:</p>
 <ul>
@@ -125,17 +128,17 @@ CaDrA.shiny
 <li>Top N candidates overlapping heatmap.</li>
 <li>Permutation plot.</li>
 </ul>
-<p>The <strong>CaDrA.shiny</strong> package is already containerized using <strong>Docker</strong> and can be deployed on any Cloud-based services.</p>
+<p><strong>CaDrA.shiny</strong> is currently containerized using <strong>Docker</strong> and can be deployed on any compatible cloud-based services.</p>
 <div class="section level4">
 <h4 id="docker-image-montilabcadra-shiny">
-<strong>Docker image: <a href="https://hub.docker.com/r/montilab/cadra-shiny" class="external-link">montilab/cadra-shiny</a></strong><a class="anchor" aria-label="anchor" href="#docker-image-montilabcadra-shiny"></a>
+<strong>Docker image: <a href="https://hub.docker.com/r/montilab/cadra.shiny" class="external-link">montilab/cadra-shiny</a></strong><a class="anchor" aria-label="anchor" href="#docker-image-montilabcadra-shiny"></a>
 </h4>
 </div>
 <div class="section level4">
 <h4 id="useful-guides">Useful Guides<a class="anchor" aria-label="anchor" href="#useful-guides"></a>
 </h4>
 <ul>
-<li><a href="articles/docker.html" target="_blank">Containerize CaDrA.shiny with Docker</a></li>
+<li><a href="articles/docker.html" target="_blank">Launch CaDrA’s Shiny Dashboard with Docker CLI</a></li>
 <li><a href="articles/docker-compose.html" target="_blank">Launch CaDrA’s Shiny Dashboard with Compose</a></li>
 </ul>
 </div>
@@ -158,10 +161,7 @@ CaDrA.shiny
 <span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/hypeR"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Install CaDrA.shiny</span></span>
-<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/CaDrA.shiny"</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Install knitr</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"knitr"</span>, repos<span class="op">=</span><span class="st">"http://cran.us.r-project.org"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">devtools</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"montilab/CaDrA.shiny"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_2-load-packages">(2) Load packages<a class="anchor" aria-label="anchor" href="#id_2-load-packages"></a>
@@ -170,8 +170,7 @@ CaDrA.shiny
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA.shiny/">CaDrA.shiny</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/CaDrA/" class="external-link">CaDrA</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/rcastelo/GSVA" class="external-link">GSVA</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/hypeR" class="external-link">hypeR</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://yihui.org/knitr/" class="external-link">knitr</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/montilab/hypeR" class="external-link">hypeR</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="id_3-run-cadra-with-dataset-downloaded-from-cadra-portal">(3) Run CaDrA with dataset downloaded from CaDrA Portal<a class="anchor" aria-label="anchor" href="#id_3-run-cadra-with-dataset-downloaded-from-cadra-portal"></a>
@@ -194,14 +193,53 @@ feature_set_name
 <th style="text-align:left;">
 description
 </th>
+<th style="text-align:left;">
+collection
+</th>
 </tr></thead>
 <tbody>
+<tr>
+<td style="text-align:left;">
+CCLE SCNAs and Mutations
+</td>
+<td style="text-align:left;">
+Somatic copy number alterations and mutations from CCLE. See ?CaDrA::CCLE_MUT_SCNA
+</td>
+<td style="text-align:left;">
+CCLE
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Simulated Feature Set
+</td>
+<td style="text-align:left;">
+Simulated feature set comprises of 1000 genomic features and 100 sample profiles. This simulated data includes 10 left-skewed (i.e. True Positive or TP) and 990 uniformly-distributed (i.e. True Null or TN) features. See ?CaDrA::BRCA_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+Simulated
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+TCGA BrCa SCNAs and Mutations
+</td>
+<td style="text-align:left;">
+Somatic copy number alterations and mutations from BRCA TCGA. See ?CaDrA::BRCA_GISTIC_MUT_SIG
+</td>
+<td style="text-align:left;">
+TCGA
+</td>
+</tr>
 <tr>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
 ACC
+</td>
+<td style="text-align:left;">
+TCGA
 </td>
 </tr>
 <tr>
@@ -211,6 +249,9 @@ TCGA_BLCA_2016_01_28_GISTIC_MUT_SIG
 <td style="text-align:left;">
 BLCA
 </td>
+<td style="text-align:left;">
+TCGA
+</td>
 </tr>
 <tr>
 <td style="text-align:left;">
@@ -219,29 +260,8 @@ TCGA_BRCA_2016_01_28_GISTIC_MUT_SIG
 <td style="text-align:left;">
 BRCA
 </td>
-</tr>
-<tr>
 <td style="text-align:left;">
-TCGA_CESC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-CESC
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_CHOL_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-CHOL
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_COADREAD_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-COADREAD
+TCGA
 </td>
 </tr>
 </tbody>
@@ -251,7 +271,7 @@ COADREAD
 <h4 id="ii-retrieve-datasets-from-the-portal">(ii) Retrieve datasets from the portal<a class="anchor" aria-label="anchor" href="#ii-retrieve-datasets-from-the-portal"></a>
 </h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co">## Retrieve the ACC dataset (both genetic feature set and gene expression)</span></span>
+<code class="sourceCode R"><span><span class="co">## Retrieve the dataset (both genetic feature set and gene expression)</span></span>
 <span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/pull_datasets.html">pull_datasets</a></span><span class="op">(</span></span>
 <span>  feature_set <span class="op">=</span> <span class="st">"TCGA_HNSC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
 <span>  include_gene_expression <span class="op">=</span> <span class="cn">TRUE</span></span>
@@ -491,14 +511,14 @@ Apical Junction
 <p><img src="./reference/figures/unnamed-chunk-9-1.png"><!-- --></p>
 </div>
 <div class="section level3">
-<h3 id="id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset">(4) Launch CaDrA’s Shiny App with your pre-proccessed dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadras-shiny-app-with-your-pre-proccessed-dataset"></a>
+<h3 id="id_4-launch-cadras-shiny-dashboard-with-your-pre-proccessed-dataset">(4) Launch CaDrA’s Shiny dashboard with your pre-proccessed dataset<a class="anchor" aria-label="anchor" href="#id_4-launch-cadras-shiny-dashboard-with-your-pre-proccessed-dataset"></a>
 </h3>
 <p>Here, we show how to launch a local instance of the CaDrA Portal, which will be populated with a user-selected set of datasets. In the example, a single dataset (ACC) will be uploaded to the portal.</p>
 <div class="section level4">
 <h4 id="i-pull-pre-processed-feature-sets-using-our-rest-api">(i) Pull pre-processed feature sets using our REST API<a class="anchor" aria-label="anchor" href="#i-pull-pre-processed-feature-sets-using-our-rest-api"></a>
 </h4>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Download feature sets and return a datalist with appropriate paths to dataset</span></span>
+<code class="sourceCode R"><span><span class="co"># Download feature sets from CaDrA portal and return a datalist with appropriate paths to dataset</span></span>
 <span><span class="va">mydatafile</span> <span class="op">&lt;-</span> <span class="fu">CaDrA.shiny</span><span class="fu">::</span><span class="fu"><a href="reference/download_feature_sets.html">download_feature_sets</a></span><span class="op">(</span></span>
 <span>  <span class="co">#feature_set = fs_list$feature_set_name,  # this would download all TCGA datasets</span></span>
 <span>  feature_set <span class="op">=</span> <span class="st">"TCGA_ACC_2016_01_28_GISTIC_MUT_SIG"</span>,</span>
@@ -536,19 +556,19 @@ gene_expression_path
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
 NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 <tr>
@@ -556,106 +576,26 @@ TCGA_ACC_2016_01_28_Gene_Expression
 TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
 </td>
 <td style="text-align:left;">
-HALLMARK_TNFA_SIGNALING_VIA_NFKB
+NA
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_TNFA_SIGNALING_VIA_NFKB.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_HYPOXIA
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_HYPOXIA.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/NA
 </td>
 <td style="text-align:left;">
 TCGA_ACC_2016_01_28_Gene_Expression
 </td>
 <td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_CHOLESTEROL_HOMEOSTASIS
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_CHOLESTEROL_HOMEOSTASIS.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_MITOTIC_SPINDLE
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_MITOTIC_SPINDLE.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_GISTIC_MUT_SIG
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds
-</td>
-<td style="text-align:left;">
-HALLMARK_WNT_BETA_CATENIN_SIGNALING
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/input_score/HALLMARK_WNT_BETA_CATENIN_SIGNALING.rds
-</td>
-<td style="text-align:left;">
-TCGA_ACC_2016_01_28_Gene_Expression
-</td>
-<td style="text-align:left;">
-/Users/reinachau/Github/download-fs-2023-11-07/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
+/Users/reinachau/Github/download-fs-2023-11-27/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG/gene_expression/TCGA_ACC_2016_01_28_Gene_Expression.rds
 </td>
 </tr>
 </tbody>
 </table>
 </div>
 <div class="section level4">
-<h4 id="iii-launch-cadras-shiny-app-with-the-downloaded-dataset">(iii) Launch CaDrA’s Shiny app with the downloaded dataset<a class="anchor" aria-label="anchor" href="#iii-launch-cadras-shiny-app-with-the-downloaded-dataset"></a>
+<h4 id="iii-launch-shiny-dashboard-with-downloaded-dataset">(iii) Launch Shiny dashboard with downloaded dataset<a class="anchor" aria-label="anchor" href="#iii-launch-shiny-dashboard-with-downloaded-dataset"></a>
 </h4>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Launch CaDrA's Shiny app with your downloaded datalist retrieved from (ii)</span></span>
@@ -667,15 +607,15 @@ TCGA_ACC_2016_01_28_Gene_Expression
 </div>
 </div>
 <div class="section level1">
-<div class="page-header"><h1 id="a-glimpse-of-cadras-dashboard">A Glimpse of CaDrA’s Dashboard<a class="anchor" aria-label="anchor" href="#a-glimpse-of-cadras-dashboard"></a>
+<div class="page-header"><h1 id="a-glimpse-of-cadras-shiny-dashboard">A Glimpse of CaDrA’s Shiny Dashboard<a class="anchor" aria-label="anchor" href="#a-glimpse-of-cadras-shiny-dashboard"></a>
 </h1></div>
-<p>There are five tabs on CaDrA’s Dashboard. Explore each tab and see what they do:</p>
+<p><img src="reference/figures/cadra-shiny-landing-page.png"></p>
+<p>There are five tabs on CaDrA’s Shiny dashboard. Explore each tab and see what they do.</p>
 <p><img src="reference/figures/tabs.png"></p>
 <ul>
-<li><a href="articles/run-cadra-tab.html" target="_blank">Run CaDrA</a></li>
-<li><a href="articles/run-gsva-tab.html" target="_blank">Run GSVA</a></li>
-<li><a href="articles/api.html" target="_blank">Download</a></li>
-<li>Help</li>
+<li><a href="https://montilab.github.io/CaDrA.shiny/articles/run-cadra-tab.html" target="_blank" class="external-link">Run CaDrA</a></li>
+<li><a href="https://montilab.github.io/CaDrA.shiny/articles/run-gsva-tab.html" target="_blank" class="external-link">Run GSVA</a></li>
+<li>Download</li>
 <li>Publication</li>
 <li>Contract Us</li>
 </ul>
@@ -683,8 +623,8 @@ TCGA_ACC_2016_01_28_Gene_Expression
 <div class="section level1">
 <h1 id="getting-help">Getting Help<a class="anchor" aria-label="anchor" href="#getting-help"></a>
 </h1>
-<p>To get help with <strong>CaDrA</strong>, visit our <a href="https://github.com/montilab/CaDrA/discussions" class="external-link">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA/issues" class="external-link">Github issues</a>.</p>
-<p>To get help with <strong>CaDrA.shiny</strong>, visit our <a href="https://github.com/montilab/CaDrA.shiny/discussions">Github dicussion</a> or <a href="https://github.com/montilab/CaDrA.shiny/issues">Github issues</a>.</p>
+<p>To get help with <strong>CaDrA</strong>, visit our <a href="https://github.com/montilab/CaDrA/discussions" class="external-link">Github CaDrA dicussion</a> or <a href="https://github.com/montilab/CaDrA/issues" class="external-link">Github CaDrA issues</a>.</p>
+<p>To get help with <strong>CaDrA.shiny</strong>, visit our <a href="https://github.com/montilab/CaDrA.shiny/discussions">Github CaDrA.shiny dicussion</a> or <a href="https://github.com/montilab/CaDrA.shiny/issues">Github CaDrA.shiny issues</a>.</p>
 </div>
 
   </div>

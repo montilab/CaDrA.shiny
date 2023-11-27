@@ -17,13 +17,16 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CaDrA.shiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav"><li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -69,7 +72,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Shiny UI modules</h1>
-    <small class="dont-index">Source: <a href="https://github.com/montilab/CaDrA.shiny/blob/HEAD/R/app.R"><code>R/app.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/montilab/CaDrA.shiny/blob/HEAD/R/cadra_shiny.R"><code>R/cadra_shiny.R</code></a></small>
     <div class="hidden name"><code>CaDrA_UI.Rd</code></div>
     </div>
 
@@ -93,8 +96,8 @@ the absolute paths of necessary files to start the app.</p>
 <p>The datalist must contains the following variables:
 'feature_set' (required), 'feature_set_path' (repuired), 
 'input_score_name' (required), input_score_path' (required), 
-'gene_expression_name' (optional), 'gene_expression_path' (optional)</p>
-<p>Default is NULL. If NULL, the app will start with DEFAULT dataset included 
+'gene_expression_name' (required), 'gene_expression_path' (required)</p>
+<p>Default is NULL. If NULL, the app will start with DEFAULT dataset that included 
 in the package.</p></dd>
 
 </dl></div>

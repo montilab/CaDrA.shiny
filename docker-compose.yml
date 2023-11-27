@@ -13,10 +13,22 @@ x-cadra-shiny-git-repo:
   https://github.com/montilab/CaDrA.shiny.git
 
 x-cadra-shiny-extdata:
-  &cadra-shiny-extdata
-  type: bind
-  source: /path/to/extdata
-  target: /CaDrA.shiny/inst/extdata
+ &cadra-shiny-extdata
+ type: bind
+ source: /path/to/extdata
+ target: /CaDrA.shiny/inst/extdata
+ 
+x-cadra-code:
+ &cadra-code
+ type: bind
+ source: /Users/reinachau/Github/CaDrA
+ target: /CaDrA
+  
+x-cadra-shiny-code:
+ &cadra-shiny-code
+ type: bind
+ source: /Users/reinachau/Github/CaDrA.shiny
+ target: /CaDrA.shiny
   
 services:
   cadra.shiny:
@@ -35,6 +47,8 @@ services:
       - 4567:3838
     volumes:
       - *cadra-shiny-extdata
+      - *cadra-shiny-code
+      - *cadra-code
 
 networks:
   frontend: 

@@ -6,8 +6,8 @@ library(tidyverse)
 
 # Must load CaDrA.shiny to access dataset
 library(devtools)
-load_all("/CaDrA", recompile=TRUE)
-load_all("/CaDrA.shiny", recompile=TRUE)
+devtools::load_all("/CaDrA", recompile=TRUE)
+devtools::load_all("/CaDrA.shiny", recompile=TRUE)
 
 # Get location of datalist file
 # Required column names in datalist:

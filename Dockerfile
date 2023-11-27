@@ -62,7 +62,7 @@ COPY . ${PACKAGE_DIR}
 RUN Rscript -e "library('devtools'); devtools::load_all('/CaDrA');" \
   && Rscript "${PACKAGE_DIR}/install_r_packages.R"
 
-# Install packages for plumber API 
+# Install additional R packages for plumber API 
 RUN R -e "install.packages('unix', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 RUN R -e "install.packages('plumber', dependencies=TRUE, repos='http://cran.rstudio.com/')"
 

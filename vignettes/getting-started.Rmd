@@ -9,7 +9,12 @@ vignette: >
 
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
-library(CaDrA)
+
+# Load CaDrA
+library(devtools)
+devtools::load_all("~/Github/CaDrA", recompile=TRUE)
+
+# Load other R packages
 library(SummarizedExperiment)
 ```
 

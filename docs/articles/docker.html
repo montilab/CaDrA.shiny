@@ -5,13 +5,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Containerizing CaDrA.shiny with Docker • CaDrA.shiny</title>
+<title>Launch CaDrA's Shiny Dashboard with Docker CLI • CaDrA.shiny</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.4.0/flatly/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Containerizing CaDrA.shiny with Docker">
+<script src="../pkgdown.js"></script><meta property="og:title" content="Launch CaDrA's Shiny Dashboard with Docker CLI">
 <meta property="og:description" content="CaDrA.shiny">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -33,14 +33,17 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">CaDrA.shiny</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">1.0.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.0.0</span>
       </span>
     </div>
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
 <li>
-  <a href="../index.html">Home</a>
+  <a href="../index.html">
+    <span class="fa fa-home"></span>
+     
+  </a>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -93,7 +96,8 @@
       </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Containerizing CaDrA.shiny with Docker</h1>
+      <h1 data-toc-skip>Launch CaDrA’s Shiny Dashboard with Docker
+CLI</h1>
             
       
       <small class="dont-index">Source: <a href="https://github.com/montilab/CaDrA.shiny/blob/HEAD/vignettes/docker.Rmd"><code>vignettes/docker.Rmd</code></a></small>
@@ -107,99 +111,204 @@
 <h2 id="software-requirements">Software requirements<a class="anchor" aria-label="anchor" href="#software-requirements"></a>
 </h2>
 <ul>
-<li>Docker version &gt;= 20.10</li>
 <li>Git version &gt;= 2.21</li>
+<li>Docker version &gt;= 20.10</li>
 </ul>
-<p>Don’t have Docker installed, see <a href="https://docs.docker.com/engine/install/" class="external-link">Docker Engine</a></p>
 <p>Don’t have Git installed, see <a href="https://github.com/git-guides/install-git" class="external-link">Git Guides</a></p>
+<p>Don’t have Docker installed, see <a href="https://docs.docker.com/engine/install/" class="external-link">Docker Engine</a></p>
 </div>
 <div class="section level2">
-<h2 id="container-dependencies">Container dependencies<a class="anchor" aria-label="anchor" href="#container-dependencies"></a>
-</h2>
-<ul>
-<li>montiab/cadra:2.0.0 (stored on <a href="https://hub.docker.com/r/montilab/cadra" class="external-link">Docker Hub</a>)</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="build-docker-image">Build Docker image<a class="anchor" aria-label="anchor" href="#build-docker-image"></a>
+<h2 id="build-docker-image-of-cadra-shiny">Build Docker image of <code>CaDrA.shiny</code><a class="anchor" aria-label="anchor" href="#build-docker-image-of-cadra-shiny"></a>
 </h2>
 <div class="section level3">
-<h3 id="clone-this-respitory">(1) Clone this respitory<a class="anchor" aria-label="anchor" href="#clone-this-respitory"></a>
+<h3 id="clone-this-repository">(1) Clone this repository<a class="anchor" aria-label="anchor" href="#clone-this-repository"></a>
 </h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="cd-to-cadra-shiny-folder-where-dockerfile-file-is-stored-and-build-the-docker-image-">(2) CD to <code>CaDrA.shiny</code> folder where
-<code>Dockerfile</code> file is stored and build the Docker image.<a class="anchor" aria-label="anchor" href="#cd-to-cadra-shiny-folder-where-dockerfile-file-is-stored-and-build-the-docker-image-"></a>
+<h3 id="navigate-to-cadra-shiny-folder-where-dockerfile-is-stored-and-build-its-docker-image-">(2) Navigate to <code>CaDrA.shiny</code> folder where
+<code>Dockerfile</code> is stored and build its Docker image.<a class="anchor" aria-label="anchor" href="#navigate-to-cadra-shiny-folder-where-dockerfile-is-stored-and-build-its-docker-image-"></a>
 </h3>
-<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> cadra-shiny:1.0.0 .</span></code></pre></div>
-<p><strong>-t</strong>: add a tag to an image such as the version of the
-application, e.g. <em>cadra-shiny:1.0.0</em> or
-<em>cadra-shiny:latest</em>. <br></p>
-<p><strong>NOTE:</strong> <em>The image takes approximately &lt; 10 mins
-to build</em></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="ex">docker</span> build <span class="at">-t</span> cadra.shiny:latest .</span></code></pre></div>
+<p><strong><code>-t</code></strong>: add a tag to an image such as the
+version of the application, e.g. <em>cadra.shiny:1.0.0</em> or
+<em>cadra.shiny:latest</em>. <br></p>
 </div>
 <div class="section level3">
-<h3 id="after-the-build-is-completed-you-can-check-if-the-image-is-built-successfully">(3) After the build is completed, you can check if the image is
-built successfully<a class="anchor" aria-label="anchor" href="#after-the-build-is-completed-you-can-check-if-the-image-is-built-successfully"></a>
+<h3 id="after-the-build-is-completed-check-if-the-image-is-built-successfully">(3) After the build is completed, check if the image is built
+successfully<a class="anchor" aria-label="anchor" href="#after-the-build-is-completed-check-if-the-image-is-built-successfully"></a>
 </h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">docker</span> images</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="ex">REPOSITORY</span>        TAG        IMAGE ID        CREATED        SIZE</span>
-<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="ex">cadra.shiny</span>       1.0.0      2c22887402d3    2 hours ago    2.56GB</span></code></pre></div>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="ex">cadra.shiny</span>       latest     2c22887402d3    2 hours ago    2.56GB</span></code></pre></div>
 </div>
+</div>
+<div class="section level2">
+<h2 id="run-cadra-shiny-container-with-its-built-image">Run <code>CaDrA.shiny</code> container with its built image<a class="anchor" aria-label="anchor" href="#run-cadra-shiny-container-with-its-built-image"></a>
+</h2>
 <div class="section level3">
-<h3 id="to-run-the-container-with-the-built-image">(4) To run the container with the built image<a class="anchor" aria-label="anchor" href="#to-run-the-container-with-the-built-image"></a>
+<h3 id="mount-appropriate-data-inputs-and-code-base-to-the-container">(1) Mount appropriate data inputs and code base to the
+container<a class="anchor" aria-label="anchor" href="#mount-appropriate-data-inputs-and-code-base-to-the-container"></a>
 </h3>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="at">-v</span> /path/to/CaDrA.shiny:/CaDrA.shiny <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>           <span class="at">-v</span> /path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh:/usr/bin/shiny-server.sh <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>           <span class="at">-p</span> 8080:8050 <span class="at">--name</span> cadra-shiny <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>           <span class="at">-d</span> cadra-shiny:1.0.0 </span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">docker</span> run <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>-v /path/to/CaDrA.shiny:/CaDrA.shiny <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>-v /path/to/CaDrA.shiny/inst/extdata:/CaDrA.shiny/inst/extdata <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>-p 4567:3838 <span class="at">--name</span> cadra.shiny <span class="dt">\</span></span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>-d cadra.shiny:latest </span></code></pre></div>
+<p><strong><code>-v</code></strong>: mount code base or data files from
+host directory to container directory
+<strong>[host_div]:[container_dir]</strong>. <br><strong><code>-p</code></strong>: map host port to container port
+<strong>[host_port]:[container_port]</strong> <br><strong><code>--name</code></strong>: give an identity to the container
+<br><strong><code>-d</code></strong>: run container in detached mode
+<br></p>
+<p>For more information about the Docker syntax, see <a href="https://docs.docker.com/engine/reference/run/" class="external-link">Docker run
+reference</a></p>
 <p><strong>NOTE:</strong></p>
 <ul>
 <li>Change <strong>/path/to/CaDrA.shiny</strong> to your local
-<code>CaDrA.shiny</code> directory. This directory must contain all of
-the code base needed to build the <code>CaDrA.shiny</code> dashboard.
+<code>CaDrA.shiny</code> directory. This directory contains the code
+base of <code>CaDrA.shiny</code> needed to build its Shiny dashboard.
 <br>
 </li>
-<li>Change
-<strong>/path/to/CaDrA.shiny/inst/shinyapp/shiny-server.sh</strong> to
-your local <code>CaDrA.shiny/inst/shinyapp/shiny-server.sh</code>
-directory. This directory contains a bash file used to launch
-<code>CaDrA.shiny</code> dashboard. <br>
-</li>
+<li>Change <strong>/path/to/CaDrA.shiny/inst/extdata</strong> to your
+local <code>CaDrA.shiny/inst/extdata</code> directory. In this
+directory, you can place any external data files (e.g. feature sets,
+gene expression sets, input scores, etc.) in which you would like to
+populate the <code>CaDrA.shiny</code> dashboard with. However, a
+<code>datalist.csv</code> or <code>datalist.RDS</code> must be provided
+at the root of the directory including names and paths of where to
+import these data files into <code>CaDrA.shiny</code> dashboard.
+<br><br> The <code>datalist.csv</code> or <code>datalist.RDS</code> must
+contain the following fields:</li>
 </ul>
-<p><strong>-v</strong>: mount code base and data files from host
-directory to container directory
-<strong>[host_div]:[container_dir]</strong>. <br><strong>-p</strong>:
-map the host port to the container port
-<strong>[host_port]:[container_port]</strong> <br><strong><code>--</code>name</strong>: give an identity to the container
-<br><strong>-d</strong>: run the container in detached mode <br></p>
-<p>For more information about the Docker syntax, see <a href="https://docs.docker.com/engine/reference/run/" class="external-link">Docker run
-reference</a></p>
+<table class="table">
+<colgroup>
+<col width="10%">
+<col width="40%">
+<col width="49%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Fields</th>
+<th align="left">Description</th>
+<th align="left">Values</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">feature_set_name</td>
+<td align="left">Alias name for a feature set</td>
+<td align="left">
+<b>Required</b>. <br>
+e.g. TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="even">
+<td align="left">feature_set_path</td>
+<td align="left">Absolute path to a feature set file. File format:
+<b>csv</b> or <b>rds</b>.</td>
+<td align="left">
+<b>Required</b>. <br>
+e.g. /CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+</tr>
+<tr class="odd">
+<td align="left">input_score_name</td>
+<td align="left">Alias name for an input score</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="even">
+<td align="left">input_score_path</td>
+<td align="left">Absolute path to an input score file. File format:
+<b>csv</b> or <b>rds</b>.</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="odd">
+<td align="left">gene_expression_name</td>
+<td align="left">Alias name for a gene expression set</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="even">
+<td align="left">gene_expression_path</td>
+<td align="left">Absolute path to a gene expression set file. File
+format: <b>csv</b> or <b>rds</b>.</td>
+<td align="left">Optional.</td>
+</tr>
+</tbody>
+</table>
+<p>An example of <strong>datalist.csv</strong>: <br></p>
+<table class="table">
+<colgroup>
+<col width="14%">
+<col width="24%">
+<col width="14%">
+<col width="25%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">feature_set_name</th>
+<th align="left">feature_set_path</th>
+<th align="left">input_score_name</th>
+<th align="left">input_score_path</th>
+<th align="left">gene_expression_name</th>
+<th align="left">gene_expression_path</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">CCLE SCNAs and Mutations</td>
+<td align="left">/CaDrA.shiny/inst/extdata/CCLE_MUT_SCNA.rds</td>
+<td align="left">B-catenin Activity in CCLE</td>
+<td align="left">/CaDrA.shiny/inst/extdata/CTNBB1_reporter.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">TCGA BrCa SCNAs and Mutations</td>
+<td align="left">/CaDrA.shiny/inst/extdata/BRCA_GISTIC_MUT_SIG.rds</td>
+<td align="left">YAP/TAZ Activity in TCGA BrCa</td>
+<td align="left">/CaDrA.shiny/inst/extdata/TAZYAP_BRCA_ACTIVITY.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Simulated Feature Set</td>
+<td align="left">/CaDrA.shiny/inst/extdata/sim_FS.rds</td>
+<td align="left">Simulated Input Score</td>
+<td align="left">/CaDrA.shiny/inst/extdata/sim_Scores.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>IMPORTANT NOTE</strong>: Since Docker does not have direct
+access to the host machine, we must list each data file in its absolute
+path as referenced to its mounted directory inside the container
+(e.g. <code>/CaDrA.shiny/inst/extdata</code>) not the host
+directory.</p>
 </div>
 <div class="section level3">
-<h3 id="to-check-if-the-container-is-built-sucessfully">(5) To check if the container is built sucessfully<a class="anchor" aria-label="anchor" href="#to-check-if-the-container-is-built-sucessfully"></a>
+<h3 id="check-if-the-container-is-built-successfully">(2) Check if the container is built successfully<a class="anchor" aria-label="anchor" href="#check-if-the-container-is-built-successfully"></a>
 </h3>
-<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">docker</span> container ps</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">docker</span> ps</span>
 <span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a></span>
 <span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a><span class="ex">CONTAINER</span> ID   IMAGE               COMMAND                    CREATED        STATUS        PORTS                    NAMES</span>
-<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="ex">b37b6b19c4e8</span>   cadra-shiny:1.0.0   <span class="st">"bash dashboard-kickoff"</span>   5 hours ago    Up 5 hours    0.0.0.0:4567-<span class="op">&gt;</span>3838/tcp   cadra-shiny</span></code></pre></div>
-<p><strong>NOTE:</strong> The <code>cadra-shiny</code> container is
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a><span class="ex">b37b6b19c4e8</span>   cadra.shiny:latest  <span class="st">"/bin/bash -c /user/..."</span>   5 hours ago    Up 5 hours    0.0.0.0:4567-<span class="op">&gt;</span>3838/tcp   cadra.shiny</span></code></pre></div>
+<p>Based on the output above, the <code>cadra.shiny</code> dashboard is
 published on port <strong>4567</strong> on the host machine, and
-<strong>3838</strong> is the port of where the <code>cadra-shiny</code>
-is published inside the container. All requests that are made to the
-host will be redirected to the Docker container.</p>
+<strong>3838</strong> is the port of where the <code>cadra.shiny</code>
+is published inside the Docker container. Noted that all requests that
+are made to the host machine will be automatically redirected to the
+Docker container where the Shiny app is launched and deployed.</p>
 </div>
-<div class="section level3">
-<h3 id="access-cadra-shiny-dashboard-on-the-host-network">(6) Access <code>CaDrA</code> Shiny dashboard on the host
-network<a class="anchor" aria-label="anchor" href="#access-cadra-shiny-dashboard-on-the-host-network"></a>
-</h3>
-<p>You can visit the local host using your preferred web browser, type
-in <a href="http://localhost:4567" class="external-link uri">http://localhost:4567</a>, and check if the dashboard is
-indeed hosted there.</p>
 </div>
+<div class="section level2">
+<h2 id="access-cadra-shiny-dashboard-on-your-localhost">Access <code>CaDrA.shiny</code> dashboard on your localhost<a class="anchor" aria-label="anchor" href="#access-cadra-shiny-dashboard-on-your-localhost"></a>
+</h2>
+<p>Using your preferred web browser, type in <a href="http://localhost:4567" class="external-link uri">http://localhost:4567</a> and
+see if <code>CaDrA.shiny</code> dashboard is indeed hosted there.</p>
+<p><img src="figures/cadra-shiny-landing-page.png"></p>
+<p><br><br></p>
+<p>Any questions or issues? Please report them on our <a href="https://github.com/montilab/CaDrA.shiny/issues">github
+issues</a>.</p>
 </div>
   </div>
 
