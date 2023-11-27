@@ -9,6 +9,14 @@ vignette: >
 
 ```{r, include=FALSE, messages=FALSE, warnings=FALSE}
 knitr::opts_chunk$set(message=FALSE, collapse = TRUE, comment="")
+
+# Load CaDrA and CaDrA.shiny
+library(devtools)
+devtools::load_all("~/Github/CaDrA", recompile=TRUE)
+devtools::load_all("~/Github/CaDrA.shiny", recompile=TRUE)
+
+# Load other R packages
+library(tidyverse)
 ```
 
 ## Software requirements
@@ -33,13 +41,13 @@ git clone https://github.com/montilab/CaDrA.git
 git clone https://github.com/montilab/CaDrA.shiny.git
 ``` 
 
-### (2) Navigate to `CaDrA.shiny` folder where `docker-compose.yml` is stored and edit that yaml file to configure variables needed to build its Docker image and mount appropriate data inputs and code base to run its container
+### (2) Navigate to `CaDrA.shiny` folder where `docker-compose.yml` is stored and edit the yaml file to configure variables needed to build its Docker image and mount appropriate data inputs and code base to run its container
 
 Here is a list of configurations:
 
 - Specify a version of R to use as a base image to launch `CaDrA.shiny` dashboard. Default `R_VERSION=4.3.0`
-- Specify a release branch of `CaDrA` which one can pull and build its package directly from its Github repo. Default `CADRA_BRANCH=devel`
-- Mount external data files (e.g. feature sets, gene expression sets, input scores, etc.) to populate `CaDrA.shiny` dashboard with. One can place external data files in a desired directory (e.g. `/path/to/extdata`) and change __/path/to/extdata__ to your defined **extdata** directory in `docker-compose.yml`.
+- Specify a release branch of `CaDrA` in which one can pull and build its package directly from its Github repo. Default `CADRA_BRANCH=devel`
+- Mount external data files (e.g. feature sets, gene expression sets, input scores, etc.) to populate `CaDrA.shiny` dashboard with. One can place external data files in a desired directory (e.g. `/path/to/extdata`) and change __/path/to/extdata__ to your defined **extdata** directory in `docker-compose.yml`. 
 
 ```bash
 x-cadra-shiny-extdata:
@@ -48,6 +56,40 @@ x-cadra-shiny-extdata:
   source: /path/to/extdata
   target: /CaDrA.shiny/inst/extdata
 ```
+
+Additionally, a `datalist.csv` or `datalist.RDS` must be provided at __/path/to/extdata__ directory including names and paths of where to import these data files into `CaDrA.shiny` dashboard. <br><br> The `datalist.csv` or `datalist.RDS` must contain the following fields: 
+
+```{r, include=TRUE, echo=FALSE}
+# Required column names for datalist
+required_fields <- c('feature_set_name', 'feature_set_path', 'input_score_name', 'input_score_path', 'gene_expression_name', 'gene_expression_path')
+fields_description <- c("Alias name for a feature set", 'Absolute path to a feature set file. File format: <b>csv</b> or <b>rds</b>.', "Alias name for an input score", 'Absolute path to an input score file. File format: <b>csv</b> or <b>rds</b>.', 'Alias name for a gene expression set', 'Absolute path to a gene expression set file. File format: <b>csv</b> or <b>rds</b>.')
+fields_values <- c(
+  '<b>Required</b>. <br> e.g. TCGA_ACC_2016_01_28_GISTIC_MUT_SIG', 
+  '<b>Required</b>. <br> e.g. /CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds', 
+  'Optional.', 
+  'Optional.', 
+  'Optional.', 
+  'Optional.'
+)
+
+datalist_df <- data.frame(
+  `Fields` = required_fields,
+  `Description` = fields_description,
+  `Values` = fields_values
+)
+
+knitr::kable(datalist_df)
+```
+An example of __datalist.csv__: <br>
+```{r, include=TRUE, echo=FALSE}
+sample_datalist <- CaDrA.shiny:::get_extdata() %>% 
+  dplyr::select(-collection, -description) %>% 
+  dplyr::mutate_all(~stringr::str_replace(., ".rda", ".rds")) %>% 
+  dplyr::mutate_all(~stringr::str_replace(., normalizePath("~/Github/CaDrA/data"), "/CaDrA.shiny/inst/extdata"))
+
+knitr::kable(sample_datalist, row.names = FALSE)
+```
+__IMPORTANT NOTE__: Since Docker does not have direct access to the host machine, we must list each data file in its absolute path as referenced to its mounted directory inside the container (e.g. `/CaDrA.shiny/inst/extdata`) not the host directory.
 
 - Mount code base of **CaDrA**, change __/path/to/CaDrA__ to your **CaDrA** directory.
 

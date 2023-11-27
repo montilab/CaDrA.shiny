@@ -1,8 +1,8 @@
 ---
-title: "Launch CaDrA's Shiny Dashboard with Docker CLI"
+title: "Launch CaDrA's Shiny Dashboard with Docker"
 output: BiocStyle::html_document
 vignette: >
-  %\VignetteIndexEntry{Launch CaDrA's Shiny Dashboard with Docker CLI}
+  %\VignetteIndexEntry{Launch CaDrA's Shiny Dashboard with Docker}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

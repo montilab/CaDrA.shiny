@@ -57,7 +57,7 @@ deployed on any compatible cloud-based services.
 #### Useful Guides
 
 - <a href="articles/docker.html" target="_blank">Launch CaDrA’s Shiny
-  Dashboard with Docker CLI</a>
+  Dashboard with Docker</a>
 - <a href="articles/docker-compose.html" target="_blank">Launch CaDrA’s
   Shiny Dashboard with Compose</a>
 

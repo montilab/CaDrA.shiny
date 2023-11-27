@@ -125,10 +125,10 @@ repositories<a class="anchor" aria-label="anchor" href="#clone-cadra-and-cadra-s
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/montilab/CaDrA.shiny.git</span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-that-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container">(2) Navigate to <code>CaDrA.shiny</code> folder where
-<code>docker-compose.yml</code> is stored and edit that yaml file to
+<h3 id="navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-the-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container">(2) Navigate to <code>CaDrA.shiny</code> folder where
+<code>docker-compose.yml</code> is stored and edit the yaml file to
 configure variables needed to build its Docker image and mount
-appropriate data inputs and code base to run its container<a class="anchor" aria-label="anchor" href="#navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-that-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container"></a>
+appropriate data inputs and code base to run its container<a class="anchor" aria-label="anchor" href="#navigate-to-cadra-shiny-folder-where-docker-compose-yml-is-stored-and-edit-the-yaml-file-to-configure-variables-needed-to-build-its-docker-image-and-mount-appropriate-data-inputs-and-code-base-to-run-its-container"></a>
 </h3>
 <p>Here is a list of configurations:</p>
 <ul>
@@ -136,7 +136,7 @@ appropriate data inputs and code base to run its container<a class="anchor" aria
 <code>CaDrA.shiny</code> dashboard. Default
 <code>R_VERSION=4.3.0</code>
 </li>
-<li>Specify a release branch of <code>CaDrA</code> which one can pull
+<li>Specify a release branch of <code>CaDrA</code> in which one can pull
 and build its package directly from its Github repo. Default
 <code>CADRA_BRANCH=devel</code>
 </li>
@@ -153,6 +153,113 @@ One can place external data files in a desired directory
 <span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>  <span class="ex">type:</span> bind</span>
 <span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a>  <span class="ex">source:</span> /path/to/extdata</span>
 <span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>  <span class="ex">target:</span> /CaDrA.shiny/inst/extdata</span></code></pre></div>
+<p>Additionally, a <code>datalist.csv</code> or
+<code>datalist.RDS</code> must be provided at
+<strong>/path/to/extdata</strong> directory including names and paths of
+where to import these data files into <code>CaDrA.shiny</code>
+dashboard. <br><br> The <code>datalist.csv</code> or
+<code>datalist.RDS</code> must contain the following fields:</p>
+<table class="table">
+<colgroup>
+<col width="10%">
+<col width="40%">
+<col width="49%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">Fields</th>
+<th align="left">Description</th>
+<th align="left">Values</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">feature_set_name</td>
+<td align="left">Alias name for a feature set</td>
+<td align="left">
+<b>Required</b>. <br>
+e.g. TCGA_ACC_2016_01_28_GISTIC_MUT_SIG</td>
+</tr>
+<tr class="even">
+<td align="left">feature_set_path</td>
+<td align="left">Absolute path to a feature set file. File format:
+<b>csv</b> or <b>rds</b>.</td>
+<td align="left">
+<b>Required</b>. <br>
+e.g. /CaDrA.shiny/inst/extdata/feature_set/TCGA_ACC_2016_01_28_GISTIC_MUT_SIG.rds</td>
+</tr>
+<tr class="odd">
+<td align="left">input_score_name</td>
+<td align="left">Alias name for an input score</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="even">
+<td align="left">input_score_path</td>
+<td align="left">Absolute path to an input score file. File format:
+<b>csv</b> or <b>rds</b>.</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="odd">
+<td align="left">gene_expression_name</td>
+<td align="left">Alias name for a gene expression set</td>
+<td align="left">Optional.</td>
+</tr>
+<tr class="even">
+<td align="left">gene_expression_path</td>
+<td align="left">Absolute path to a gene expression set file. File
+format: <b>csv</b> or <b>rds</b>.</td>
+<td align="left">Optional.</td>
+</tr>
+</tbody>
+</table>
+<p>An example of <strong>datalist.csv</strong>: <br></p>
+<table class="table">
+<colgroup>
+<col width="14%">
+<col width="24%">
+<col width="14%">
+<col width="25%">
+<col width="10%">
+<col width="10%">
+</colgroup>
+<thead><tr class="header">
+<th align="left">feature_set_name</th>
+<th align="left">feature_set_path</th>
+<th align="left">input_score_name</th>
+<th align="left">input_score_path</th>
+<th align="left">gene_expression_name</th>
+<th align="left">gene_expression_path</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">CCLE SCNAs and Mutations</td>
+<td align="left">/CaDrA.shiny/inst/extdata/CCLE_MUT_SCNA.rds</td>
+<td align="left">B-catenin Activity in CCLE</td>
+<td align="left">/CaDrA.shiny/inst/extdata/CTNBB1_reporter.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="even">
+<td align="left">TCGA BrCa SCNAs and Mutations</td>
+<td align="left">/CaDrA.shiny/inst/extdata/BRCA_GISTIC_MUT_SIG.rds</td>
+<td align="left">YAP/TAZ Activity in TCGA BrCa</td>
+<td align="left">/CaDrA.shiny/inst/extdata/TAZYAP_BRCA_ACTIVITY.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+<tr class="odd">
+<td align="left">Simulated Feature Set</td>
+<td align="left">/CaDrA.shiny/inst/extdata/sim_FS.rds</td>
+<td align="left">Simulated Input Score</td>
+<td align="left">/CaDrA.shiny/inst/extdata/sim_Scores.rds</td>
+<td align="left"></td>
+<td align="left"></td>
+</tr>
+</tbody>
+</table>
+<p><strong>IMPORTANT NOTE</strong>: Since Docker does not have direct
+access to the host machine, we must list each data file in its absolute
+path as referenced to its mounted directory inside the container
+(e.g. <code>/CaDrA.shiny/inst/extdata</code>) not the host
+directory.</p>
 <ul>
 <li>Mount code base of <strong>CaDrA</strong>, change
 <strong>/path/to/CaDrA</strong> to your <strong>CaDrA</strong>
