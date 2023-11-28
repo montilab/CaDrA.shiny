@@ -33,12 +33,14 @@ Don't have Docker installed, see [Docker Engine](https://docs.docker.com/engine/
 ### (1) Clone this repository
 
 ```bash
+cd /path/to/
 git clone https://github.com/montilab/CaDrA.shiny.git
 ``` 
 
 ### (2) Navigate to `CaDrA.shiny` folder where `Dockerfile` is stored and build its Docker image. 
 
 ```bash
+cd /path/to/CaDrA.shiny/
 docker build -t cadra.shiny:latest .
 ```
 **`-t`**: add a tag to an image such as the version of the application, e.g. *cadra.shiny:1.0.0* or *cadra.shiny:latest*. <br>
